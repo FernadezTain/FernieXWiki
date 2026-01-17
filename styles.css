@@ -1,4 +1,4 @@
-/* Сброс */
+/* --- Сброс --- */
 * {
   margin: 0;
   padding: 0;
@@ -9,14 +9,15 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: #0d0d0d;
   color: #fff;
-  overflow-x: hidden;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-x: hidden;
+  position: relative;
 }
 
-/* Canvas */
+/* --- Canvas для частиц --- */
 #particle-network {
   position: fixed;
   top: 0;
@@ -26,7 +27,7 @@ body {
   z-index: 0;
 }
 
-/* Центральный блок поиска */
+/* --- Центральный блок поиска --- */
 .search-bar {
   position: relative;
   top: 40px;
@@ -34,12 +35,13 @@ body {
   align-items: center;
   width: 600px;
   max-width: 90%;
-  background: rgba(30,30,30,0.9);
+  background: rgba(30,30,30,0.85);
   border-radius: 40px;
   padding: 12px 20px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  backdrop-filter: blur(6px);
   z-index: 2;
-  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
 }
 
 .search-bar input {
@@ -65,14 +67,14 @@ body {
   cursor: pointer;
 }
 
-/* Основной контент */
+/* --- Основной контент --- */
 .main-content {
   margin-top: 120px;
   width: 100%;
   max-width: 900px;
   z-index: 1;
-  position: relative;
   text-align: center;
+  padding: 0 15px;
 }
 
 h1 {
@@ -88,15 +90,15 @@ p {
   font-size: 1.2rem;
   margin-bottom: 40px;
   color: #ccc;
+  line-height: 1.6;
 }
 
-/* Блоки категорий */
+/* --- Блоки категорий --- */
 .category-blocks {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 20px;
   margin-bottom: 40px;
-  padding: 0 20px;
 }
 
 .category {
@@ -105,16 +107,17 @@ p {
   border-radius: 15px;
   font-weight: bold;
   font-size: 1.2rem;
-  transition: transform 0.3s, box-shadow 0.3s;
   cursor: pointer;
+  transition: transform 0.25s, box-shadow 0.25s, background 0.25s;
 }
 
 .category:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 234, 255, 0.4);
+  box-shadow: 0 8px 20px rgba(0, 234, 255, 0.3);
+  background: rgba(25, 25, 25, 0.95);
 }
 
-/* Сайт в разработке */
+/* --- Сайт в разработке --- */
 .notice {
   font-size: 1.5rem;
   font-weight: bold;
@@ -126,4 +129,66 @@ p {
   0% { opacity: 0.7; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.05); }
   100% { opacity: 0.7; transform: scale(1); }
+}
+
+/* --- Адаптив для планшетов и телефонов --- */
+@media (max-width: 768px) {
+  .search-bar {
+    width: 90%;
+    padding: 10px 15px;
+  }
+
+  .search-bar input {
+    font-size: 0.9rem;
+    padding: 8px 10px;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  p {
+    font-size: 1rem;
+    margin-bottom: 30px;
+  }
+
+  .category {
+    padding: 20px;
+    font-size: 1rem;
+  }
+
+  .category-blocks {
+    gap: 15px;
+  }
+
+  .main-content {
+    margin-top: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  p {
+    font-size: 0.9rem;
+  }
+
+  .search-bar {
+    flex-direction: column;
+    align-items: stretch;
+    border-radius: 30px;
+  }
+
+  .search-bar .icons {
+    margin-left: 0;
+    justify-content: flex-end;
+    margin-top: 8px;
+  }
+
+  .category {
+    padding: 15px;
+    font-size: 0.9rem;
+  }
 }
