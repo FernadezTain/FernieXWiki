@@ -1,4 +1,6 @@
-/* --- Общие стили --- */
+/* -------------------------
+   ОБЩИЕ СТИЛИ
+------------------------- */
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
@@ -9,6 +11,7 @@ body {
   flex-direction: column;
   min-height: 100vh;
   align-items: center;
+  overflow-x: hidden;
 }
 
 /* --- Основной контейнер --- */
@@ -18,59 +21,63 @@ body {
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 40px 20px;
+  padding: 30px 15px;
+  animation: fadeIn 0.8s ease forwards;
 }
 
 /* --- Карточка профиля --- */
 .profile-card {
   background: rgba(25, 25, 25, 0.95);
-  padding: 40px 30px;
+  padding: 35px 25px;
   border-radius: 20px;
   text-align: center;
-  max-width: 450px;
+  max-width: 380px;
   width: 90%;
   box-shadow: 0 10px 30px rgba(0, 234, 255, 0.3);
   position: relative;
   overflow: hidden;
+  transform: translateY(20px);
+  opacity: 0;
+  animation: cardAppear 0.6s forwards;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .profile-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(0, 234, 255, 0.5);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(0, 234, 255, 0.4);
 }
 
 /* --- Аватарка --- */
 .profile-avatar {
-  width: 140px;
-  height: 140px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   object-fit: cover;
-  border: 4px solid #00eaff;
-  box-shadow: 0 0 20px rgba(0, 234, 255, 0.4);
+  border: 3px solid #00eaff;
+  box-shadow: 0 0 15px rgba(0, 234, 255, 0.4);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .profile-avatar:hover {
   transform: scale(1.05);
-  box-shadow: 0 0 30px rgba(0, 234, 255, 0.7);
+  box-shadow: 0 0 25px rgba(0, 234, 255, 0.6);
 }
 
 /* --- Ник пользователя --- */
 .profile-card h2 {
   color: #00eaff;
-  margin-bottom: 15px;
-  font-size: 1.8rem;
+  margin-bottom: 12px;
+  font-size: 1.6rem;
   text-shadow: 0 0 10px rgba(0, 234, 255, 0.6);
 }
 
 /* --- Описание --- */
 .profile-card p {
   color: #ccc;
-  margin-bottom: 25px;
-  font-size: 1rem;
-  line-height: 1.5;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+  line-height: 1.4;
 }
 
 /* --- Соцсети --- */
@@ -78,61 +85,68 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 12px;
-  margin-bottom: 25px;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
 .profile-buttons a {
-  padding: 10px 20px;
+  padding: 8px 15px;
   background: #00eaff;
   color: #000;
   font-weight: 600;
-  border-radius: 30px;
+  border-radius: 25px;
   text-decoration: none;
   transition: transform 0.2s ease, background 0.2s ease;
-  box-shadow: 0 5px 15px rgba(0, 234, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 234, 255, 0.3);
 }
 
 .profile-buttons a:hover {
   transform: translateY(-2px);
   background: #00c0d6;
-  box-shadow: 0 8px 20px rgba(0, 234, 255, 0.5);
+  box-shadow: 0 6px 18px rgba(0, 234, 255, 0.5);
 }
 
 /* --- Кнопка возврата --- */
 .back-btn {
   display: inline-block;
-  padding: 10px 25px;
+  padding: 8px 20px;
   background: #ff6b6b;
   color: #fff;
   font-weight: bold;
-  border-radius: 30px;
+  border-radius: 25px;
   text-decoration: none;
   transition: transform 0.2s ease, background 0.2s ease;
-  box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
 }
 
 .back-btn:hover {
   transform: translateY(-2px);
   background: #e55a5a;
-  box-shadow: 0 8px 20px rgba(255, 107, 107, 0.5);
+  box-shadow: 0 6px 18px rgba(255, 107, 107, 0.5);
+}
+
+/* --- Анимации --- */
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes cardAppear {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* --- Адаптив --- */
 @media (max-width: 768px) {
   .profile-card {
-    padding: 30px 20px;
-  }
-
-  .profile-avatar {
-    width: 120px;
-    height: 120px;
-  }
-}
-
-@media (max-width: 480px) {
-  .profile-card {
     padding: 25px 15px;
+    max-width: 320px;
   }
 
   .profile-avatar {
@@ -141,16 +155,42 @@ body {
   }
 
   .profile-card h2 {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
 
   .profile-card p {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
   }
 
   .profile-buttons a,
   .back-btn {
-    padding: 8px 15px;
-    font-size: 0.9rem;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-card {
+    padding: 20px 12px;
+    max-width: 280px;
+  }
+
+  .profile-avatar {
+    width: 80px;
+    height: 80px;
+  }
+
+  .profile-card h2 {
+    font-size: 1.2rem;
+  }
+
+  .profile-card p {
+    font-size: 0.8rem;
+  }
+
+  .profile-buttons a,
+  .back-btn {
+    padding: 5px 10px;
+    font-size: 0.8rem;
   }
 }
