@@ -64,22 +64,21 @@ body {
   box-shadow: 0 6px 20px rgba(0,234,255,0.3);
   transition: all 0.3s ease;
   z-index: 1;
-  overflow: visible; /* важно, чтобы свечение не обрезалось */
+  overflow: hidden; /* теперь свечение остаётся внутри */
 }
 
-/* Радужное рассеянное свечение */
 .search-bar::before {
   content: '';
   position: absolute;
-  top: -20px; left: -20px;
-  right: -20px; bottom: -20px;
-  border-radius: 60px;
+  top: 0; left: 0; right: 0; bottom: 0; /* занимает весь блок */
+  border-radius: 50px;
   background: conic-gradient(red, orange, yellow, green, blue, purple, red);
-  filter: blur(40px);
+  filter: blur(20px); /* меньше, чтобы свечение не выходило */
   opacity: 0.6;
   z-index: -1;
-  animation: rotateGlow 8s linear infinite;
+  animation: rotateGlow 6s linear infinite;
 }
+
 
 /* Анимация вращения свечения */
 @keyframes rotateGlow {
