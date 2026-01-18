@@ -1,4 +1,7 @@
+// Firebase
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
+  getFirestore,
   collection,
   addDoc,
   getDocs,
@@ -8,27 +11,36 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+// CONFIG
+const firebaseConfig = {
+  apiKey: "AIzaSyBc6Bf4oHrTyWsQp9CrrRPNyGSqm4w8J_M",
+  authDomain: "ferniexwiki.firebaseapp.com",
+  projectId: "ferniexwiki",
+  storageBucket: "ferniexwiki.firebasestorage.app",
+  messagingSenderId: "451396973595",
+  appId: "1:451396973595:web:f31a19ade2b8b6c5f374be"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// ===== НАСТРОЙКИ =====
 const ADMIN_PASSWORD = "12345";
 
+// ===== ЭЛЕМЕНТЫ =====
 const modal = document.getElementById("post-modal");
 const postBar = document.getElementById("post-bar");
 const closeModal = document.getElementById("close-modal");
 const submitPost = document.getElementById("submit-post");
 const postsContainer = document.getElementById("posts-container");
-const mainContent = document.getElementById("main-content");
 const currentSection = document.querySelector(".current-section");
 
-// открыть модалку
-postBar.addEventListener("click", () => {
-  modal.classList.add("active");
-});
+// ===== МОДАЛКА =====
+postBar.onclick = () => modal.classList.add("active");
+closeModal.onclick = () => modal.classList.remove("active");
 
-closeModal.addEventListener("click", () => {
-  modal.classList.remove("active");
-});
-
-// добавить пост
-submitPost.addEventListener("click", async () => {
+// ===== ДОБАВЛЕНИЕ ПОСТА =====
+submitPost.onclick = async () => {
   const password = document.getElementById("post-password").value;
   if (password !== ADMIN_PASSWORD) {
     alert("Неверный пароль");
@@ -36,11 +48,11 @@ submitPost.addEventListener("click", async () => {
   }
 
   const category = document.getElementById("post-category").value;
-  const text = document.getElementById("post-text").value;
-  const photo = document.getElementById("post-photo").value;
+  const text = document.getElementById("post-text").value.trim();
+  const photo = document.getElementById("post-photo").value.trim();
 
-  if (!text.trim()) {
-    alert("Текст пустой");
+  if (!text) {
+    alert("Пустой текст");
     return;
   }
 
@@ -57,9 +69,9 @@ submitPost.addEventListener("click", async () => {
   document.getElementById("post-photo").value = "";
 
   loadPosts(category);
-});
+};
 
-// загрузка постов по категории
+// ===== ЗАГРУЗКА ПОСТОВ =====
 async function loadPosts(category) {
   postsContainer.innerHTML = "";
 
@@ -69,34 +81,31 @@ async function loadPosts(category) {
     orderBy("createdAt", "desc")
   );
 
-  const snapshot = await getDocs(q);
+  const snap = await getDocs(q);
 
-  snapshot.forEach(doc => {
+  snap.forEach(doc => {
     const post = doc.data();
+
     const div = document.createElement("div");
     div.className = "post";
-
     div.innerHTML = `
       ${post.photo ? `<img src="${post.photo}">` : ""}
       <div class="post-text collapsed">${post.text}</div>
     `;
 
-    const textEl = div.querySelector(".post-text");
-    textEl.addEventListener("click", () => {
-      textEl.classList.toggle("collapsed");
-    });
+    div.querySelector(".post-text").onclick = e => {
+      e.target.classList.toggle("collapsed");
+    };
 
     postsContainer.appendChild(div);
   });
 }
 
-// навигация по разделам
+// ===== НАВИГАЦИЯ =====
 document.querySelectorAll(".side-item").forEach(item => {
-  item.addEventListener("click", () => {
+  item.onclick = () => {
     const section = item.dataset.section;
     currentSection.textContent = section;
-    mainContent.innerHTML = "";
-    postsContainer.innerHTML = "";
     loadPosts(section);
-  });
+  };
 });
