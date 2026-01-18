@@ -37,27 +37,88 @@ body {
   box-shadow: 0 8px 30px rgba(0,234,255,0.3);
 }
 
+/* Аватар */
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin-bottom: 15px;
+  object-fit: cover;
+  border: 3px solid #00eaff;
+}
+
+/* Ник */
 .profile-card h2 {
   color: #00eaff;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
+/* Описание */
 .profile-card p {
   color: #ccc;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
-.back-btn {
-  display: inline-block;
-  padding: 10px 25px;
+/* Контейнер кнопок соцсетей */
+.profile-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* Кнопки соцсетей */
+.profile-buttons a {
+  padding: 10px 20px;
   background: #00eaff;
   color: #000;
   font-weight: bold;
   border-radius: 25px;
   text-decoration: none;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.profile-buttons a:hover {
+  transform: translateY(-2px);
+  background: #00c0d6;
+}
+
+/* Кнопка возврата на главную */
+.back-btn {
+  display: inline-block;
+  padding: 10px 25px;
+  background: #ff6b6b;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 25px;
+  text-decoration: none;
+  transition: transform 0.2s ease, background 0.2s ease;
 }
 
 .back-btn:hover {
   transform: translateY(-2px);
+  background: #e55a5a;
+}
+
+/* --- Адаптив --- */
+@media (max-width: 480px) {
+  .profile-card {
+    padding: 20px 15px;
+  }
+
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+  }
+
+  .profile-buttons a {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+  }
+
+  .back-btn {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+  }
 }
