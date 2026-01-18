@@ -1,5 +1,5 @@
 /* =========================
-   DOM
+   DOM элементы
 ========================= */
 const modal = document.getElementById("post-modal");
 const postBar = document.getElementById("post-bar");
@@ -7,6 +7,9 @@ const closeModal = document.getElementById("close-modal");
 const submitPost = document.getElementById("submit-post");
 const postsContainer = document.getElementById("posts-container");
 const currentSection = document.querySelector(".current-section");
+const hint = document.querySelector(".main-content .hint");
+const logoLink = document.getElementById("logo-link");
+const logoImg = document.getElementById("logo");
 
 /* =========================
    МОДАЛКА
@@ -59,6 +62,9 @@ submitPost.addEventListener("click", () => {
 function loadPosts(category) {
   postsContainer.innerHTML = "";
 
+  // Скрываем подсказку
+  if (hint) hint.style.display = "none";
+
   const filtered = postsData.filter(p => p.category === category);
 
   if (!filtered.length) {
@@ -90,21 +96,22 @@ document.querySelectorAll(".side-item").forEach(item => {
     loadPosts(section);
   });
 });
-const logoLink = document.getElementById("logo-link");
-const currentSection = document.querySelector(".current-section");
-const postsContainer = document.getElementById("posts-container");
-const hint = document.querySelector(".main-content .hint");
 
+/* =========================
+   КЛИКАБЕЛЬНОЕ ЛОГО
+========================= */
 logoLink.addEventListener("click", (e) => {
   e.preventDefault();
   currentSection.textContent = "Главная";
-  if (hint) hint.style.display = "block"; // показываем надпись снова
   postsContainer.innerHTML = "";
+  if (hint) hint.style.display = "block"; // показываем надпись "Выберите раздел слева"
 });
 
-// Проверка, есть ли картинка
-const logoImg = document.getElementById("logo");
-logoImg.onerror = () => {
-  logoImg.style.display = "none";
-  document.getElementById("logo-text").style.display = "inline-block";
-};
+// Проверка, есть ли картинка логотипа
+if (logoImg) {
+  logoImg.onerror = () => {
+    logoImg.style.display = "none";
+    const logoText = document.getElementById("logo-text");
+    if (logoText) logoText.style.display = "inline-block";
+  };
+}
