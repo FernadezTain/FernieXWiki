@@ -6,10 +6,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const banner = document.getElementById("dev-banner");
   const closeBannerBtn = document.getElementById("close-banner");
 
+  // --- Закрытие баннера разработки ---
   if (banner && closeBannerBtn) {
     closeBannerBtn.addEventListener("click", () => banner.remove());
   }
 
+  // --- Навигация по разделам ---
   document.querySelectorAll(".side-item").forEach(item => {
     item.addEventListener("click", () => {
       const section = item.dataset.section;
@@ -19,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // --- Клик на логотип ---
   if (logoLink) {
     logoLink.addEventListener("click", e => {
       e.preventDefault();
@@ -28,6 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // --- Проверка логотипа ---
   const logoImg = document.getElementById("logo");
   if (logoImg) {
     logoImg.onerror = () => {
@@ -37,6 +41,9 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
+  // =========================
+  // Загрузка постов
+  // =========================
   async function loadPosts(category) {
     postsContainer.innerHTML = "";
     try {
@@ -62,9 +69,11 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `;
 
+        // Раскрытие текста по клику
         const textEl = div.querySelector(".post-text");
         textEl.addEventListener("click", () => textEl.classList.toggle("collapsed"));
 
+        // Клик на автора открывает баннер
         const authorEl = div.querySelector(".author");
         authorEl.addEventListener("click", e => {
           e.stopPropagation();
@@ -80,6 +89,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // =========================
+  // Баннер автора
+  // =========================
   function showAuthorBanner(nick) {
     if (document.getElementById("author-banner")) return;
 
@@ -107,8 +119,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.body.appendChild(banner);
 
+    // --- Переход на универсальный профиль ---
     document.getElementById("profile-btn").addEventListener("click", () => {
-      window.open(`profile_${nick}.html`, "_blank");
+      // Теперь открывается profile.html с параметром ?nick=
+      window.open(`profile.html?nick=${encodeURIComponent(nick)}`, "_blank");
     });
 
     document.getElementById("close-author-banner").addEventListener("click", () => banner.remove());
