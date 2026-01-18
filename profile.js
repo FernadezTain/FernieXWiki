@@ -28,7 +28,7 @@ if (!nick) {
         const btn = document.createElement("a");
         btn.href = profile.Telegram;
         btn.target = "_blank";
-        btn.textContent = "Перейти в Telegram";
+        btn.textContent = "Telegram";
         buttonsContainer.appendChild(btn);
       }
 
@@ -36,7 +36,7 @@ if (!nick) {
         const btn = document.createElement("a");
         btn.href = profile.Discord;
         btn.target = "_blank";
-        btn.textContent = "Перейти в Discord";
+        btn.textContent = "Discord";
         buttonsContainer.appendChild(btn);
       }
 
@@ -44,7 +44,7 @@ if (!nick) {
         const btn = document.createElement("a");
         btn.href = profile.VK;
         btn.target = "_blank";
-        btn.textContent = "Перейти в VK";
+        btn.textContent = "VK";
         buttonsContainer.appendChild(btn);
       }
 
@@ -52,7 +52,7 @@ if (!nick) {
         const btn = document.createElement("a");
         btn.href = profile.Odnoklasniki;
         btn.target = "_blank";
-        btn.textContent = "Перейти в Одноклассники";
+        btn.textContent = "Одноклассники";
         buttonsContainer.appendChild(btn);
       }
 
