@@ -58,15 +58,6 @@ body {
   color: #aaa;
 }
 
-.search-bar .icons {
-  display: flex;
-  gap: 15px;
-  margin-left: 10px;
-  font-size: 1.2rem;
-  color: #ccc;
-  cursor: pointer;
-}
-
 /* --- Основной контент --- */
 .main-content {
   margin-top: 120px;
@@ -117,82 +108,7 @@ p {
   background: rgba(25, 25, 25, 0.95);
 }
 
-/* --- Сайт в разработке --- */
-.notice {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #ff6b6b;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% { opacity: 0.7; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.05); }
-  100% { opacity: 0.7; transform: scale(1); }
-}
-
-/* --- Адаптив для планшетов и телефонов --- */
-@media (max-width: 768px) {
-  .search-bar {
-    width: 90%;
-    padding: 10px 15px;
-  }
-
-  .search-bar input {
-    font-size: 0.9rem;
-    padding: 8px 10px;
-  }
-
-  h1 {
-    font-size: 2rem;
-  }
-
-  p {
-    font-size: 1rem;
-    margin-bottom: 30px;
-  }
-
-  .category {
-    padding: 20px;
-    font-size: 1rem;
-  }
-
-  .category-blocks {
-    gap: 15px;
-  }
-
-  .main-content {
-    margin-top: 80px;
-  }
-}
-
-@media (max-width: 480px) {
-  h1 {
-    font-size: 1.5rem;
-  }
-
-  p {
-    font-size: 0.9rem;
-  }
-
-  .search-bar {
-    flex-direction: column;
-    align-items: stretch;
-    border-radius: 30px;
-  }
-
-  .search-bar .icons {
-    margin-left: 0;
-    justify-content: flex-end;
-    margin-top: 8px;
-  }
-
-  .category {
-    padding: 15px;
-    font-size: 0.9rem;
-  }
-}
-/* --- Баннер сайта в разработке --- */
+/* --- Баннер "Сайт в разработке" --- */
 #dev-banner {
   position: fixed;
   top: 0;
@@ -249,49 +165,20 @@ p {
 }
 
 @keyframes bannerFadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
 }
 
-/* --- Мобильная оптимизация --- */
-@media (max-width: 480px) {
-  .dev-banner-content {
-    padding: 30px 20px;
-  }
-
-  .dev-banner-content h2 {
-    font-size: 1.5rem;
-  }
-
-  .dev-banner-content p {
-    font-size: 0.9rem;
-  }
-}
-/* --- Анимация исчезновения баннера --- */
 #dev-banner.hide {
   animation: bannerFadeOut 0.5s ease forwards;
 }
 
 @keyframes bannerFadeOut {
-  from {
-    opacity: 1;
-    transform: scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: scale(0.95);
-  }
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.95); }
 }
-/* ============================= */
-/* 💎 ПРЕМИАЛЬНАЯ БОКОВАЯ ПАНЕЛЬ */
-/* ============================= */
 
+/* --- Боковая панель --- */
 .side-panel {
   position: fixed;
   top: 50%;
@@ -299,20 +186,13 @@ p {
   transform: translateY(-50%);
   width: 6px;
   height: 300px;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    rgba(0, 234, 255, 0.8),
-    transparent
-  );
+  background: linear-gradient(to bottom, transparent, rgba(0,234,255,0.8), transparent);
   border-radius: 10px;
   z-index: 5;
-  transition: width 0.6s cubic-bezier(0.77, 0, 0.175, 1),
-              background 0.6s ease;
+  transition: width 0.6s cubic-bezier(0.77,0,0.175,1), background 0.6s ease;
   overflow: hidden;
 }
 
-/* ▶ Значок */
 .side-handle {
   position: absolute;
   top: 50%;
@@ -324,7 +204,6 @@ p {
   transition: transform 0.6s ease, opacity 0.6s ease;
 }
 
-/* Меню */
 .side-menu {
   opacity: 0;
   transform: translateX(-20px);
@@ -335,7 +214,6 @@ p {
   transition: opacity 0.4s ease, transform 0.6s ease;
 }
 
-/* Пункты */
 .side-item {
   font-size: 1rem;
   font-weight: 600;
@@ -359,23 +237,13 @@ p {
   transition: transform 0.3s ease;
 }
 
-.side-item:hover {
-  color: #00eaff;
-  transform: translateX(6px);
-}
-
-.side-item:hover::before {
-  transform: translateY(-50%) scale(1);
-}
-
-/* ============================= */
-/* ✨ СОСТОЯНИЕ НАВЕДЕНИЯ */
-/* ============================= */
+.side-item:hover { color: #00eaff; transform: translateX(6px); }
+.side-item:hover::before { transform: translateY(-50%) scale(1); }
 
 .side-panel:hover {
   width: 260px;
-  background: rgba(15, 15, 15, 0.95);
-  box-shadow: 8px 0 40px rgba(0, 234, 255, 0.25);
+  background: rgba(15,15,15,0.95);
+  box-shadow: 8px 0 40px rgba(0,234,255,0.25);
 }
 
 .side-panel:hover .side-menu {
@@ -388,44 +256,26 @@ p {
   opacity: 0;
 }
 
-/* ============================= */
-/* 📱 МОБИЛЬНАЯ ОПТИМИЗАЦИЯ */
-/* ============================= */
-@media (max-width: 768px) {
-  .side-panel {
-    height: 240px;
-  }
-
-  .side-panel:hover {
-    width: 220px;
-  }
-
-  .side-item {
-    font-size: 0.95rem;
-  }
-}
-/* ============================= */
-/* ⬇️ ПОЛОСА ПУБЛИКАЦИИ ПОСТОВ */
+/* --- Полоса публикации постов (минималистичная) --- */
 .post-bar {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: rgba(0,0,0,0.6);
-  color: #00eaff;
-  text-align: center;
-  padding: 12px 0;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background 0.3s ease;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 6px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 3px;
+  cursor: default;
   z-index: 100;
-}
-.post-bar:hover {
-  background: rgba(0,0,0,0.8);
+  transition: background 0.3s ease;
 }
 
-/* ============================= */
-/* ⬆️ МОДАЛЬНОЕ ОКНО ПУБЛИКАЦИИ */
+.post-bar:hover {
+  background: rgba(255,255,255,0.5);
+}
+
+/* --- Модальное окно --- */
 .modal {
   position: fixed;
   top: 0;
@@ -485,8 +335,7 @@ p {
   transform: translateY(-2px);
 }
 
-/* ============================= */
-/* 📌 ПОСТЫ */
+/* --- Посты --- */
 .post {
   background: rgba(20,20,20,0.85);
   margin: 20px 0;
@@ -512,56 +361,19 @@ p {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 6; /* приблизительно 200 символов */
+  -webkit-line-clamp: 6;
   -webkit-box-orient: vertical;
 }
 
-/* ============================= */
-/* 📱 МОБИЛЬНАЯ ОПТИМИЗАЦИЯ ДЛЯ МОДАЛКИ И ПОСТОВ */
+/* --- Адаптив --- */
 @media (max-width: 768px) {
-  .modal-content {
-    padding: 20px;
-  }
-
-  .post {
-    margin: 15px 10px;
-    padding: 15px;
-  }
-
-  .post-bar {
-    padding: 10px 0;
-  }
+  .search-bar { width: 90%; padding: 10px 15px; }
+  .modal-content { padding: 20px; }
+  .post { margin: 15px 10px; padding: 15px; }
 }
 
 @media (max-width: 480px) {
-  .modal-content {
-    padding: 15px;
-  }
-
-  .post {
-    padding: 12px;
-  }
-
-  .post-bar {
-    font-size: 0.9rem;
-  }
-}
-/* ============================= */
-/* ⬇️ Минималистичная полоска снизу */
-.post-bar {
-  position: fixed;
-  bottom: 12px; /* немного отступ сверху от низа */
-  left: 50%;
-  transform: translateX(-50%);
-  width: 120px; /* ширина полоски */
-  height: 6px;   /* толщина полоски */
-  background: rgba(255, 255, 255, 0.3); /* полупрозрачная */
-  border-radius: 3px; /* полностью закругленные края */
-  cursor: default;
-  z-index: 100;
-  transition: background 0.3s ease;
-}
-
-.post-bar:hover {
-  background: rgba(255, 255, 255, 0.5); /* чуть ярче при наведении */
+  .search-bar { flex-direction: column; align-items: stretch; border-radius: 30px; }
+  .modal-content { padding: 15px; }
+  .post { padding: 12px; }
 }
