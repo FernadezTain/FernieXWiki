@@ -22,7 +22,6 @@ body {
 }
 
 /* --- Верхняя панель --- */
-/* --- Верхняя панель --- */
 .top-bar {
   position: fixed;
   top: 20px;
@@ -165,49 +164,12 @@ p.hint {
 .side-item::before { content:""; position:absolute; left:0; top:50%; width:6px; height:6px; background:#00eaff; border-radius:50%; transform: translateY(-50%) scale(0); transition: transform 0.3s ease; }
 .side-item:hover::before { transform: translateY(-50%) scale(1); }
 
-/* --- Адаптив --- */
-@media (max-width:768px) { .top-bar{flex-direction:column;align-items:stretch;} .search-bar{width:100%;} .current-section{text-align:left; max-width:100%;} }
-@media (max-width:480px) { .post { padding:12px; } }
-.search-bar {
-  position: relative;
-  flex: 1;
-  display: flex;
-  align-items: center;
-  background: rgba(30,30,30,0.85);
-  border-radius: 40px;
-  padding: 12px 20px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-  backdrop-filter: blur(6px);
-  transition: all 0.3s ease;
-  z-index: 1;
-  overflow: hidden; /* чтобы псевдоэлемент не вылезал */
-}
-
-/* Радужное свечение */
-.search-bar::before {
-  content: '';
-  position: absolute;
-  top: -5px; left: -5px;
-  right: -5px; bottom: -5px;
-  border-radius: 45px; /* чуть больше радиуса search-bar */
-  background: linear-gradient(45deg, red, orange, yellow, green, blue, purple, red);
-  z-index: -1;
-  filter: blur(20px);
-  opacity: 0.7;
-  animation: rotateGlow 6s linear infinite;
-}
-
-/* Плавная анимация вращения */
-@keyframes rotateGlow {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
 /* --- Посты --- */
 .post {
   background: rgba(20,20,20,0.9);
   border-left: 4px solid #00eaff;
   border-radius: 12px;
-  padding: 15px 20px 40px 20px; /* нижний отступ для инфо */
+  padding: 15px 20px 40px 20px; 
   margin-bottom: 20px;
   box-shadow: 0 4px 20px rgba(0,234,255,0.15);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -242,7 +204,6 @@ p.hint {
   max-height: 1000px;
 }
 
-/* --- Нижняя строка с автором и датой --- */
 .post-info {
   position: absolute;
   bottom: 10px;
@@ -265,9 +226,10 @@ p.hint {
 
 /* --- Адаптив --- */
 @media (max-width:768px) {
-  .post {
-    padding: 12px 15px 35px 15px;
-  }
+  .top-bar { flex-direction: column; align-items: stretch; }
+  .search-bar { width: 100%; }
+  .current-section { text-align: left; max-width: 100%; }
+  .post { padding: 12px 15px 35px 15px; }
   .post-text { font-size: 0.9rem; }
 }
 
@@ -275,4 +237,3 @@ p.hint {
   .post { padding: 10px 12px 30px 12px; }
   .post-text { font-size: 0.85rem; }
 }
-
