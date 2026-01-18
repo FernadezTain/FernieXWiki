@@ -1,0 +1,18 @@
+{
+  "FernieX": {
+    "Avatar": "FernieX.png",
+    "About": "Главный администратор сайта FernieX Wiki.",
+    "Telegram": "https://t.me/Admin",
+    "Discord": "none",
+    "VK": "https://vk.com/Admin",
+    "Odnoklasniki": "none"
+  },
+  "User123": {
+    "Avatar": "user123-avatar.png",
+    "About": "Активный участник сообщества FernieX.",
+    "Telegram": "none",
+    "Discord": "none",
+    "VK": "https://vk.com/User123",
+    "Odnoklasniki": "none"
+  }
+}
