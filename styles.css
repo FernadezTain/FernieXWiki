@@ -22,6 +22,7 @@ body {
 }
 
 /* --- Верхняя панель --- */
+/* --- Верхняя панель --- */
 .top-bar {
   position: fixed;
   top: 20px;
@@ -35,43 +36,75 @@ body {
   font-size: 1.5rem;
   font-weight: bold;
   color: #00eaff;
-  cursor: pointer;
   z-index: 10;
+  padding: 0 10px;
 }
 
+/* --- Контейнер строки поиска --- */
 .search-bar-container {
-  margin-top: 80px; /* под верхней панелью */
+  margin-top: 80px;
   width: 90%;
   max-width: 900px;
   display: flex;
   justify-content: center;
+  position: relative;
+  z-index: 5;
 }
 
-.search-bar-container input {
+/* --- Строка поиска --- */
+.search-bar {
+  position: relative;
   width: 100%;
-  padding: 12px 20px;
-  border-radius: 40px;
-  border: none;
-  outline: none;
-  font-size: 1rem;
+  max-width: 600px;
+  display: flex;
+  align-items: center;
+  border-radius: 50px;
+  padding: 14px 20px;
   background: rgba(30,30,30,0.85);
-  color: #fff;
-  box-shadow: 0 6px 20px rgba(0,234,255,0.3);
   backdrop-filter: blur(6px);
+  box-shadow: 0 8px 30px rgba(0,234,255,0.2);
+  transition: all 0.3s ease;
 }
 
+/* Радужное рассеянное свечение */
+.search-bar::before {
+  content: '';
+  position: absolute;
+  top: -20px; left: -20px;
+  right: -20px; bottom: -20px;
+  border-radius: 60px;
+  background: conic-gradient(red, orange, yellow, green, blue, purple, red);
+  filter: blur(40px);
+  opacity: 0.6;
+  z-index: -1;
+  animation: rotateGlow 8s linear infinite;
+}
 
+/* Анимация вращения свечения */
+@keyframes rotateGlow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Поле ввода */
 .search-bar input {
   flex: 1;
   border: none;
   outline: none;
   background: transparent;
-  font-size: 1rem;
   color: #fff;
+  font-size: 1rem;
   padding: 10px 15px;
 }
 
-.search-bar input::placeholder { color: #aaa; }
+.search-bar input::placeholder {
+  color: #aaa;
+}
+
+/* При наведении подсветка */
+.search-bar:hover {
+  box-shadow: 0 12px 40px rgba(0,234,255,0.35);
+}
 
 /* --- Текущий раздел --- */
 .current-section {
