@@ -288,3 +288,119 @@ p {
     transform: scale(0.95);
   }
 }
+/* ============================= */
+/* 💎 ПРЕМИАЛЬНАЯ БОКОВАЯ ПАНЕЛЬ */
+/* ============================= */
+
+.side-panel {
+  position: fixed;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 300px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(0, 234, 255, 0.8),
+    transparent
+  );
+  border-radius: 10px;
+  z-index: 5;
+  transition: width 0.6s cubic-bezier(0.77, 0, 0.175, 1),
+              background 0.6s ease;
+  overflow: hidden;
+}
+
+/* ▶ Значок */
+.side-handle {
+  position: absolute;
+  top: 50%;
+  right: -14px;
+  transform: translateY(-50%);
+  font-size: 22px;
+  color: #00eaff;
+  opacity: 0.8;
+  transition: transform 0.6s ease, opacity 0.6s ease;
+}
+
+/* Меню */
+.side-menu {
+  opacity: 0;
+  transform: translateX(-20px);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 30px 20px;
+  transition: opacity 0.4s ease, transform 0.6s ease;
+}
+
+/* Пункты */
+.side-item {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ddd;
+  cursor: pointer;
+  position: relative;
+  padding-left: 15px;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.side-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  background: #00eaff;
+  border-radius: 50%;
+  transform: translateY(-50%) scale(0);
+  transition: transform 0.3s ease;
+}
+
+.side-item:hover {
+  color: #00eaff;
+  transform: translateX(6px);
+}
+
+.side-item:hover::before {
+  transform: translateY(-50%) scale(1);
+}
+
+/* ============================= */
+/* ✨ СОСТОЯНИЕ НАВЕДЕНИЯ */
+/* ============================= */
+
+.side-panel:hover {
+  width: 260px;
+  background: rgba(15, 15, 15, 0.95);
+  box-shadow: 8px 0 40px rgba(0, 234, 255, 0.25);
+}
+
+.side-panel:hover .side-menu {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.side-panel:hover .side-handle {
+  transform: translateY(-50%) rotate(180deg);
+  opacity: 0;
+}
+
+/* ============================= */
+/* 📱 МОБИЛЬНАЯ ОПТИМИЗАЦИЯ */
+/* ============================= */
+@media (max-width: 768px) {
+  .side-panel {
+    height: 240px;
+  }
+
+  .side-panel:hover {
+    width: 220px;
+  }
+
+  .side-item {
+    font-size: 0.95rem;
+  }
+}
