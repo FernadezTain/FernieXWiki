@@ -1,24 +1,18 @@
-/* ============================= */
-/* 🔹 БАННЕР "Сайт в разработке" */
+// Баннер "Сайт в разработке"
 const banner = document.getElementById('dev-banner');
-const closeBtn = document.getElementById('close-banner');
-closeBtn.addEventListener('click', () => {
+document.getElementById('close-banner').addEventListener('click', () => {
   banner.classList.add('hide');
   setTimeout(() => banner.remove(), 500);
 });
 
-/* ============================= */
-/* 🔹 НАВИГАЦИЯ ПО РАЗДЕЛАМ */
+// Навигация по разделам
 const sideItems = document.querySelectorAll('.side-item');
 const mainContent = document.getElementById('main-content');
-const topBar = document.querySelector('.top-bar');
 const currentSection = document.querySelector('.current-section');
 
 sideItems.forEach(item => {
   item.addEventListener('click', () => {
     const section = item.dataset.section;
-
-    topBar.classList.add('active');
     currentSection.textContent = section;
 
     mainContent.style.opacity = 0;
@@ -29,8 +23,7 @@ sideItems.forEach(item => {
   });
 });
 
-/* ============================= */
-/* 🔹 МОДАЛЬНОЕ ОКНО ПУБЛИКАЦИИ ПОСТОВ */
+// Модальное окно публикации постов
 const postBar = document.getElementById('post-bar');
 const modal = document.getElementById('post-modal');
 const closeModal = document.getElementById('close-modal');
@@ -52,8 +45,6 @@ submitPost.addEventListener('click', () => {
   const category = document.getElementById('post-category').value;
   const photo = document.getElementById('post-photo').value;
   const text = document.getElementById('post-text').value;
-
-  if(!text.trim()) { alert("Введите текст поста!"); return; }
 
   const postDiv = document.createElement('div');
   postDiv.classList.add('post');
