@@ -60,18 +60,24 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      posts.forEach(post => {
-        const div = document.createElement("div");
-        div.className = "post";
-        div.innerHTML = `
-          <strong>${post.author}</strong> <span class="date">${post.date}</span>
-          ${post.photo ? `<img src="${post.photo}" alt="">` : ""}
-          <div class="post-text collapsed">${post.text}</div>
-        `;
-        const textEl = div.querySelector(".post-text");
-        textEl.addEventListener("click", () => textEl.classList.toggle("collapsed"));
-        postsContainer.appendChild(div);
-      });
+posts.forEach(post => {
+  const div = document.createElement("div");
+  div.className = "post";
+
+  div.innerHTML = `
+    <strong>${post.author}</strong>
+    <span class="date">${post.date}</span>
+    ${post.photo ? `<img src="${post.photo}" alt="Фото от ${post.author}">` : ""}
+    <div class="post-text collapsed">${post.text}</div>
+  `;
+
+  // Раскрытие текста по клику
+  const textEl = div.querySelector(".post-text");
+  textEl.addEventListener("click", () => textEl.classList.toggle("collapsed"));
+
+  postsContainer.appendChild(div);
+});
+
     } catch (err) {
       postsContainer.innerHTML = "<p class='hint'>Ошибка загрузки постов</p>";
       console.error(err);
