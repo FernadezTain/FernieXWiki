@@ -6,36 +6,28 @@ document.addEventListener("DOMContentLoaded", () => {
   const banner = document.getElementById("dev-banner");
   const closeBannerBtn = document.getElementById("close-banner");
 
-  // --- Закрытие баннера разработки ---
   if (banner && closeBannerBtn) {
-    closeBannerBtn.addEventListener("click", () => {
-      banner.remove();
-    });
+    closeBannerBtn.addEventListener("click", () => banner.remove());
   }
 
-  // --- Навигация по разделам ---
   document.querySelectorAll(".side-item").forEach(item => {
     item.addEventListener("click", () => {
       const section = item.dataset.section;
       currentSection.textContent = section;
-
-      if (hint) hint.style.display = "none"; // скрываем подсказку
+      if (hint) hint.style.display = "none";
       loadPosts(section);
     });
   });
 
-  // --- Лого ---
   if (logoLink) {
     logoLink.addEventListener("click", e => {
       e.preventDefault();
       currentSection.textContent = "Главная";
-
-      if (hint) hint.style.display = "block"; // показываем подсказку
-      postsContainer.innerHTML = ""; // очищаем контент
+      if (hint) hint.style.display = "block";
+      postsContainer.innerHTML = "";
     });
   }
 
-  // --- Проверка логотипа ---
   const logoImg = document.getElementById("logo");
   if (logoImg) {
     logoImg.onerror = () => {
@@ -45,9 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  // =========================
-  // Загрузка постов из JSON
-  // =========================
   async function loadPosts(category) {
     postsContainer.innerHTML = "";
     try {
@@ -73,14 +62,12 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `;
 
-        // Раскрытие текста по клику
         const textEl = div.querySelector(".post-text");
         textEl.addEventListener("click", () => textEl.classList.toggle("collapsed"));
 
-        // Клик на автора для открытия баннера
         const authorEl = div.querySelector(".author");
         authorEl.addEventListener("click", e => {
-          e.stopPropagation(); // чтобы не раскрывать текст
+          e.stopPropagation();
           showAuthorBanner(post.author);
         });
 
@@ -93,9 +80,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // =========================
-  // Баннер автора с кнопкой перехода на profile.html
-  // =========================
   function showAuthorBanner(nick) {
     if (document.getElementById("author-banner")) return;
 
@@ -123,14 +107,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.body.appendChild(banner);
 
-    // Переход на профиль
     document.getElementById("profile-btn").addEventListener("click", () => {
       window.open(`profile_${nick}.html`, "_blank");
     });
 
-    // Закрытие баннера
-    document.getElementById("close-author-banner").addEventListener("click", () => {
-      banner.remove();
-    });
+    document.getElementById("close-author-banner").addEventListener("click", () => banner.remove());
   }
 });
