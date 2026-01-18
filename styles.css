@@ -40,6 +40,7 @@ body {
 }
 
 /* --- Контейнер строки поиска --- */
+/* --- Контейнер строки поиска --- */
 .search-bar-container {
   margin-top: 80px;
   width: 90%;
@@ -61,32 +62,44 @@ body {
   padding: 14px 20px;
   background: rgba(30,30,30,0.85);
   backdrop-filter: blur(6px);
-  box-shadow: 0 6px 20px rgba(0,234,255,0.3);
+  box-shadow: 0 6px 20px rgba(0,234,255,0.2);
   transition: all 0.3s ease;
   z-index: 1;
-  overflow: hidden; /* теперь свечение остаётся внутри */
+  overflow: hidden; /* свечение остаётся внутри */
 }
 
+/* --- Внутреннее свечение (только жёлтый, красный, синий, зеленый) --- */
 .search-bar::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0; /* занимает весь блок */
+  top: 0; left: 0; right: 0; bottom: 0;
   border-radius: 50px;
-  background: conic-gradient(red, orange, yellow, green, blue, purple, red);
-  filter: blur(20px); /* меньше, чтобы свечение не выходило */
+  background: conic-gradient(
+    #fdd835, /* желтый */
+    #f44336, /* красный */
+    #2196f3, /* синий */
+    #4caf50, /* зеленый */
+    #fdd835  /* замыкаем на желтый для плавного перехода */
+  );
+  filter: blur(20px); /* мягкое свечение */
   opacity: 0.6;
   z-index: -1;
   animation: rotateGlow 6s linear infinite;
 }
 
+/* --- Пульсация при фокусе --- */
+.search-bar:focus-within::before {
+  filter: blur(30px);
+  opacity: 0.8;
+}
 
-/* Анимация вращения свечения */
+/* --- Анимация вращения свечения --- */
 @keyframes rotateGlow {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
-/* Поле ввода */
+/* --- Поле ввода --- */
 .search-bar input {
   flex: 1;
   border: none;
@@ -101,9 +114,9 @@ body {
   color: #aaa;
 }
 
-/* При наведении подсветка */
+/* --- При наведении подсветка --- */
 .search-bar:hover {
-  box-shadow: 0 12px 40px rgba(0,234,255,0.35);
+  box-shadow: 0 12px 40px rgba(0,234,255,0.25);
 }
 
 /* --- Текущий раздел --- */
