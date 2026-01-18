@@ -546,3 +546,22 @@ p {
     font-size: 0.9rem;
   }
 }
+/* ============================= */
+/* ⬇️ Минималистичная полоска снизу */
+.post-bar {
+  position: fixed;
+  bottom: 12px; /* немного отступ сверху от низа */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px; /* ширина полоски */
+  height: 6px;   /* толщина полоски */
+  background: rgba(255, 255, 255, 0.3); /* полупрозрачная */
+  border-radius: 3px; /* полностью закругленные края */
+  cursor: default;
+  z-index: 100;
+  transition: background 0.3s ease;
+}
+
+.post-bar:hover {
+  background: rgba(255, 255, 255, 0.5); /* чуть ярче при наведении */
+}
