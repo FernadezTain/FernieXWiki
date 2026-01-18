@@ -7,61 +7,163 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
   <!-- Canvas для частиц -->
   <canvas id="particle-network"></canvas>
 
   <!-- Баннер "Сайт в разработке" -->
-<div id="dev-banner">
-  <div class="dev-banner-content">
-    <h2>⚠️ Сайт в разработке</h2>
-    <p>FernieX Wiki ещё не завершён. 
-      Некоторые функции могут быть недоступны.</p>
-    <button id="close-banner">Понятно</button>
-  </div>
-</div>
-
-  <!-- Центральный блок поиска сверху -->
-  <div class="search-bar">
-    <input type="text" placeholder="Поиск по FernieX Wiki..." disabled>
-    <div class="icons">
+  <div id="dev-banner">
+    <div class="dev-banner-content">
+      <h2>⚠️ Сайт в разработке</h2>
+      <p>FernieX Wiki ещё не завершён. Некоторые функции могут быть недоступны.</p>
+      <button id="close-banner">Понятно</button>
     </div>
   </div>
 
+  <!-- Верхний колонтитул -->
+  <header class="top-bar">
+    <div class="search-container">
+      <input type="text" placeholder="Поиск по FernieX Wiki...">
+    </div>
+    <div class="current-section">Главная</div>
+  </header>
+
+  <!-- Левая боковая панель -->
+  <aside class="side-panel">
+    <div class="side-handle">›</div>
+    <nav class="side-menu">
+      <div class="side-item" data-section="Игровые функции">Игровые функции</div>
+      <div class="side-item" data-section="Чат-менеджер">Чат-менеджер</div>
+      <div class="side-item" data-section="Команды">Команды</div>
+      <div class="side-item" data-section="Статистика">Статистика</div>
+      <div class="side-item" data-section="Настройки">Настройки</div>
+      <div class="side-item" data-section="Дополнительно">Дополнительно</div>
+    </nav>
+  </aside>
+
   <!-- Основной контент -->
-  <main class="main-content">
-    <h1><span class="highlight">FernieX Wiki</span></h1>
-    <p>Добро пожаловать в FernieX Wiki — сайт в разработке.</p>
-
-<!-- Левая боковая панель -->
-<aside class="side-panel">
-  <div class="side-handle">›</div>
-
-  <nav class="side-menu">
-    <div class="side-item">Игровые функции</div>
-    <div class="side-item">Чат-менеджер</div>
-    <div class="side-item">Команды</div>
-    <div class="side-item">Статистика</div>
-    <div class="side-item">Настройки</div>
-    <div class="side-item">Дополнительно</div>
-  </nav>
-</aside>
-
+  <main class="main-content" id="main-content">
+    <p>Выберите раздел слева, чтобы увидеть контент.</p>
   </main>
 
+  <!-- Полупрозрачная полоса для публикации постов -->
+  <div class="post-bar" id="post-bar">Публикация нового поста</div>
+
+  <!-- Модальное окно публикации -->
+  <div class="modal" id="post-modal">
+    <div class="modal-content">
+      <h2>Публикация Поста</h2>
+      <label>
+        Password:
+        <input type="password" id="post-password" placeholder="Введите пароль">
+      </label>
+      <label>
+        Категория:
+        <select id="post-category">
+          <option value="Игровые функции">Игровые функции</option>
+          <option value="Чат-менеджер">Чат-менеджер</option>
+          <option value="Команды">Команды</option>
+          <option value="Статистика">Статистика</option>
+          <option value="Настройки">Настройки</option>
+          <option value="Дополнительно">Дополнительно</option>
+        </select>
+      </label>
+      <label>
+        Фото (ссылка):
+        <input type="text" id="post-photo" placeholder="https://example.com/photo.jpg">
+      </label>
+      <label>
+        Текст:
+        <textarea id="post-text" placeholder="Введите текст поста..."></textarea>
+      </label>
+      <button id="submit-post">Опубликовать</button>
+      <button id="close-modal">Отмена</button>
+    </div>
+  </div>
+
+  <!-- Контейнер для постов -->
+  <div id="posts-container"></div>
+
+  <!-- JS -->
   <script src="particles.js"></script>
-<script>
-  const banner = document.getElementById('dev-banner');
-  const closeBtn = document.getElementById('close-banner');
+  <script>
+    // Баннер "Сайт в разработке"
+    const banner = document.getElementById('dev-banner');
+    const closeBtn = document.getElementById('close-banner');
+    closeBtn.addEventListener('click', () => {
+      banner.classList.add('hide');
+      setTimeout(() => banner.remove(), 500);
+    });
 
-  closeBtn.addEventListener('click', () => {
-    banner.classList.add('hide');
+    // Навигация по разделам
+    const sideItems = document.querySelectorAll('.side-item');
+    const mainContent = document.getElementById('main-content');
+    const topBar = document.querySelector('.top-bar');
+    const currentSection = document.querySelector('.current-section');
 
-    setTimeout(() => {
-      banner.remove();
-    }, 500);
-  });
-</script>
+    sideItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const section = item.dataset.section;
 
+        // Показать колонтитул
+        topBar.classList.add('active');
 
+        // Обновить название открытого раздела
+        currentSection.textContent = section;
+
+        // Анимированный контент
+        mainContent.style.opacity = 0;
+
+        setTimeout(() => {
+          // TODO: здесь динамически подгружать контент из файлов
+          mainContent.innerHTML = `<div id="section-content"></div>`;
+          mainContent.style.opacity = 1;
+        }, 300);
+      });
+    });
+
+    // Полоса публикации поста и модалка
+    const postBar = document.getElementById('post-bar');
+    const modal = document.getElementById('post-modal');
+    const closeModal = document.getElementById('close-modal');
+    const submitPost = document.getElementById('submit-post');
+    const postsContainer = document.getElementById('posts-container');
+
+    const ADMIN_PASSWORD = "12345"; // поставьте свой пароль
+
+    postBar.addEventListener('click', () => modal.classList.add('active'));
+    closeModal.addEventListener('click', () => modal.classList.remove('active'));
+
+    submitPost.addEventListener('click', () => {
+      const password = document.getElementById('post-password').value;
+      if(password !== ADMIN_PASSWORD){
+        alert("Неверный пароль!");
+        return;
+      }
+
+      const category = document.getElementById('post-category').value;
+      const photo = document.getElementById('post-photo').value;
+      const text = document.getElementById('post-text').value;
+
+      const postDiv = document.createElement('div');
+      postDiv.classList.add('post');
+      postDiv.innerHTML = `
+        <strong>Категория: ${category}</strong><br>
+        ${photo ? `<img src="${photo}" alt="Фото">` : ''}
+        <div class="post-text collapsed">${text}</div>
+      `;
+
+      const postText = postDiv.querySelector('.post-text');
+      postText.addEventListener('click', () => postText.classList.toggle('collapsed'));
+
+      postsContainer.prepend(postDiv);
+      modal.classList.remove('active');
+
+      // очищаем поля
+      document.getElementById('post-password').value = '';
+      document.getElementById('post-photo').value = '';
+      document.getElementById('post-text').value = '';
+    });
+  </script>
 </body>
 </html>
