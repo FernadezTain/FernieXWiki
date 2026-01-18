@@ -30,7 +30,7 @@ const closeModal = document.getElementById('close-modal');
 const submitPost = document.getElementById('submit-post');
 const postsContainer = document.getElementById('posts-container');
 
-const ADMIN_PASSWORD = "12345";
+const ADMIN_PASSWORD = "FernieXWikiPW98";
 
 postBar.addEventListener('click', () => modal.classList.add('active'));
 closeModal.addEventListener('click', () => modal.classList.remove('active'));
