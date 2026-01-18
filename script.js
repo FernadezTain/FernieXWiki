@@ -38,22 +38,26 @@ closeModal.addEventListener("click", () => {
    ДОБАВЛЕНИЕ ПОСТА
 ========================= */
 submitPost.addEventListener("click", async () => {
+  // Получаем значения из формы
   const password = document.getElementById("post-password").value;
   const category = document.getElementById("post-category").value;
   const text = document.getElementById("post-text").value.trim();
   const photo = document.getElementById("post-photo").value.trim();
 
+  // Проверка пароля
   if (password !== ADMIN_PASSWORD) {
     alert("Неверный пароль");
     return;
   }
 
+  // Проверка текста
   if (!text) {
     alert("Текст пустой");
     return;
   }
 
   try {
+    // Сохраняем пост в Firestore
     await addDoc(collection(db, "posts"), {
       category,
       text,
@@ -61,18 +65,25 @@ submitPost.addEventListener("click", async () => {
       createdAt: serverTimestamp()
     });
 
+    // Закрываем модальное окно
     modal.classList.remove("active");
 
+    // Сбрасываем поля формы
     document.getElementById("post-password").value = "";
     document.getElementById("post-text").value = "";
     document.getElementById("post-photo").value = "";
 
-    loadPosts(category);
+    // Переключаем текущий раздел на категорию поста
+    currentSection.textContent = category;
+
+    // Загружаем посты для выбранной категории
+    await loadPosts(category);
   } catch (e) {
     alert("Ошибка публикации");
     console.error(e);
   }
 });
+
 
 /* =========================
    ЗАГРУЗКА ПОСТОВ
