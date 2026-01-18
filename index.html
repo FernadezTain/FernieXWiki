@@ -8,27 +8,27 @@
 </head>
 <body>
 
-  <!-- Canvas для частиц -->
+  <!-- Canvas -->
   <canvas id="particle-network"></canvas>
 
-  <!-- Баннер "Сайт в разработке" -->
+  <!-- Баннер -->
   <div id="dev-banner">
     <div class="dev-banner-content">
       <h2>⚠️ Сайт в разработке</h2>
-      <p>FernieX Wiki ещё не завершён. Некоторые функции могут быть недоступны.</p>
+      <p>Некоторые функции могут быть недоступны.</p>
       <button id="close-banner">Понятно</button>
     </div>
   </div>
 
-  <!-- Верхний колонтитул -->
+  <!-- Верхняя панель -->
   <header class="top-bar">
     <div class="search-bar">
-      <input type="text" placeholder="Поиск по FernieX Wiki..." disabled>
+      <input type="text" placeholder="Поиск..." disabled>
     </div>
     <div class="current-section">Главная</div>
   </header>
 
-  <!-- Левая боковая панель -->
+  <!-- Боковое меню -->
   <aside class="side-panel">
     <div class="side-handle">›</div>
     <nav class="side-menu">
@@ -41,85 +41,48 @@
     </nav>
   </aside>
 
-  <!-- Основной контент -->
-  <main class="main-content" id="main-content">
-    <p class="hint">Выберите раздел слева, чтобы увидеть контент.</p>
+  <!-- Контент -->
+  <main class="main-content">
+    <p class="hint">Выберите раздел слева</p>
     <div id="posts-container"></div>
   </main>
 
-  <!-- Полоска публикации (как iPad) -->
+  <!-- Полоска -->
   <div class="post-bar" id="post-bar"></div>
 
-  <!-- Модальное окно публикации -->
+  <!-- Модалка -->
   <div class="modal" id="post-modal">
     <div class="modal-content">
       <h2>Публикация поста</h2>
 
-      <label>
-        Password
-        <input type="password" id="post-password" placeholder="Только для администратора">
-      </label>
+      <input type="password" id="post-password" placeholder="Пароль администратора">
 
-      <label>
-        Категория
-        <select id="post-category">
-          <option value="Игровые функции">Игровые функции</option>
-          <option value="Чат-менеджер">Чат-менеджер</option>
-          <option value="Команды">Команды</option>
-          <option value="Статистика">Статистика</option>
-          <option value="Настройки">Настройки</option>
-          <option value="Дополнительно">Дополнительно</option>
-        </select>
-      </label>
+      <select id="post-category">
+        <option>Игровые функции</option>
+        <option>Чат-менеджер</option>
+        <option>Команды</option>
+        <option>Статистика</option>
+        <option>Настройки</option>
+        <option>Дополнительно</option>
+      </select>
 
-      <label>
-        Фото (ссылка)
-        <input type="text" id="post-photo" placeholder="https://...">
-      </label>
+      <input type="text" id="post-photo" placeholder="Ссылка на фото (необязательно)">
+      <textarea id="post-text" placeholder="Текст поста"></textarea>
 
-      <label>
-        Текст
-        <textarea id="post-text" placeholder="Введите текст поста..."></textarea>
-      </label>
-
-      <div class="modal-actions">
-        <button id="submit-post">Опубликовать</button>
-        <button id="close-modal" class="secondary">Отмена</button>
-      </div>
+      <button id="submit-post">Опубликовать</button>
+      <button id="close-modal">Отмена</button>
     </div>
   </div>
 
-  <!-- Firebase -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBc6Bf4oHrTyWsQp9CrrRPNyGSqm4w8J_M",
-      authDomain: "ferniexwiki.firebaseapp.com",
-      projectId: "ferniexwiki",
-      storageBucket: "ferniexwiki.firebasestorage.app",
-      messagingSenderId: "451396973595",
-      appId: "1:451396973595:web:f31a19ade2b8b6c5f374be"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    window.db = getFirestore(app);
-  </script>
-
   <!-- JS -->
   <script src="particles.js"></script>
-  <script src="script.js" type="module"></script>
+  <script type="module" src="script.js"></script>
 
   <!-- Баннер -->
   <script>
-    const banner = document.getElementById('dev-banner');
-    const closeBtn = document.getElementById('close-banner');
-
-    closeBtn.addEventListener('click', () => {
-      banner.classList.add('hide');
-      setTimeout(() => banner.remove(), 500);
-    });
+    document.getElementById("close-banner").onclick = () => {
+      document.getElementById("dev-banner").remove();
+    };
   </script>
 
 </body>
