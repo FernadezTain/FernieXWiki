@@ -2,17 +2,17 @@
   "FernieX": {
     "Avatar": "FernieX.png",
     "About": "Главный администратор сайта FernieX Wiki.",
-    "Telegram": "https://t.me/Admin",
-    "Discord": "none",
-    "VK": "https://vk.com/Admin",
+    "Telegram": "https://t.me/FernieK",
+    "Discord": "https://discord.com/users/1082456815947763763",
+    "VK": "https://vk.com/fernieow",
     "Odnoklasniki": "none"
   },
-  "User123": {
-    "Avatar": "user123-avatar.png",
-    "About": "Активный участник сообщества FernieX.",
-    "Telegram": "none",
+  "Webael": {
+    "Avatar": "Webael.png",
+    "About": "Media-Партнер FernieX.",
+    "Telegram": "https://t.me/webael",
     "Discord": "none",
-    "VK": "https://vk.com/User123",
+    "VK": "none",
     "Odnoklasniki": "none"
   }
 }
