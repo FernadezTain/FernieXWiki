@@ -1,0 +1,86 @@
+/* --- Сброс --- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #0d0d0d;
+  color: #fff;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* --- Верхняя панель --- */
+.top-bar {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 900px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #00eaff;
+  cursor: pointer;
+  z-index: 10;
+}
+
+/* --- Основной контент --- */
+.main-content {
+  margin-top: 80px;
+  width: 100%;
+  height: calc(100vh - 80px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* --- 3D-карусель --- */
+.team-container {
+  perspective: 1000px;
+  width: 100%;
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.center-object {
+  width: 120px;
+  height: 120px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 50%;
+  backdrop-filter: blur(15px);
+  position: absolute;
+  z-index: 10;
+}
+
+.avatars {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: 0 -200px; /* радиус вращения */
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0,234,255,0.25);
+  backdrop-filter: blur(5px); /* glass effect */
+  background-color: rgba(255,255,255,0.1);
+}
+
+/* При наведении немного увеличиваем аватар */
+.avatar:hover {
+  transform: scale(1.2);
+  z-index: 100 !important;
+}
