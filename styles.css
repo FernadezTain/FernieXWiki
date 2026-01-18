@@ -22,24 +22,49 @@ body {
 }
 
 /* --- Верхняя панель --- */
+/* Индикатор верхней панели */
 .top-bar {
   position: fixed;
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
   width: 90%;
   max-width: 900px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   font-size: 1.5rem;
   font-weight: bold;
   color: #00eaff;
-  z-index: 10;
   padding: 0 10px;
+  z-index: 10;
+  position: relative;
 }
 
-/* --- Контейнер строки поиска --- */
+.nav-link {
+  position: relative;
+  text-decoration: none;
+  color: #00eaff;
+  margin-right: 20px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.nav-link:hover {
+  color: #ffffff;
+}
+
+.nav-indicator {
+  position: absolute;
+  bottom: -5px;
+  height: 4px;
+  width: 0;
+  left: 0;
+  background-color: #8e44ad; /* фиолетовый */
+  border-radius: 2px;
+  transition: left 0.4s ease, width 0.4s ease;
+}
+
 /* --- Контейнер строки поиска --- */
 .search-bar-container {
   margin-top: 80px;
