@@ -273,3 +273,18 @@ p {
     font-size: 0.9rem;
   }
 }
+/* --- Анимация исчезновения баннера --- */
+#dev-banner.hide {
+  animation: bannerFadeOut 0.5s ease forwards;
+}
+
+@keyframes bannerFadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
