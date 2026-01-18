@@ -128,3 +128,22 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("close-author-banner").addEventListener("click", () => banner.remove());
   }
 });
+  let scale = 1; // текущий масштаб
+  const minScale = 0.8; // минимальное отдаление
+  const maxScale = 1.2; // максимальное увеличение
+
+  window.addEventListener('wheel', (e) => {
+    if (e.ctrlKey) { // если CTRL + скролл
+      e.preventDefault();
+      if (e.deltaY < 0) {
+        scale += 0.05; // приближение
+      } else {
+        scale -= 0.05; // отдаление
+      }
+      scale = Math.min(Math.max(scale, minScale), maxScale);
+      document.body.style.transform = `scale(${scale})`;
+      document.body.style.transformOrigin = 'top left';
+    }
+  }, { passive: false });
+
+});
