@@ -90,3 +90,21 @@ document.querySelectorAll(".side-item").forEach(item => {
     loadPosts(section);
   });
 });
+const logoLink = document.getElementById("logo-link");
+const currentSection = document.querySelector(".current-section");
+const postsContainer = document.getElementById("posts-container");
+const hint = document.querySelector(".main-content .hint");
+
+logoLink.addEventListener("click", (e) => {
+  e.preventDefault();
+  currentSection.textContent = "Главная";
+  if (hint) hint.style.display = "block"; // показываем надпись снова
+  postsContainer.innerHTML = "";
+});
+
+// Проверка, есть ли картинка
+const logoImg = document.getElementById("logo");
+logoImg.onerror = () => {
+  logoImg.style.display = "none";
+  document.getElementById("logo-text").style.display = "inline-block";
+};
