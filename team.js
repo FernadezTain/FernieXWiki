@@ -1,20 +1,29 @@
 const avatars = document.querySelectorAll('.avatar');
 let angle = 0; // общий угол вращения
+const radius = 200; // радиус вращения
 
 function rotateAvatars() {
   const step = 360 / avatars.length;
+
   avatars.forEach((avatar, i) => {
     const a = angle + step * i;
     const rad = a * Math.PI / 180;
-    const z = Math.cos(rad) * 200; // координата Z для эффекта глубины
-    const x = Math.sin(rad) * 200;
+    const z = Math.cos(rad) * radius;
+    const x = Math.sin(rad) * radius;
 
+    // Позиционирование
     avatar.style.transform = `translateX(${x}px) translateZ(${z}px)`;
 
-    // Эффект размытия, если аватарка позади
-    const behind = Math.cos(rad) < 0;
-    avatar.style.filter = behind ? 'blur(4px) brightness(0.6)' : 'blur(0px) brightness(1)';
-    avatar.style.zIndex = behind ? 1 : 10;
+    // Эффект размытия и z-index
+    if (z >= 0) {
+      // Перед центром (над кругом)
+      avatar.style.filter = 'none';
+      avatar.style.zIndex = 20 + i; // объекты сверху
+    } else {
+      // За кругом
+      avatar.style.filter = 'blur(4px) brightness(0.6)';
+      avatar.style.zIndex = 1; // объекты позади
+    }
   });
 
   angle += 0.2; // скорость вращения
@@ -24,24 +33,17 @@ function rotateAvatars() {
 rotateAvatars();
 
 // --- Клик на FernieX в верхней панели ---
-document.getElementById('logo-link').addEventListener('click', () => {
+const logoLink = document.getElementById('logo-link');
+const teamLink = document.querySelector('.team-link');
+
+logoLink.addEventListener('click', () => {
   window.location.href = "index.html"; // перейти на главную
 });
 
-const links = document.querySelectorAll(".nav-link");
-const indicator = document.querySelector(".nav-indicator");
-
-function moveIndicator(el) {
-  const rect = el.getBoundingClientRect();
-  const parentRect = el.parentElement.getBoundingClientRect();
-  indicator.style.width = rect.width + "px";
-  indicator.style.left = (rect.left - parentRect.left) + "px";
+// --- Установка цветов верхней панели ---
+function updateTopBarColors() {
+  logoLink.style.color = '#00eaff'; // синий
+  teamLink.style.color = '#a14fff'; // фиолетовый (активная)
 }
 
-links.forEach(link => {
-  link.addEventListener("click", () => moveIndicator(link));
-});
-
-// Инициализация
-window.addEventListener("load", () => moveIndicator(links[1])); // team.html => Команда активна
-window.addEventListener("resize", () => moveIndicator(links[1]));
+updateTopBarColors();
