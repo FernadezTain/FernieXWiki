@@ -18,28 +18,26 @@ body {
   width: 90%;
   max-width: 900px;
   display: flex;
-  justify-content: flex-start; /* ссылки слева */
+  justify-content: flex-start;
   align-items: center;
   font-size: 1.5rem;
   font-weight: bold;
-  z-index: 10;
+  z-index: 100; /* очень сверху */
   gap: 30px;
+  pointer-events: auto;
 }
 
-.top-bar a {
+.top-bar a, .top-bar div {
   text-decoration: none;
   cursor: pointer;
-  transition: color 0.3s ease;
-  font-weight: bold;
+  transition: color 0.25s ease;
+  font-weight: 700;
+  user-select: none;
 }
 
-#logo-link {
-  color: #00eaff; /* синий */
-}
-
-.team-link {
-  color: #a14fff; /* фиолетовый (активная страница) */
-}
+/* Цвета: FernieX синий, Команда фиолетовый (активный) */
+#logo-link { color: #00eaff; }
+.team-link { color: #a14fff; }
 
 /* --- Основной контент --- */
 .main-content {
@@ -49,11 +47,12 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 /* --- 3D-карусель --- */
 .team-container {
-  perspective: 1000px;
+  perspective: 1200px;
   width: 100%;
   height: 80vh;
   display: flex;
@@ -62,14 +61,22 @@ body {
   position: relative;
 }
 
+/* Центр круга: поверх задних аватаров, но под передними */
 .center-object {
-  width: 120px;
-  height: 120px;
-  background: rgba(255,255,255,0.05);
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
-  backdrop-filter: blur(15px);
   position: absolute;
-  z-index: 10;
+  z-index: 20; /* средний слой: между задними и передними аватарами */
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(12,12,12,0.25);            /* полупрозрачный фон — нужен для backdrop-filter */
+  -webkit-backdrop-filter: blur(6px);         /* размытие только в круге */
+  backdrop-filter: blur(6px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6), inset 0 0 40px rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.03);
+  pointer-events: none; /* чтобы не мешал кликам на аватарки */
 }
 
 /* --- Контейнер аватаров --- */
@@ -78,6 +85,8 @@ body {
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
+  left: 0; top: 0;
+  pointer-events: none; /* делаем клики на аватарках через вложенные элементы если нужно */
 }
 
 /* --- Аватарки --- */
@@ -88,52 +97,53 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform-origin: 0 -200px; /* радиус вращения */
-  transition: transform 0.3s ease, filter 0.3s ease, z-index 0.3s ease;
-  box-shadow: 0 4px 20px rgba(0,234,255,0.25);
-  background-color: rgba(255,255,255,0.1);
-  /* фильтр применяется динамически через JS для части аватарки за центром */
+  transform-origin: 0 -220px; /* радиус вращения (меняем в JS при необходимости) */
+  transition: transform 0.25s cubic-bezier(.2,.9,.2,1), z-index 0.15s, filter 0.25s;
+  box-shadow: 0 10px 30px rgba(0,234,255,0.06), 0 2px 6px rgba(0,0,0,0.6);
+  overflow: visible;
+  pointer-events: auto; /* чтобы можно было кликать */
+  display: block;
+  background-size: cover;
+  background-position: center;
+  will-change: transform;
 }
 
-/* --- При наведении --- */
+/* Если используешь <img class="avatar"> — делай img {display:block; width:100%; height:100%; border-radius:50%} */
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+  pointer-events: none;
+}
+
+/* Подсветка / hover */
 .avatar:hover {
-  transform: scale(1.2);
-  z-index: 100 !important; /* всегда сверху */
+  transform: scale(1.18) translateZ(40px); /* лёгкое «выпрыгивание» */
+  z-index: 200 !important;
+  box-shadow: 0 18px 40px rgba(0,234,255,0.18);
 }
 
-/* --- Скрытая часть размытия — JS добавляет filter: blur(4px) brightness(0.6) для задних объектов --- */
+/* Немного затемняем задние (будут ещё размываться сквозь центр) */
+.avatar.back {
+  filter: brightness(0.85);
+}
 
 /* --- Адаптив --- */
+@media (max-width: 1000px) {
+  .center-object { width: 120px; height: 120px; }
+  .avatar { width: 70px; height: 70px; transform-origin: 0 -190px; }
+}
+
 @media (max-width: 768px) {
-  .top-bar {
-    font-size: 1.2rem;
-    gap: 15px;
-  }
-
-  .avatar {
-    width: 60px;
-    height: 60px;
-  }
-
-  .center-object {
-    width: 100px;
-    height: 100px;
-  }
+  .top-bar { font-size: 1.15rem; gap: 16px; }
+  .center-object { width: 110px; height: 110px; }
+  .avatar { width: 60px; height: 60px; transform-origin: 0 -160px; }
 }
 
 @media (max-width: 480px) {
-  .top-bar {
-    font-size: 1rem;
-    gap: 10px;
-  }
-
-  .avatar {
-    width: 50px;
-    height: 50px;
-  }
-
-  .center-object {
-    width: 80px;
-    height: 80px;
-  }
+  .top-bar { font-size: 1rem; gap: 12px; }
+  .center-object { width: 90px; height: 90px; }
+  .avatar { width: 48px; height: 48px; transform-origin: 0 -120px; }
 }
