@@ -177,3 +177,71 @@ p.hint {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+/* --- Посты --- */
+.post {
+  background: rgba(20,20,20,0.9);
+  border-left: 4px solid #00eaff;
+  border-radius: 12px;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 20px rgba(0,234,255,0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.post:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0,234,255,0.3);
+}
+
+.post strong {
+  display: block;
+  font-size: 1rem;
+  color: #00eaff;
+  margin-bottom: 2px;
+}
+
+.post .date {
+  font-size: 0.8rem;
+  color: #aaa;
+}
+
+.post img {
+  max-width: 100%;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+
+.post-text {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  margin-top: 5px;
+  max-height: 80px;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.post-text.collapsed {
+  max-height: 80px;
+}
+
+.post-text:not(.collapsed) {
+  max-height: 1000px; /* раскрытый текст */
+}
+
+/* --- Мобильная адаптация --- */
+@media (max-width:768px) {
+  .post {
+    padding: 12px 15px;
+  }
+}
+
+@media (max-width:480px) {
+  .post {
+    padding: 10px 12px;
+  }
+  .post-text {
+    font-size: 0.9rem;
+  }
+}
