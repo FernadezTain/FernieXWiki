@@ -121,11 +121,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- Переход на универсальный профиль ---
     document.getElementById("profile-btn").addEventListener("click", () => {
-      // Теперь открывается profile.html с параметром ?nick=
       window.open(`profile.html?nick=${encodeURIComponent(nick)}`, "_blank");
     });
 
     document.getElementById("close-author-banner").addEventListener("click", () => banner.remove());
   }
-});
 
+  // =========================
+  // Фиолетовый индикатор верхней панели
+  // =========================
+  const links = document.querySelectorAll(".nav-link");
+  const indicator = document.querySelector(".nav-indicator");
+
+  function moveIndicator(el) {
+    const rect = el.getBoundingClientRect();
+    const parentRect = el.parentElement.getBoundingClientRect();
+    indicator.style.width = rect.width + "px";
+    indicator.style.left = (rect.left - parentRect.left) + "px";
+  }
+
+  links.forEach(link => {
+    link.addEventListener("click", () => moveIndicator(link));
+  });
+
+  // Инициализация на первом элементе (FernieX)
+  window.addEventListener("load", () => moveIndicator(links[0]));
+  window.addEventListener("resize", () => moveIndicator(links[0]));
+
+});
