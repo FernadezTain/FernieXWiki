@@ -1,5 +1,5 @@
 /* =========================
-   DOM элементы
+   DOM ЭЛЕМЕНТЫ
 ========================= */
 const modal = document.getElementById("post-modal");
 const postBar = document.getElementById("post-bar");
@@ -12,22 +12,22 @@ const logoLink = document.getElementById("logo-link");
 const logoImg = document.getElementById("logo");
 
 /* =========================
+   ЛОКАЛЬНОЕ ХРАНИЛИЩЕ
+========================= */
+const STORAGE_KEY = "ferniex-posts";
+let postsData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+/* =========================
    МОДАЛКА
 ========================= */
 postBar.addEventListener("click", () => modal.classList.add("active"));
 closeModal.addEventListener("click", () => modal.classList.remove("active"));
 
 /* =========================
-   Локальное хранилище
-========================= */
-const STORAGE_KEY = "ferniex-posts";
-let postsData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-
-/* =========================
    ДОБАВЛЕНИЕ ПОСТА
 ========================= */
 submitPost.addEventListener("click", () => {
-  const author = document.getElementById("post-author").value.trim() || "Аноним";
+  const author = document.getElementById("post-author")?.value.trim() || "Аноним";
   const category = document.getElementById("post-category").value;
   const text = document.getElementById("post-text").value.trim();
   const photo = document.getElementById("post-photo").value.trim();
@@ -45,14 +45,19 @@ submitPost.addEventListener("click", () => {
     date: new Date().toLocaleString()
   };
 
+  // Добавляем новый пост в начало массива
   postsData.unshift(post);
+
+  // Сохраняем в localStorage
   localStorage.setItem(STORAGE_KEY, JSON.stringify(postsData));
 
+  // Закрываем модалку и очищаем поля
   modal.classList.remove("active");
-  document.getElementById("post-author").value = "";
+  if (document.getElementById("post-author")) document.getElementById("post-author").value = "";
   document.getElementById("post-text").value = "";
   document.getElementById("post-photo").value = "";
 
+  // Загружаем посты для выбранной категории
   loadPosts(category);
 });
 
@@ -62,8 +67,8 @@ submitPost.addEventListener("click", () => {
 function loadPosts(category) {
   postsContainer.innerHTML = "";
 
-  // Скрываем подсказку
-  if (hint) hint.style.display = "none";
+  // Скрываем подсказку для разделов
+  if (category !== "Главная" && hint) hint.style.display = "none";
 
   const filtered = postsData.filter(p => p.category === category);
 
@@ -80,8 +85,10 @@ function loadPosts(category) {
       ${post.photo ? `<img src="${post.photo}" alt="">` : ""}
       <div class="post-text collapsed">${post.text}</div>
     `;
+
     const textEl = div.querySelector(".post-text");
     textEl.addEventListener("click", () => textEl.classList.toggle("collapsed"));
+
     postsContainer.appendChild(div);
   });
 }
@@ -104,10 +111,13 @@ logoLink.addEventListener("click", (e) => {
   e.preventDefault();
   currentSection.textContent = "Главная";
   postsContainer.innerHTML = "";
-  if (hint) hint.style.display = "block"; // показываем надпись "Выберите раздел слева"
+  if (hint) hint.style.display = "block"; // показываем подсказку
+
+  // При желании можно сбросить фильтр постов
+  // loadPosts("Главная"); // Если захотим показывать посты главной
 });
 
-// Проверка, есть ли картинка логотипа
+// Проверка, есть ли картинка для лого
 if (logoImg) {
   logoImg.onerror = () => {
     logoImg.style.display = "none";
