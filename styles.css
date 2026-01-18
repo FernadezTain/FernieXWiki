@@ -182,29 +182,17 @@ p.hint {
   background: rgba(20,20,20,0.9);
   border-left: 4px solid #00eaff;
   border-radius: 12px;
-  padding: 15px 20px;
+  padding: 15px 20px 40px 20px; /* нижний отступ для инфо */
   margin-bottom: 20px;
   box-shadow: 0 4px 20px rgba(0,234,255,0.15);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
-  overflow: hidden;
+  position: relative;
 }
 
 .post:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0,234,255,0.3);
-}
-
-.post strong {
-  display: block;
-  font-size: 1rem;
-  color: #00eaff;
-  margin-bottom: 2px;
-}
-
-.post .date {
-  font-size: 0.8rem;
-  color: #aaa;
 }
 
 .post img {
@@ -216,7 +204,6 @@ p.hint {
 .post-text {
   font-size: 0.95rem;
   line-height: 1.4;
-  margin-top: 5px;
   max-height: 80px;
   overflow: hidden;
   transition: max-height 0.3s ease;
@@ -227,21 +214,40 @@ p.hint {
 }
 
 .post-text:not(.collapsed) {
-  max-height: 1000px; /* раскрытый текст */
+  max-height: 1000px;
 }
 
-/* --- Мобильная адаптация --- */
+/* --- Нижняя строка с автором и датой --- */
+.post-info {
+  position: absolute;
+  bottom: 10px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #aaa;
+}
+
+.post-info .author {
+  color: #00eaff;
+  cursor: pointer;
+}
+
+.post-info .date {
+  color: #ccc;
+}
+
+/* --- Адаптив --- */
 @media (max-width:768px) {
   .post {
-    padding: 12px 15px;
+    padding: 12px 15px 35px 15px;
   }
+  .post-text { font-size: 0.9rem; }
 }
 
 @media (max-width:480px) {
-  .post {
-    padding: 10px 12px;
-  }
-  .post-text {
-    font-size: 0.9rem;
-  }
+  .post { padding: 10px 12px 30px 12px; }
+  .post-text { font-size: 0.85rem; }
 }
+
