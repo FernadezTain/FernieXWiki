@@ -194,3 +194,45 @@ body {
     font-size: 0.8rem;
   }
 }
+/* -------------------------
+   ЗАГОЛОВОК ПРОФИЛЯ
+------------------------- */
+.profile-header {
+  width: 100%;
+  text-align: center;
+  padding: 20px 0;
+  background: #141414;
+  border-bottom: 2px solid #00eaff;
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: headerAppear 0.6s forwards 0.2s; /* плавное появление */
+}
+
+.profile-header h1 {
+  color: #00eaff;
+  font-size: 2rem;
+  margin: 0;
+  text-shadow: 0 0 10px rgba(0, 234, 255, 0.6);
+}
+
+/* Анимация появления заголовка */
+@keyframes headerAppear {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Адаптив --- */
+@media (max-width: 768px) {
+  .profile-header h1 {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-header h1 {
+    font-size: 1.3rem;
+    padding: 15px 0;
+  }
+}
