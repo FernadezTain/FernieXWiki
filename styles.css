@@ -30,46 +30,36 @@ body {
   width: 90%;
   max-width: 900px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  z-index: 10;
-  gap: 15px;
-}
-
-/* --- Лого --- */
-#logo-link {
-  display: flex;
   align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  text-decoration: none;
-  color: #00eaff;
-}
-
-#logo {
-  width: 50px;
-  height: 50px;
-  object-fit: contain;
-  display: inline-block;
-}
-
-#logo-text {
   font-size: 1.5rem;
   font-weight: bold;
-  display: none; /* по умолчанию скрыт */
+  color: #00eaff;
+  cursor: pointer;
+  z-index: 10;
 }
 
-/* --- Поиск --- */
-.search-bar {
-  flex: 1;
+.search-bar-container {
+  margin-top: 80px; /* под верхней панелью */
+  width: 90%;
+  max-width: 900px;
   display: flex;
-  align-items: center;
-  background: rgba(30,30,30,0.85);
-  border-radius: 40px;
+  justify-content: center;
+}
+
+.search-bar-container input {
+  width: 100%;
   padding: 12px 20px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  border-radius: 40px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  background: rgba(30,30,30,0.85);
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(0,234,255,0.3);
   backdrop-filter: blur(6px);
 }
+
 
 .search-bar input {
   flex: 1;
