@@ -27,3 +27,21 @@ rotateAvatars();
 document.getElementById('logo-link').addEventListener('click', () => {
   window.location.href = "index.html"; // перейти на главную
 });
+
+const links = document.querySelectorAll(".nav-link");
+const indicator = document.querySelector(".nav-indicator");
+
+function moveIndicator(el) {
+  const rect = el.getBoundingClientRect();
+  const parentRect = el.parentElement.getBoundingClientRect();
+  indicator.style.width = rect.width + "px";
+  indicator.style.left = (rect.left - parentRect.left) + "px";
+}
+
+links.forEach(link => {
+  link.addEventListener("click", () => moveIndicator(link));
+});
+
+// Инициализация
+window.addEventListener("load", () => moveIndicator(links[1])); // team.html => Команда активна
+window.addEventListener("resize", () => moveIndicator(links[1]));
