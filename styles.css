@@ -27,20 +27,31 @@ body {
   z-index: 0;
 }
 
-/* --- Центральный блок поиска --- */
-.search-bar {
-  position: relative;
-  top: 40px;
+/* --- Верхняя панель --- */
+.top-bar {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 900px;
   display: flex;
   align-items: center;
-  width: 600px;
-  max-width: 90%;
+  justify-content: space-between;
+  z-index: 10;
+  gap: 15px;
+}
+
+/* --- Центральный блок поиска --- */
+.search-bar {
+  flex: 1;
+  display: flex;
+  align-items: center;
   background: rgba(30,30,30,0.85);
   border-radius: 40px;
   padding: 12px 20px;
   box-shadow: 0 6px 20px rgba(0,0,0,0.3);
   backdrop-filter: blur(6px);
-  z-index: 2;
   transition: all 0.3s ease;
 }
 
@@ -56,6 +67,18 @@ body {
 
 .search-bar input::placeholder {
   color: #aaa;
+}
+
+/* --- Текущий раздел --- */
+.current-section {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #00eaff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px; /* можно подстраивать под ширину */
+  text-align: right;
 }
 
 /* --- Основной контент --- */
@@ -82,30 +105,6 @@ p {
   margin-bottom: 40px;
   color: #ccc;
   line-height: 1.6;
-}
-
-/* --- Блоки категорий --- */
-.category-blocks {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 20px;
-  margin-bottom: 40px;
-}
-
-.category {
-  background: rgba(20, 20, 20, 0.85);
-  padding: 30px;
-  border-radius: 15px;
-  font-weight: bold;
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: transform 0.25s, box-shadow 0.25s, background 0.25s;
-}
-
-.category:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 234, 255, 0.3);
-  background: rgba(25, 25, 25, 0.95);
 }
 
 /* --- Баннер "Сайт в разработке" --- */
@@ -256,7 +255,7 @@ p {
   opacity: 0;
 }
 
-/* --- Полоса публикации постов (минималистичная) --- */
+/* --- Полоса публикации --- */
 .post-bar {
   position: fixed;
   bottom: 12px;
@@ -367,13 +366,18 @@ p {
 
 /* --- Адаптив --- */
 @media (max-width: 768px) {
-  .search-bar { width: 90%; padding: 10px 15px; }
+  .top-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .search-bar { width: 100%; padding: 10px 15px; }
+  .current-section { text-align: left; max-width: 100%; }
   .modal-content { padding: 20px; }
   .post { margin: 15px 10px; padding: 15px; }
 }
 
 @media (max-width: 480px) {
-  .search-bar { flex-direction: column; align-items: stretch; border-radius: 30px; }
   .modal-content { padding: 15px; }
   .post { padding: 12px; }
 }
