@@ -23,7 +23,7 @@
   <!-- Верхний колонтитул -->
   <header class="top-bar">
     <div class="search-bar">
-      <input type="text" placeholder="Поиск по FernieX Wiki...">
+      <input type="text" placeholder="Поиск по FernieX Wiki..." disabled>
     </div>
     <div class="current-section">Главная</div>
   </header>
@@ -43,20 +43,25 @@
 
   <!-- Основной контент -->
   <main class="main-content" id="main-content">
-    <p>Выберите раздел слева, чтобы увидеть контент.</p>
+    <p class="hint">Выберите раздел слева, чтобы увидеть контент.</p>
+    <div id="posts-container"></div>
   </main>
 
-  <!-- Минималистичная полоска -->
+  <!-- Полоска публикации (как iPad) -->
   <div class="post-bar" id="post-bar"></div>
 
   <!-- Модальное окно публикации -->
   <div class="modal" id="post-modal">
     <div class="modal-content">
-      <h2>Публикация Поста</h2>
-      <label>Password:
-        <input type="password" id="post-password" placeholder="Введите пароль">
+      <h2>Публикация поста</h2>
+
+      <label>
+        Password
+        <input type="password" id="post-password" placeholder="Только для администратора">
       </label>
-      <label>Категория:
+
+      <label>
+        Категория
         <select id="post-category">
           <option value="Игровые функции">Игровые функции</option>
           <option value="Чат-менеджер">Чат-менеджер</option>
@@ -66,22 +71,56 @@
           <option value="Дополнительно">Дополнительно</option>
         </select>
       </label>
-      <label>Фото (ссылка):
-        <input type="text" id="post-photo" placeholder="https://example.com/photo.jpg">
+
+      <label>
+        Фото (ссылка)
+        <input type="text" id="post-photo" placeholder="https://...">
       </label>
-      <label>Текст:
+
+      <label>
+        Текст
         <textarea id="post-text" placeholder="Введите текст поста..."></textarea>
       </label>
-      <button id="submit-post">Опубликовать</button>
-      <button id="close-modal">Отмена</button>
+
+      <div class="modal-actions">
+        <button id="submit-post">Опубликовать</button>
+        <button id="close-modal" class="secondary">Отмена</button>
+      </div>
     </div>
   </div>
 
-  <!-- Контейнер для постов -->
-  <div id="posts-container"></div>
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBc6Bf4oHrTyWsQp9CrrRPNyGSqm4w8J_M",
+      authDomain: "ferniexwiki.firebaseapp.com",
+      projectId: "ferniexwiki",
+      storageBucket: "ferniexwiki.firebasestorage.app",
+      messagingSenderId: "451396973595",
+      appId: "1:451396973595:web:f31a19ade2b8b6c5f374be"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    window.db = getFirestore(app);
+  </script>
 
   <!-- JS -->
   <script src="particles.js"></script>
-  <script src="script.js"></script>
+  <script src="script.js" type="module"></script>
+
+  <!-- Баннер -->
+  <script>
+    const banner = document.getElementById('dev-banner');
+    const closeBtn = document.getElementById('close-banner');
+
+    closeBtn.addEventListener('click', () => {
+      banner.classList.add('hide');
+      setTimeout(() => banner.remove(), 500);
+    });
+  </script>
+
 </body>
 </html>
