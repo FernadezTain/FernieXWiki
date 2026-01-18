@@ -22,7 +22,7 @@
 
   <!-- Верхний колонтитул -->
   <header class="top-bar">
-    <div class="search-container">
+    <div class="search-bar">
       <input type="text" placeholder="Поиск по FernieX Wiki...">
     </div>
     <div class="current-section">Главная</div>
@@ -46,19 +46,17 @@
     <p>Выберите раздел слева, чтобы увидеть контент.</p>
   </main>
 
-  <!-- Полупрозрачная полоса для публикации постов -->
-<div class="post-bar" id="post-bar"></div>
+  <!-- Минималистичная полоска -->
+  <div class="post-bar" id="post-bar"></div>
 
   <!-- Модальное окно публикации -->
   <div class="modal" id="post-modal">
     <div class="modal-content">
       <h2>Публикация Поста</h2>
-      <label>
-        Password:
+      <label>Password:
         <input type="password" id="post-password" placeholder="Введите пароль">
       </label>
-      <label>
-        Категория:
+      <label>Категория:
         <select id="post-category">
           <option value="Игровые функции">Игровые функции</option>
           <option value="Чат-менеджер">Чат-менеджер</option>
@@ -68,12 +66,10 @@
           <option value="Дополнительно">Дополнительно</option>
         </select>
       </label>
-      <label>
-        Фото (ссылка):
+      <label>Фото (ссылка):
         <input type="text" id="post-photo" placeholder="https://example.com/photo.jpg">
       </label>
-      <label>
-        Текст:
+      <label>Текст:
         <textarea id="post-text" placeholder="Введите текст поста..."></textarea>
       </label>
       <button id="submit-post">Опубликовать</button>
