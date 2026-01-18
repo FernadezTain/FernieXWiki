@@ -62,8 +62,10 @@ body {
   padding: 14px 20px;
   background: rgba(30,30,30,0.85);
   backdrop-filter: blur(6px);
-  box-shadow: 0 8px 30px rgba(0,234,255,0.2);
+  box-shadow: 0 6px 20px rgba(0,234,255,0.3);
   transition: all 0.3s ease;
+  z-index: 1;
+  overflow: visible; /* важно, чтобы свечение не обрезалось */
 }
 
 /* Радужное рассеянное свечение */
