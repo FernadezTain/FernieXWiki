@@ -1,11 +1,11 @@
-// Получаем ник из URL
-const url = window.location.href;
-const nickMatch = url.match(/profile_(.+)\.html$/);
-const nick = nickMatch ? nickMatch[1] : null;
+// Получаем ник пользователя из URL
+const params = new URLSearchParams(window.location.search);
+const nick = params.get("nick");
 
 if (!nick) {
   alert("Пользователь не найден");
 } else {
+  // Загружаем profiles.json
   fetch("profiles.json")
     .then(res => res.json())
     .then(data => {
@@ -15,12 +15,12 @@ if (!nick) {
         return;
       }
 
-      // Подставляем аватарку, имя и описание
+      // Подставляем аватарку, ник и описание
       document.getElementById("profile-name").textContent = nick;
       document.getElementById("profile-avatar").src = profile.Avatar || "default-avatar.png";
       document.getElementById("profile-description").textContent = profile.About || "";
 
-      // Соцсети
+      // Подставляем кнопки соцсетей
       const buttonsContainer = document.querySelector(".profile-buttons");
       buttonsContainer.innerHTML = ""; // очищаем старые кнопки
 
@@ -55,6 +55,10 @@ if (!nick) {
         btn.textContent = "Перейти в Одноклассники";
         buttonsContainer.appendChild(btn);
       }
+
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+      console.error(err);
+      alert("Ошибка загрузки профиля");
+    });
 }
