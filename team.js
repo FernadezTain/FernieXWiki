@@ -113,105 +113,85 @@ document.addEventListener('DOMContentLoaded', () => {
   rotateAvatars();
 
   // ---------- Показ панели профиля (полностью переработан) ----------
-  // showProfile — асинхронная: дождётся загрузки profiles.json
-  async function showProfile(avatar) {
-    // ждём загрузки профилей (если ещё грузятся)
-    await profilesPromise;
+async function showProfile(avatar) {
+  // ждём загрузки профилей (если ещё грузятся)
+  await profilesPromise;
 
-    // Если профили не загрузились — показываем сообщение об ошибке
-    if (!profiles || !Object.keys(profiles).length) {
-      showSimplePanel('Ошибка', 'Профили не загружены. Проверьте profiles.json в консоли.');
-      return;
-    }
+  // Если профили не загрузились — показываем сообщение об ошибке
+  if (!profiles || !Object.keys(profiles).length) {
+    showSimplePanel('Ошибка', 'Профили не загружены. Проверьте profiles.json в консоли.');
+    return;
+  }
 
-    // получаем src и имя файла
-    const img = avatar.querySelector('img');
-    const src = img ? (img.getAttribute('src') || img.src || '') : '';
-    const filename = getFilenameFromSrc(src);
+  // получаем src и имя файла
+  const img = avatar.querySelector('img');
+  const src = img ? (img.getAttribute('src') || img.src || '') : '';
+  const filename = getFilenameFromSrc(src);
 
-    // Находим ник по имени файла (чувствительность к регистру убрана)
-    const nick = Object.keys(profiles).find(k => {
-      const avatarName = (profiles[k].Avatar || '').toString().toLowerCase();
-      return avatarName && (avatarName === filename || filename.includes(avatarName));
-    });
+  // Находим ник по имени файла
+  const nick = Object.keys(profiles).find(k => {
+    const avatarName = (profiles[k].Avatar || '').toString().toLowerCase();
+    return avatarName && (avatarName === filename || filename.includes(avatarName));
+  });
 
-    if (!nick) {
-      // Если не найден — покажем панель с отладочной информацией
-      showSimplePanel('Профиль не найден', `Не найден профиль для файла: <b>${filename}</b>`);
-      return;
-    }
+  if (!nick) {
+    showSimplePanel('Профиль не найден', `Не найден профиль для файла: <b>${filename}</b>`);
+    return;
+  }
 
-    const data = profiles[nick];
+  const data = profiles[nick];
 
-    // Удаляем старую панель, если есть
-    const oldPanel = document.querySelector('.profile-panel');
-    if (oldPanel) oldPanel.remove();
+  // Удаляем старую панель, если есть
+  const oldPanel = document.querySelector('.profile-panel');
+  if (oldPanel) oldPanel.remove();
 
-    // Создаём панель (фиксированная справа-сверху)
-    const panel = document.createElement('div');
-    panel.className = 'profile-panel';
-    panel.style.position = 'fixed';
-    panel.style.top = '20px';
-    panel.style.right = '20px';
-    panel.style.zIndex = '10000';
-    panel.addEventListener('click', e => e.stopPropagation());
+  // Создаём панель
+  const panel = document.createElement('div');
+  panel.className = 'profile-panel';
+  panel.style.position = 'fixed';
+  panel.style.top = '20px';
+  panel.style.right = '20px';
+  panel.style.zIndex = '10000';
+  panel.addEventListener('click', e => e.stopPropagation());
 
-    // Собираем ссылки соцсетей (если есть)
-    const links = [];
-    if (data.Telegram && data.Telegram !== 'none') links.push(`<a href="${data.Telegram}" target="_blank" rel="noopener">Telegram</a>`);
-    if (data.Discord && data.Discord !== 'none') links.push(`<a href="${data.Discord}" target="_blank" rel="noopener">Discord</a>`);
-    if (data.VK && data.VK !== 'none') links.push(`<a href="${data.VK}" target="_blank" rel="noopener">VK</a>`);
-    if (data.Odnoklasniki && data.Odnoklasniki !== 'none') links.push(`<a href="${data.Odnoklasniki}" target="_blank" rel="noopener">OK</a>`);
-
-    // Вставляем HTML — можно расширить (аватар в панели, доп. поля и т.д.)
-    panel.innerHTML = `
-      <div style="display:flex;gap:12px;align-items:flex-start;">
-        <div style="width:68px;height:68px;border-radius:12px;overflow:hidden;flex-shrink:0;background:#111;border:1px solid rgba(255,255,255,0.03)">
-          <img src="${src}" alt="${nick}" style="width:100%;height:100%;object-fit:cover;display:block">
-        </div>
-        <div style="min-width:0">
-          <h3 style="margin:0 0 6px 0;color:#a14fff;font-size:1.1rem">${nick}</h3>
-          <p style="margin:0 0 10px 0;color:#aaa;font-size:0.95rem;line-height:1.3">${data.About || ''}</p>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">${links.join('')}</div>
-          <div style="display:flex;gap:8px">
-            <button class="open-profile-btn" style="flex:1;padding:8px 10px;border-radius:20px;border:none;background:linear-gradient(135deg,#7b3cff,#a14fff);color:#fff;cursor:pointer">
-              Открыть профиль
-            </button>
-            <button class="close-panel-btn" style="padding:8px 10px;border-radius:20px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#fff;cursor:pointer">
-              ✕
-            </button>
-          </div>
+  // HTML панели без соцсетей, только аватар, ник, описание и кнопка
+  panel.innerHTML = `
+    <div style="display:flex;gap:12px;align-items:flex-start;">
+      <div style="width:68px;height:68px;border-radius:12px;overflow:hidden;flex-shrink:0;background:#111;border:1px solid rgba(255,255,255,0.03)">
+        <img src="${src}" alt="${nick}" style="width:100%;height:100%;object-fit:cover;display:block">
+      </div>
+      <div style="min-width:0">
+        <h3 style="margin:0 0 6px 0;color:#a14fff;font-size:1.1rem">${nick}</h3>
+        <p style="margin:0 0 10px 0;color:#aaa;font-size:0.95rem;line-height:1.3">${data.About || ''}</p>
+        <!-- Вертикальная кнопка -->
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="open-profile-btn"
+            style="padding:8px 10px;border-radius:20px;border:none;background:linear-gradient(135deg,#7b3cff,#a14fff);color:#fff;cursor:pointer">
+            Открыть профиль
+          </button>
         </div>
       </div>
-    `;
+    </div>
+  `;
 
-    document.body.appendChild(panel);
+  document.body.appendChild(panel);
 
-    // кнопки внутри панели
-    panel.querySelector('.open-profile-btn').addEventListener('click', (e) => {
-      e.stopPropagation();
-      window.open(`profile.html?nick=${encodeURIComponent(nick)}`, '_blank');
-    });
-    panel.querySelector('.close-panel-btn').addEventListener('click', (e) => {
-      e.stopPropagation();
-      panel.style.opacity = '0';
-      setTimeout(() => panel.remove(), 200);
-      if (activeAvatar) {
-        activeAvatar.classList.remove('active-glow');
-        activeAvatar = null;
-      }
-    });
+  // Обработчик кнопки
+  panel.querySelector('.open-profile-btn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    window.open(`profile.html?nick=${encodeURIComponent(nick)}`, '_blank');
+  });
 
-    // Плавное появление
-    panel.style.opacity = '0';
-    panel.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
-    // лёгкий подъём при появлении
-    panel.style.transform = 'translateY(-6px)';
-    requestAnimationFrame(() => {
-      panel.style.opacity = '1';
-      panel.style.transform = 'translateY(0)';
-    });
-  }
+  // Плавное появление панели
+  panel.style.opacity = '0';
+  panel.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+  panel.style.transform = 'translateY(-6px)';
+  requestAnimationFrame(() => {
+    panel.style.opacity = '1';
+    panel.style.transform = 'translateY(0)';
+  });
+}
+
 
   // Вспомогательная простая панель с сообщением (ошибка/отладка)
   function showSimplePanel(title, htmlMessage) {
