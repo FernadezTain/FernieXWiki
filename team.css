@@ -332,3 +332,12 @@ body {
     font-size: 0.8rem;
   }
 }s
+#particle-network {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;          /* чтобы был на фоне */
+  pointer-events: none; /* чтобы не мешал кликам */
+}
