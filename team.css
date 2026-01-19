@@ -40,25 +40,21 @@ body {
 
 /* --- Основной контент --- */
 .main-content {
-  margin-top: 80px;
+  margin-top: 0;
   width: 100%;
-  height: calc(100vh - 80px);
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
 }
+
 
 /* --- 3D-карусель --- */
 .team-container {
-  perspective: 1200px;
   width: 100%;
-  height: 80vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
+  height: 100%;
 }
+
 
 /* Центр круга */
 .center-object {
