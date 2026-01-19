@@ -1,120 +1,89 @@
-// team.js — улучшенная 3D-карусель с индивидуальными траекториями и корректным перекрытием.
-// Требования выполнены:
-// 1) аватарки круглые,
-// 2) аватарки, ставшие спереди, НЕ размываются,
-// 3) разные траектории (rx, ry, tilt, phase, wobble).
+const avatars = document.querySelectorAll('.avatar');
+const center = document.querySelector('.center-object');
 
-(function () {
-  const avatarEls = Array.from(document.querySelectorAll('.avatar'));
-  const center = document.querySelector('.center-object');
+let angle = 0;
+let activeAvatar = null;
+let profiles = {};
 
-  if (!avatarEls.length || !center) {
-    console.warn('team.js: нет .avatar или .center-object в DOM');
-    return;
-  }
+// ---------- Загрузка профилей ----------
+fetch('profiles.json')
+  .then(res => res.json())
+  .then(data => profiles = data);
 
-  // Параметры
-  let angle = 0; // общий смещающий угол в градусах
-  const baseRadius = Math.max(160, Math.min(window.innerWidth * 0.18, 260));
+// ---------- Вращение ----------
+function rotateAvatars() {
+  avatars.forEach((avatar, i) => {
+    if (avatar === activeAvatar) return;
 
-  // Для детерминированных, но разных траекторий — используем индекс как seed
-  const params = avatarEls.map((el, i) => {
-    // небольшие вариации
-    const seed = i + 1;
-    const rx = baseRadius * (0.8 + (seed % 5) * 0.06);  // по X (горизонталь)
-    const ry = baseRadius * (0.35 + (seed % 3) * 0.12); // по Y (вертикаль/эллипс)
-    const rz = baseRadius * (0.9 + (seed % 4) * 0.05);  // глубина (управляет front/back)
-    const tilt = ( (seed * 37) % 25 ) * (Math.PI/180);   // наклон плоскости (в радианах)
-    const phase = (seed * 47) % 360;                    // фазовый сдвиг (deg)
-    const wobbleAmp = 6 + (seed % 4) * 2;               // вертикальная "вибрация"
-    const speedMul = 0.9 + (seed % 3) * 0.15;           // индивидуальная скорость множитель
+    const step = 360 / avatars.length;
+    const a = angle + step * i;
+    const rad = a * Math.PI / 180;
 
-    // Store on element for possible later tweaks
-    el._orbit = { rx, ry, rz, tilt, phase, wobbleAmp, speedMul };
-    return el._orbit;
+    const radiusX = 220;
+    const radiusY = 60;
+
+    const x = Math.cos(rad) * radiusX;
+    const y = Math.sin(rad) * radiusY;
+    const z = Math.sin(rad) * 200;
+
+    avatar.style.transform = `
+      translate3d(${x}px, ${y}px, ${z}px)
+      scale(${z > 0 ? 1 : 0.85})
+    `;
+
+    avatar.style.zIndex = z > 0 ? 20 : 5;
+    avatar.style.filter = z > 0
+      ? 'none'
+      : 'blur(3px) brightness(0.6)';
   });
 
-  // Удобная функция — установить позицию и стили аватара
-  function updateAvatar(el, idx, x, y, z) {
-    // небольшой vertical offset для реалистичности
-    const yOffset = y; // уже включает wobble
-    // scale по глубине (ближе -> больше)
-    const scale = 1 + (z / (baseRadius * 6));
-    const s = Math.max(0.6, Math.min(1.35, scale));
+  angle += 0.25;
+  requestAnimationFrame(rotateAvatars);
+}
 
-    // применяем transform (translateX, translateY, scale). translateZ не нужен.
-    el.style.transform = `translateX(${x}px) translateY(${yOffset}px) scale(${s})`;
+rotateAvatars();
 
-    // управление слоями:
-    // если z >= 0 — аватарка "перед" центром, ставим выше центра (z-index большое)
-    // иначе — "за" центром, z-index меньше чем у центра (в CSS center z-index = 200)
-    if (z >= 0) {
-      el.classList.remove('back');
-      el.classList.add('front');
-      el.style.zIndex = 1000 + idx; // выше центра (центр 200)
-    } else {
-      el.classList.remove('front');
-      el.classList.add('back');
-      el.style.zIndex = 50 + idx; // под центром
-    }
+// ---------- Клик по аватарке ----------
+avatars.forEach(avatar => {
+  avatar.addEventListener('click', () => activateAvatar(avatar));
+});
+
+function activateAvatar(avatar) {
+  if (activeAvatar === avatar) return;
+
+  if (activeAvatar) {
+    activeAvatar.classList.remove('active');
   }
 
-  // Главный цикл
-  function tick() {
-    const n = avatarEls.length;
-    const step = 360 / n;
+  activeAvatar = avatar;
+  avatar.classList.add('active');
 
-    avatarEls.forEach((el, i) => {
-      const p = el._orbit;
-      // динамическая индивидуальная скорость
-      const localAngle = angle * p.speedMul + p.phase;
-      const rad = localAngle * Math.PI / 180;
+  showProfile(avatar.querySelector('img').getAttribute('src'));
+}
 
-      // эллиптическая орбита + наклон плоскости
-      // x — горизонталь: cos
-      const x = Math.cos(rad) * p.rx;
-      // y — вертикаль: синус * ry, скорректирован по наклону и небольшой вибрации
-      const y = Math.sin(rad) * p.ry * Math.cos(p.tilt) + Math.sin((rad * 2) + p.phase) * p.wobbleAmp;
-      // z — глубина: sin * rz * sin(tilt) (делаем так, чтобы проход через центр давал смену front/back)
-      const z = Math.sin(rad) * p.rz * Math.sin(p.tilt);
+// ---------- Профиль ----------
+function showProfile(avatarSrc) {
+  const nick = Object.keys(profiles).find(
+    key => profiles[key].Avatar === avatarSrc
+  );
 
-      updateAvatar(el, i, x, y, z);
-    });
+  if (!nick) return;
 
-    // Общая скорость вращения
-    angle += 0.25; // можно уменьшить при желании
-    requestAnimationFrame(tick);
-  }
+  let panel = document.querySelector('.profile-panel');
+  if (panel) panel.remove();
 
-  // Запуск
-  tick();
+  const data = profiles[nick];
 
-  // При ресайзе можно подправить радиусы (здесь просто перерасчитываем baseRadius и орбиты)
-  window.addEventListener('resize', () => {
-    const newBase = Math.max(120, Math.min(window.innerWidth * 0.18, 260));
-    // скорректируем rx/ry/rz пропорционально
-    avatarEls.forEach((el, i) => {
-      const p = el._orbit;
-      const factor = newBase / baseRadius;
-      p.rx *= factor;
-      p.ry *= factor;
-      p.rz *= factor;
-    });
-  });
+  panel = document.createElement('div');
+  panel.className = 'profile-panel';
 
-  // Topbar links behaviour (меняем цвет гарантированно)
-  const logoLink = document.getElementById('logo-link');
-  const teamLink = document.querySelector('.team-link');
-  if (logoLink) logoLink.addEventListener('click', () => window.location.href = 'index.html');
-  if (logoLink) logoLink.style.color = '#00eaff';
-  if (teamLink) teamLink.style.color = '#a14fff';
+  panel.innerHTML = `
+    <h3>${nick}</h3>
+    <p>${data.About}</p>
+    <button onclick="window.open('profile.html?nick=${nick}','_blank')">
+      Открыть профиль
+    </button>
+  `;
 
-  // Respect prefers-reduced-motion: если включен — останавливаем анимацию
-  const media = window.matchMedia('(prefers-reduced-motion: reduce)');
-  media.addEventListener && media.addEventListener('change', () => {
-    if (media.matches) {
-      // остановим анимацию — уберём requestAnimationFrame loop (простая методика: заменим tick пустышкой)
-      // Для краткости: просто не реагируем — можно реализовать флаг paused.
-    }
-  });
-})();
+  document.body.appendChild(panel);
+}
