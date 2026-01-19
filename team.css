@@ -222,3 +222,11 @@ body {
     transform: translateX(0);
   }
 }
+.avatar {
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.avatar.active {
+  transition: transform 0.45s cubic-bezier(.2,.9,.3,1);
+}
