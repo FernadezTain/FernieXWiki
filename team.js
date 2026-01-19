@@ -6,37 +6,27 @@ let activeAvatar = null;
 let profiles = {};
 
 // ---------- загрузка профилей ----------
-fetch('profiles.json')
-  .then(r => r.json())
-  .then(d => profiles = d);
-
-// ---------- вращение ----------
 function rotateAvatars() {
   avatars.forEach((avatar, i) => {
-    if (avatar === activeAvatar) return;
-
+    if (avatar === activeAvatar) return; // ← Это уже есть, но проверьте!
+    
     const step = (Math.PI * 2) / avatars.length;
     const a = angle + step * i;
-
     const x = Math.cos(a) * 220;
     const y = Math.sin(a) * 90;
     const z = Math.sin(a) * 200;
-
-    const depth = (z + 200) / 400; // 0..1
-
+    const depth = (z + 200) / 400;
     const scale = 0.8 + depth * 0.4;
     const blur = (1 - depth) * 4;
     const brightness = 0.6 + depth * 0.4;
-
+    
     avatar.style.transform = `
       translate3d(${x}px, ${y}px, ${z}px)
       scale(${scale})
     `;
-
     avatar.style.filter = `blur(${blur}px) brightness(${brightness})`;
     avatar.style.zIndex = Math.round(depth * 50);
   });
-
   angle += 0.01;
   requestAnimationFrame(rotateAvatars);
 }
