@@ -22,10 +22,11 @@ body {
   align-items: center;
   font-size: 1.5rem;
   font-weight: bold;
-  z-index: 1000; /* поверх всего */
+  z-index: 1000;
   gap: 30px;
   pointer-events: auto;
 }
+
 .top-bar a, .top-bar div {
   text-decoration: none;
   cursor: pointer;
@@ -34,7 +35,6 @@ body {
   user-select: none;
 }
 
-/* Цвета: FernieX синий, Команда фиолетовый (активная) */
 #logo-link { color: #00eaff; }
 .team-link { color: #a14fff; }
 
@@ -60,14 +60,13 @@ body {
   position: relative;
 }
 
-/* Центр круга: поверх задних аватаров, но под передними.
-   Важно: backdrop-filter здесь делает blur только внутри круга. */
+/* Центр круга */
 .center-object {
   width: 140px;
   height: 140px;
   border-radius: 50%;
   position: absolute;
-  z-index: 200; /* средний слой: между задними и передними аватарами */
+  z-index: 200;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -89,27 +88,26 @@ body {
   pointer-events: none;
 }
 
-/* --- Аватарки (рамка элемента) --- */
-/* Используем .avatar как контейнер, внутри - <img> или background-image */
+/* --- Аватарки --- */
 .avatar {
   width: 80px;
   height: 80px;
-  border-radius: 50%;           /* 1) круглые */
+  border-radius: 50%;
   position: absolute;
   top: 50%;
   left: 50%;
   transform-origin: 0 -220px;
   transition: transform 0.25s cubic-bezier(.2,.9,.2,1), z-index 0.15s ease;
   box-shadow: 0 10px 30px rgba(0,234,255,0.06), 0 2px 6px rgba(0,0,0,0.6);
-  overflow: hidden;             /* важно: img обрезаются по кругу */
+  overflow: hidden;
   pointer-events: auto;
   background: rgba(255,255,255,0.04);
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
-/* img внутри аватарки — круглое и покрывает блок */
 .avatar img {
   width: 100%;
   height: 100%;
@@ -119,56 +117,28 @@ body {
   pointer-events: none;
 }
 
-/* Передний план — будет выше центра */
 .avatar.front {
-  /* no blur, will sit above center */
   filter: none;
 }
 
-/* Задний план — затемняем (blur только в зоне круга через center-object) */
 .avatar.back {
   filter: brightness(0.9);
-  /* НЕ ставим blur здесь — blur делается локально в .center-object */
 }
 
 /* Hover */
 .avatar:hover {
   transform: scale(1.16) translateZ(40px);
-  z-index: 10000 !important; /* всегда самый верх при наведении */
+  z-index: 10000 !important;
   box-shadow: 0 22px 48px rgba(0,234,255,0.18);
 }
 
-/* --- Адаптив --- */
-@media (max-width: 1000px) {
-  .center-object { width: 120px; height: 120px; }
-  .avatar { width: 70px; height: 70px; transform-origin: 0 -190px; }
-}
-@media (max-width: 768px) {
-  .top-bar { font-size: 1.15rem; gap: 16px; }
-  .center-object { width: 110px; height: 110px; }
-  .avatar { width: 60px; height: 60px; transform-origin: 0 -160px; }
-}
-@media (max-width: 480px) {
-  .top-bar { font-size: 1rem; gap: 12px; }
-  .center-object { width: 90px; height: 90px; }
-  .avatar { width: 48px; height: 48px; transform-origin: 0 -120px; }
-}
-/* --- Активная аватарка в центре --- */
+/* --- Активная аватарка --- */
 .avatar.active {
   position: absolute;
   transform: translate3d(0, -10px, 300px) scale(1.3) !important;
   z-index: 100 !important;
   filter: none !important;
   transition: transform 0.4s cubic-bezier(.2,.9,.3,1);
-}
-
-/* --- Внутреннее изображение --- */
-.avatar img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  pointer-events: none;
 }
 
 /* --- Панель профиля --- */
@@ -181,19 +151,23 @@ body {
   border-radius: 20px;
   padding: 20px;
   box-shadow: 0 10px 40px rgba(161,79,255,0.4);
-  animation: slideIn 0.4s ease;
   z-index: 200;
+  border: 1px solid rgba(161,79,255,0.2);
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .profile-panel h3 {
   color: #a14fff;
   margin-bottom: 10px;
+  font-size: 1.2rem;
 }
 
 .profile-panel p {
   font-size: 0.95rem;
   color: #ccc;
   margin-bottom: 20px;
+  line-height: 1.4;
 }
 
 .profile-panel button {
@@ -205,28 +179,48 @@ body {
   color: #fff;
   font-weight: bold;
   cursor: pointer;
+  transition: filter 0.3s ease;
 }
 
 .profile-panel button:hover {
   filter: brightness(1.1);
 }
 
-/* --- Анимация --- */
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateX(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-.avatar {
-  cursor: pointer;
-  border-radius: 50%;
+/* --- Адаптив --- */
+@media (max-width: 1000px) {
+  .center-object { width: 120px; height: 120px; }
+  .avatar { width: 70px; height: 70px; transform-origin: 0 -190px; }
 }
 
-.avatar.active {
-  transition: transform 0.45s cubic-bezier(.2,.9,.3,1);
+@media (max-width: 768px) {
+  .top-bar { font-size: 1.15rem; gap: 16px; }
+  .center-object { width: 110px; height: 110px; }
+  .avatar { width: 60px; height: 60px; transform-origin: 0 -160px; }
+  
+  .profile-panel {
+    top: 100px;
+    right: 20px;
+    width: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-bar { font-size: 1rem; gap: 12px; }
+  .center-object { width: 90px; height: 90px; }
+  .avatar { width: 48px; height: 48px; transform-origin: 0 -120px; }
+  
+  .profile-panel {
+    top: 80px;
+    right: 10px;
+    width: 220px;
+    padding: 15px;
+  }
+  
+  .profile-panel h3 {
+    font-size: 1rem;
+  }
+  
+  .profile-panel p {
+    font-size: 0.85rem;
+  }
 }
