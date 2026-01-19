@@ -22,11 +22,10 @@ body {
   align-items: center;
   font-size: 1.5rem;
   font-weight: bold;
-  z-index: 100; /* очень сверху */
+  z-index: 1000; /* поверх всего */
   gap: 30px;
   pointer-events: auto;
 }
-
 .top-bar a, .top-bar div {
   text-decoration: none;
   cursor: pointer;
@@ -35,7 +34,7 @@ body {
   user-select: none;
 }
 
-/* Цвета: FernieX синий, Команда фиолетовый (активный) */
+/* Цвета: FernieX синий, Команда фиолетовый (активная) */
 #logo-link { color: #00eaff; }
 .team-link { color: #a14fff; }
 
@@ -61,22 +60,23 @@ body {
   position: relative;
 }
 
-/* Центр круга: поверх задних аватаров, но под передними */
+/* Центр круга: поверх задних аватаров, но под передними.
+   Важно: backdrop-filter здесь делает blur только внутри круга. */
 .center-object {
   width: 140px;
   height: 140px;
   border-radius: 50%;
   position: absolute;
-  z-index: 20; /* средний слой: между задними и передними аватарами */
+  z-index: 200; /* средний слой: между задними и передними аватарами */
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  background: rgba(12,12,12,0.25);            /* полупрозрачный фон — нужен для backdrop-filter */
-  -webkit-backdrop-filter: blur(6px);         /* размытие только в круге */
+  background: rgba(12,12,12,0.25);
+  -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   box-shadow: 0 8px 30px rgba(0,0,0,0.6), inset 0 0 40px rgba(255,255,255,0.02);
   border: 1px solid rgba(255,255,255,0.03);
-  pointer-events: none; /* чтобы не мешал кликам на аватарки */
+  pointer-events: none;
 }
 
 /* --- Контейнер аватаров --- */
@@ -86,48 +86,56 @@ body {
   height: 100%;
   transform-style: preserve-3d;
   left: 0; top: 0;
-  pointer-events: none; /* делаем клики на аватарках через вложенные элементы если нужно */
+  pointer-events: none;
 }
 
-/* --- Аватарки --- */
+/* --- Аватарки (рамка элемента) --- */
+/* Используем .avatar как контейнер, внутри - <img> или background-image */
 .avatar {
   width: 80px;
   height: 80px;
-  border-radius: 50%;
+  border-radius: 50%;           /* 1) круглые */
   position: absolute;
   top: 50%;
   left: 50%;
-  transform-origin: 0 -220px; /* радиус вращения (меняем в JS при необходимости) */
-  transition: transform 0.25s cubic-bezier(.2,.9,.2,1), z-index 0.15s, filter 0.25s;
+  transform-origin: 0 -220px;
+  transition: transform 0.25s cubic-bezier(.2,.9,.2,1), z-index 0.15s ease;
   box-shadow: 0 10px 30px rgba(0,234,255,0.06), 0 2px 6px rgba(0,0,0,0.6);
-  overflow: visible;
-  pointer-events: auto; /* чтобы можно было кликать */
-  display: block;
-  background-size: cover;
-  background-position: center;
-  will-change: transform;
+  overflow: hidden;             /* важно: img обрезаются по кругу */
+  pointer-events: auto;
+  background: rgba(255,255,255,0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Если используешь <img class="avatar"> — делай img {display:block; width:100%; height:100%; border-radius:50%} */
+/* img внутри аватарки — круглое и покрывает блок */
 .avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 50%;
   display: block;
+  border-radius: 50%;
   pointer-events: none;
 }
 
-/* Подсветка / hover */
-.avatar:hover {
-  transform: scale(1.18) translateZ(40px); /* лёгкое «выпрыгивание» */
-  z-index: 200 !important;
-  box-shadow: 0 18px 40px rgba(0,234,255,0.18);
+/* Передний план — будет выше центра */
+.avatar.front {
+  /* no blur, will sit above center */
+  filter: none;
 }
 
-/* Немного затемняем задние (будут ещё размываться сквозь центр) */
+/* Задний план — затемняем (blur только в зоне круга через center-object) */
 .avatar.back {
-  filter: brightness(0.85);
+  filter: brightness(0.9);
+  /* НЕ ставим blur здесь — blur делается локально в .center-object */
+}
+
+/* Hover */
+.avatar:hover {
+  transform: scale(1.16) translateZ(40px);
+  z-index: 10000 !important; /* всегда самый верх при наведении */
+  box-shadow: 0 22px 48px rgba(0,234,255,0.18);
 }
 
 /* --- Адаптив --- */
@@ -135,13 +143,11 @@ body {
   .center-object { width: 120px; height: 120px; }
   .avatar { width: 70px; height: 70px; transform-origin: 0 -190px; }
 }
-
 @media (max-width: 768px) {
   .top-bar { font-size: 1.15rem; gap: 16px; }
   .center-object { width: 110px; height: 110px; }
   .avatar { width: 60px; height: 60px; transform-origin: 0 -160px; }
 }
-
 @media (max-width: 480px) {
   .top-bar { font-size: 1rem; gap: 12px; }
   .center-object { width: 90px; height: 90px; }
