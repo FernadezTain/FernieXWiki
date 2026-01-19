@@ -337,3 +337,6 @@ body {
   z-index: -1;          /* чтобы был на фоне */
   pointer-events: none; /* чтобы не мешал кликам */
 }
+html, body {
+  overflow: hidden;
+}
