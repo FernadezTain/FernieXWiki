@@ -53,7 +53,8 @@ avatars.forEach(avatar => {
     activeAvatar = avatar;
 
     avatar.style.transform =
-      'translate3d(0px, 0px, 320px) scale(1.35)';
+  'translate3d(0px, 0px, 320px) scale(1.4)';
+
     avatar.style.zIndex = 100;
     avatar.style.filter = 'none';
 
