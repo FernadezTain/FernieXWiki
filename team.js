@@ -49,19 +49,24 @@ avatars.forEach(avatar => {
   avatar.addEventListener('click', e => {
     e.stopPropagation();
     if (activeAvatar) return;
-
     activeAvatar = avatar;
-
-    avatar.style.transform =
-  'translate3d(0px, 0px, 320px) scale(1.4)';
-
+    
+    // Получаем текущую позицию элемента
+    const rect = avatar.getBoundingClientRect();
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    
+    // Вычисляем смещение от текущей позиции к центру
+    const offsetX = centerX - (rect.left + rect.width / 2);
+    const offsetY = centerY - (rect.top + rect.height / 2);
+    
+    avatar.style.transform = 
+      `translate3d(${offsetX}px, ${offsetY}px, 320px) scale(1.4)`;
     avatar.style.zIndex = 100;
     avatar.style.filter = 'none';
-
     showProfile(avatar);
   });
 });
-
 // ---------- закрытие ----------
 document.addEventListener('click', () => {
   if (!activeAvatar) return;
