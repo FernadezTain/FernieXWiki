@@ -1,7 +1,7 @@
 {
   "FernieX": {
     "Avatar": "FernieX.png",
-    "About": "Главный администратор сайта FernieX Wiki.",
+    "About": "Главный Администратор.",
     "Telegram": "https://t.me/FernieK",
     "Discord": "https://discord.com/users/1082456815947763763",
     "VK": "https://vk.com/fernieow",
@@ -14,5 +14,13 @@
     "Discord": "none",
     "VK": "none",
     "Odnoklasniki": "none"
-  }
+  },
+  "~𝐿𝒾𝓏𝓀𝒶 ~": {
+    "Avatar": "LizkaLiia.png",
+    "About": "Спец. Администратор.",
+    "Telegram": "https://t.me/LizkaLiia",
+    "Discord": "none",
+    "VK": "none",
+    "Odnoklasniki": "none"
+  },
 }
