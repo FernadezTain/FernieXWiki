@@ -46,19 +46,20 @@ avatars.forEach(avatar => {
     const avatarCenterX = avatarRect.left + avatarRect.width / 2;
     const avatarCenterY = avatarRect.top + avatarRect.height / 2;
 
-    // Левая позиция (где будет аватарка в финальном виде)
-    const panelLeft = window.innerWidth / 2 - 300; // панель справа, аватарка слева
-    const panelTop = window.innerHeight / 2;
+    // Целевая позиция (правый верхний угол, слева от блока информации)
+    const targetX = window.innerWidth - 200;
+    const targetY = 120;
 
-    // Смещение от текущей позиции до левой части панели
-    const offsetX = panelLeft - avatarCenterX;
-    const offsetY = panelTop - avatarCenterY;
+    // Смещение от текущей позиции до целевой
+    const offsetX = targetX - avatarCenterX;
+    const offsetY = targetY - avatarCenterY;
 
     // Применяем анимацию
     avatar.style.transition = 'transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1)';
-    avatar.style.transform = `translate3d(${offsetX}px, ${offsetY}px, 320px) scale(1.2)`;
-    avatar.style.zIndex = 100;
+    avatar.style.transform = `translate3d(${offsetX}px, ${offsetY}px, 320px) scale(1)`;
+    avatar.style.zIndex = 150;
     avatar.style.filter = 'none';
+    avatar.style.position = 'fixed';
 
     // Показываем профиль после начала анимации
     setTimeout(() => showProfile(avatar), 100);
@@ -80,6 +81,7 @@ document.addEventListener('click', () => {
   activeAvatar.style.transform = '';
   activeAvatar.style.filter = '';
   activeAvatar.style.zIndex = '';
+  activeAvatar.style.position = '';
   activeAvatar = null;
 });
 
