@@ -46,14 +46,17 @@ avatars.forEach(avatar => {
     const centerX = window.innerWidth / 2;
     const centerY = window.innerHeight / 2;
     
-    // Вычисляем смещение от текущей позиции к центру
+    // Вычисляем смещение
     const offsetX = centerX - (rect.left + rect.width / 2);
     const offsetY = centerY - (rect.top + rect.height / 2);
     
+    // ВАЖНО: очищаем старый transform и применяем новый
     avatar.style.transform = 
       `translate3d(${offsetX}px, ${offsetY}px, 320px) scale(1.4)`;
     avatar.style.zIndex = 100;
     avatar.style.filter = 'none';
+    avatar.style.transition = 'transform 0.6s ease-out'; // плавная анимация
+    
     showProfile(avatar);
   });
 });
