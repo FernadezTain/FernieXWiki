@@ -15,31 +15,32 @@ function rotateAvatars() {
   avatars.forEach((avatar, i) => {
     if (avatar === activeAvatar) return;
 
-    const step = 360 / avatars.length;
+    const step = (Math.PI * 2) / avatars.length;
     const a = angle + step * i;
-    const rad = a * Math.PI / 180;
 
-    const radiusX = 220;
-    const radiusY = 90;
+    const x = Math.cos(a) * 220;
+    const y = Math.sin(a) * 90;
+    const z = Math.sin(a) * 200;
 
-    const x = Math.cos(rad) * radiusX;
-    const y = Math.sin(rad) * radiusY;
-    const z = Math.sin(rad) * 200;
+    const depth = (z + 200) / 400; // 0..1
+
+    const scale = 0.8 + depth * 0.4;
+    const blur = (1 - depth) * 4;
+    const brightness = 0.6 + depth * 0.4;
 
     avatar.style.transform = `
       translate3d(${x}px, ${y}px, ${z}px)
-      scale(${z > 0 ? 1 : 0.85})
+      scale(${scale})
     `;
 
-    avatar.style.zIndex = z > 0 ? 30 : 5;
-    avatar.style.filter = z > 0
-      ? 'none'
-      : 'blur(3px) brightness(0.6)';
+    avatar.style.filter = `blur(${blur}px) brightness(${brightness})`;
+    avatar.style.zIndex = Math.round(depth * 50);
   });
 
-  angle += 0.3;
+  angle += 0.01;
   requestAnimationFrame(rotateAvatars);
 }
+
 
 rotateAvatars();
 
