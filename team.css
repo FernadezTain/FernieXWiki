@@ -340,3 +340,50 @@ body {
 html, body {
   overflow: hidden;
 }
+/* --- Верхние кнопки навигации --- */
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-link {
+  position: relative;
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #00eaff; /* цвет по умолчанию */
+  background: rgba(30,30,30,0.6);
+  backdrop-filter: blur(6px);
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.nav-link.team-link {
+  color: #a14fff; /* цвет команды */
+}
+
+.nav-link.review-link {
+  color: #ff6b6b; /* цвет отзывов */
+}
+
+/* Hover */
+.nav-link:hover {
+  transform: scale(1.08);
+  background: linear-gradient(135deg, #7b3cff, #a14fff);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(0,234,255,0.3);
+}
+
+/* Активная ссылка */
+.nav-link.active {
+  background: linear-gradient(135deg, #7b3cff, #a14fff);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(0,234,255,0.3);
+}
+
+/* --- Fade-out при переходе страниц --- */
+body.fade-out {
+  opacity: 0;
+  transition: opacity 0.35s ease-in-out;
+}
