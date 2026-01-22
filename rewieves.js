@@ -12,6 +12,7 @@ fetch("rewieves.json")
             const card = document.createElement("div");
             card.className = "review-card";
 
+            // ник
             const nickEl = document.createElement("div");
             nickEl.className = "review-nick";
             nickEl.textContent = nick;
@@ -28,16 +29,28 @@ fetch("rewieves.json")
                 profileCard.style.display = "flex";
             });
 
+            // дата
+            const dateEl = document.createElement("div");
+            dateEl.className = "review-date";
+            dateEl.textContent = review.date;
+
+            // текст
             const textEl = document.createElement("div");
             textEl.className = "review-text";
             textEl.textContent = review.text;
 
             card.appendChild(nickEl);
+            card.appendChild(dateEl);
             card.appendChild(textEl);
+
             reviewsContainer.appendChild(card);
         });
+    })
+    .catch(err => {
+        console.error("Ошибка загрузки отзывов:", err);
     });
 
+// скрытие профиля при клике вне
 document.addEventListener("click", () => {
     profileCard.style.display = "none";
 });
