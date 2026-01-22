@@ -45,29 +45,40 @@ fetch("rewieves.json")
       card.append(nickEl, dateEl, textEl);
       reviewsContainer.appendChild(card);
 
-      // ======================
-      // 3D tilt эффект блока
-      // ======================
-      card.addEventListener("mousemove", e => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
+// ======================
+// 3D Perspective Tilt
+// ======================
+card.style.transformStyle = "preserve-3d";
+card.style.transition = "transform 0.2s ease, box-shadow 0.2s ease";
 
-        const rotateX = ((y - centerY) / centerY) * 8;
-        const rotateY = ((x - centerX) / centerX) * 8;
+card.addEventListener("mousemove", e => {
+  const rect = card.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
 
-        card.style.transform = `rotateX(${-rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
-        card.style.boxShadow = `${rotateY * 2}px ${-rotateX * 2}px 30px rgba(138,43,226,0.35)`;
-      });
+  const centerX = rect.width / 2;
+  const centerY = rect.height / 2;
 
-      card.addEventListener("mouseleave", () => {
-        card.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`;
-        card.style.boxShadow = "0 0 15px rgba(0,234,255,0.15)";
-      });
-    });
-  });
+  // Максимальный угол наклона
+  const maxTilt = 12; // градусов
+
+  const rotateY = ((x - centerX) / centerX) * maxTilt;
+  const rotateX = -((y - centerY) / centerY) * maxTilt;
+
+  // применяем perspective для реального 3D эффекта
+  card.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+  
+  // динамическая тень (чуть реалистичнее)
+  const shadowX = -rotateY * 2;
+  const shadowY = rotateX * 2;
+  card.style.boxShadow = `${shadowX}px ${shadowY}px 35px rgba(138,43,226,0.35)`;
+});
+
+card.addEventListener("mouseleave", () => {
+  card.style.transform = `perspective(600px) rotateX(0deg) rotateY(0deg)`;
+  card.style.boxShadow = "0 0 15px rgba(0,234,255,0.15)";
+});
+
 
 // =========================
 // Закрытие профиля
