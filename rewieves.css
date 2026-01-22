@@ -64,6 +64,13 @@ body {
     margin-bottom: 10px;
 }
 
+.review-date {
+    font-size: 13px;
+    color: #8b92c9;
+    margin-bottom: 10px;
+}
+
+
 .review-text {
     color: #d0d6ff;
     font-size: 15px;
