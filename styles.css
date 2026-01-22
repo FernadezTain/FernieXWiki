@@ -278,3 +278,48 @@ p.hint {
   .post { padding: 10px 12px 30px 12px; }
   .post-text { font-size: 0.85rem; }
 }
+/* =========================
+   Блоки переключения страниц
+   ========================= */
+.page-switcher {
+  margin-top: 25px;
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  z-index: 5;
+}
+
+.page-btn {
+  padding: 14px 28px;
+  border-radius: 16px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: #00eaff;
+  background: rgba(20, 20, 20, 0.9);
+  box-shadow: 0 0 0 rgba(0,234,255,0);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease,
+    color 0.25s ease;
+}
+
+/* hover */
+.page-btn:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 0 30px rgba(0,234,255,0.45);
+  color: #ffffff;
+}
+
+/* активная */
+.page-btn.active {
+  background: linear-gradient(135deg, #8e44ad, #5e2b97);
+  color: #ffffff;
+  box-shadow: 0 0 35px rgba(142,68,173,0.8);
+}
+
+/* нажатие */
+.page-btn:active {
+  transform: scale(0.97);
+}
