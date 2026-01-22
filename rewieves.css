@@ -97,3 +97,49 @@ body {
     color: #4da6ff;
     text-decoration: none;
 }
+/* ===== Анимация появления отзывов ===== */
+.review-card {
+  opacity: 0;
+  transform: translateY(20px) scale(0.98);
+  animation: reviewIn 0.6s ease forwards;
+}
+
+.review-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 0 30px rgba(138,43,226,0.6);
+}
+
+/* задержка по очереди */
+.review-card:nth-child(1) { animation-delay: 0.05s; }
+.review-card:nth-child(2) { animation-delay: 0.1s; }
+.review-card:nth-child(3) { animation-delay: 0.15s; }
+.review-card:nth-child(4) { animation-delay: 0.2s; }
+
+@keyframes reviewIn {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ===== Профиль ===== */
+.profile-card {
+  transform: scale(0.85);
+  opacity: 0;
+  transition: all 0.25s ease;
+}
+
+.profile-card.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ===== Анимация страницы ===== */
+body {
+  animation: pageFade 0.4s ease;
+}
+
+@keyframes pageFade {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}
