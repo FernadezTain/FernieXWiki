@@ -169,3 +169,17 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("load", initIndicator);
   window.addEventListener("resize", initIndicator);
 });
+document.querySelectorAll(".page-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const link = btn.dataset.link;
+    if (!link || btn.classList.contains("active")) return;
+
+    // анимация ухода
+    document.body.style.transition = "opacity 0.35s ease";
+    document.body.style.opacity = "0";
+
+    setTimeout(() => {
+      window.location.href = link;
+    }, 350);
+  });
+});
