@@ -97,7 +97,7 @@ fetch("rewieves.json")
       textEl.className = "review-text";
       textEl.textContent = review.text;
       
-      card.append(nickEl, ratingEl, dateEl, textEl);
+      card.append(headerEl, ratingEl, dateEl, textEl);
       reviewsContainer.appendChild(card);
       
       // ======================
