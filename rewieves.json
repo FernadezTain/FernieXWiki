@@ -1,12 +1,16 @@
 {
     "FernieX": {
-        "Telegram": "https://t.me/fernix",
-        "date": "12.01.2026",
-        "text": "Очень крутая команда, всё сделали быстро и качественно!"
+        "Telegram": "https://t.me/Gggajensjdn",
+        "date": "04.11.2025",
+        "rating": 4.5,
+        "type": "Покупка Лицензии GTA V",
+        "text": "Продавец помог быстро все сделал и объяснил."
     },
-    "DarkUser": {
+    "TestUser": {
         "Telegram": "https://t.me/darkuser",
         "date": "05.01.2026",
+        "rating": 4.5,
+        "type": "Техническая Поддержка",
         "text": "Респект за поддержку и постоянные обновления."
     }
 }
