@@ -65,3 +65,18 @@ document.querySelectorAll(".menu-btn").forEach(btn => {
     }, 300);
   });
 });
+// =========================
+// Переходы между страницами с затемнением
+// =========================
+document.querySelectorAll(".page-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const link = btn.dataset.link;
+    if (!link || btn.classList.contains("active")) return;
+
+    document.body.classList.add("fade-out");
+
+    setTimeout(() => {
+      window.location.href = link;
+    }, 350);
+  });
+});
