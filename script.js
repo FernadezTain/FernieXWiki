@@ -6,12 +6,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const banner = document.getElementById("dev-banner");
   const closeBannerBtn = document.getElementById("close-banner");
 
-  // --- Закрытие баннера разработки ---
+  // =========================
+  // Закрытие баннера разработки
+  // =========================
   if (banner && closeBannerBtn) {
     closeBannerBtn.addEventListener("click", () => banner.remove());
   }
 
-  // --- Навигация по разделам ---
+  // =========================
+  // Навигация по боковым разделам
+  // =========================
   document.querySelectorAll(".side-item").forEach(item => {
     item.addEventListener("click", () => {
       const section = item.dataset.section;
@@ -21,7 +25,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // --- Клик на логотип ---
+  // =========================
+  // Клик на логотип (Главная)
+  // =========================
   if (logoLink) {
     logoLink.addEventListener("click", e => {
       e.preventDefault();
@@ -31,7 +37,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // --- Проверка логотипа ---
+  // =========================
+  // Проверка логотипа
+  // =========================
   const logoImg = document.getElementById("logo");
   if (logoImg) {
     logoImg.onerror = () => {
@@ -49,6 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const res = await fetch(`posts/${category}.json`);
       if (!res.ok) throw new Error("Файл не найден");
+
       const posts = await res.json();
 
       if (!posts.length) {
@@ -69,11 +78,13 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `;
 
-        // Раскрытие текста по клику
+        // Раскрытие текста
         const textEl = div.querySelector(".post-text");
-        textEl.addEventListener("click", () => textEl.classList.toggle("collapsed"));
+        textEl.addEventListener("click", () => {
+          textEl.classList.toggle("collapsed");
+        });
 
-        // Клик на автора открывает баннер
+        // Баннер автора
         const authorEl = div.querySelector(".author");
         authorEl.addEventListener("click", e => {
           e.stopPropagation();
@@ -109,22 +120,23 @@ document.addEventListener("DOMContentLoaded", () => {
     banner.style.zIndex = "9999";
 
     banner.innerHTML = `
-      <div style="background: #141414; padding: 30px 25px; border-radius: 20px; text-align:center; max-width: 350px; width:90%; box-shadow:0 10px 40px rgba(0,234,255,0.4);">
-        <h2 style="color:#00eaff; margin-bottom:15px;">Администрация сайта</h2>
-        <p style="color:#ccc; margin-bottom:10px;">Имя: ${nick}</p>
-        <button id="profile-btn" style="background:#00eaff; color:#000; border:none; border-radius:30px; padding:12px 25px; font-weight:bold; cursor:pointer;">Перейти в профиль</button>
-        <button id="close-author-banner" style="margin-top:15px; background:#ff6b6b; color:#fff; border:none; border-radius:30px; padding:10px 25px; cursor:pointer;">Закрыть</button>
+      <div style="background:#141414;padding:30px 25px;border-radius:20px;text-align:center;max-width:350px;width:90%;box-shadow:0 10px 40px rgba(0,234,255,0.4);">
+        <h2 style="color:#00eaff;margin-bottom:15px;">Администрация сайта</h2>
+        <p style="color:#ccc;margin-bottom:10px;">Имя: ${nick}</p>
+        <button id="profile-btn" style="background:#00eaff;color:#000;border:none;border-radius:30px;padding:12px 25px;font-weight:bold;cursor:pointer;">Перейти в профиль</button>
+        <button id="close-author-banner" style="margin-top:15px;background:#ff6b6b;color:#fff;border:none;border-radius:30px;padding:10px 25px;cursor:pointer;">Закрыть</button>
       </div>
     `;
 
     document.body.appendChild(banner);
 
-    // --- Переход на универсальный профиль ---
     document.getElementById("profile-btn").addEventListener("click", () => {
       window.open(`profile.html?nick=${encodeURIComponent(nick)}`, "_blank");
     });
 
-    document.getElementById("close-author-banner").addEventListener("click", () => banner.remove());
+    document.getElementById("close-author-banner").addEventListener("click", () => {
+      banner.remove();
+    });
   }
 
   // =========================
@@ -134,18 +146,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const indicator = document.querySelector(".nav-indicator");
 
   function moveIndicator(el) {
+    if (!el || !indicator) return;
     const rect = el.getBoundingClientRect();
     const parentRect = el.parentElement.getBoundingClientRect();
     indicator.style.width = rect.width + "px";
     indicator.style.left = (rect.left - parentRect.left) + "px";
   }
 
+  function initIndicator() {
+    const activeLink = document.querySelector(".nav-link.active") || links[0];
+    moveIndicator(activeLink);
+  }
+
   links.forEach(link => {
-    link.addEventListener("click", () => moveIndicator(link));
+    link.addEventListener("click", () => {
+      links.forEach(l => l.classList.remove("active"));
+      link.classList.add("active");
+      moveIndicator(link);
+    });
   });
 
-  // Инициализация на первом элементе (FernieX)
-  window.addEventListener("load", () => moveIndicator(links[0]));
-  window.addEventListener("resize", () => moveIndicator(links[0]));
-
+  window.addEventListener("load", initIndicator);
+  window.addEventListener("resize", initIndicator);
 });
