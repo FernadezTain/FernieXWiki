@@ -3,54 +3,53 @@ const profileCard = document.getElementById("profileCard");
 const profileNick = document.getElementById("profileNick");
 const profileTelegram = document.getElementById("profileTelegram");
 
+// =========================
+// Загрузка отзывов
+// =========================
 fetch("rewieves.json")
-    .then(res => res.json())
-    .then(data => {
-        Object.keys(data).forEach(nick => {
-            const review = data[nick];
+  .then(res => res.json())
+  .then(data => {
+    Object.keys(data).forEach((nick, index) => {
+      const review = data[nick];
 
-            const card = document.createElement("div");
-            card.className = "review-card";
+      const card = document.createElement("div");
+      card.className = "review-card";
+      card.style.animationDelay = `${index * 0.08}s`;
 
-            // ник
-            const nickEl = document.createElement("div");
-            nickEl.className = "review-nick";
-            nickEl.textContent = nick;
+      const nickEl = document.createElement("div");
+      nickEl.className = "review-nick";
+      nickEl.textContent = nick;
 
-            nickEl.addEventListener("click", (e) => {
-                e.stopPropagation();
+      nickEl.addEventListener("click", e => {
+        e.stopPropagation();
 
-                profileNick.textContent = nick;
-                profileTelegram.href = review.Telegram;
-                profileTelegram.textContent = "[Telegram]";
+        profileNick.textContent = nick;
+        profileTelegram.href = review.Telegram;
 
-                profileCard.style.left = e.pageX + "px";
-                profileCard.style.top = e.pageY + "px";
-                profileCard.style.display = "flex";
-            });
+        profileCard.style.left = e.pageX + "px";
+        profileCard.style.top = e.pageY + "px";
 
-            // дата
-            const dateEl = document.createElement("div");
-            dateEl.className = "review-date";
-            dateEl.textContent = review.date;
+        profileCard.classList.add("show");
+        profileCard.style.display = "flex";
+      });
 
-            // текст
-            const textEl = document.createElement("div");
-            textEl.className = "review-text";
-            textEl.textContent = review.text;
+      const dateEl = document.createElement("div");
+      dateEl.className = "review-date";
+      dateEl.textContent = review.date;
 
-            card.appendChild(nickEl);
-            card.appendChild(dateEl);
-            card.appendChild(textEl);
+      const textEl = document.createElement("div");
+      textEl.className = "review-text";
+      textEl.textContent = review.text;
 
-            reviewsContainer.appendChild(card);
-        });
-    })
-    .catch(err => {
-        console.error("Ошибка загрузки отзывов:", err);
+      card.append(nickEl, dateEl, textEl);
+      reviewsContainer.appendChild(card);
     });
+  });
 
-// скрытие профиля при клике вне
+// =========================
+// Закрытие профиля
+// =========================
 document.addEventListener("click", () => {
-    profileCard.style.display = "none";
+  profileCard.classList.remove("show");
+  setTimeout(() => profileCard.style.display = "none", 200);
 });
