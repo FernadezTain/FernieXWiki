@@ -12,18 +12,20 @@ fetch("rewieves.json")
     Object.keys(data).forEach((nick, index) => {
       const review = data[nick];
 
+      // ---- Карточка отзыва ----
       const card = document.createElement("div");
       card.className = "review-card";
       card.style.animationDelay = `${index * 0.08}s`;
-      card.style.transition = "transform 0.25s ease, box-shadow 0.25s ease"; // tilt плавный
+      card.style.transition = "transform 0.2s ease, box-shadow 0.2s ease";
+      card.style.transformStyle = "preserve-3d";
 
+      // ---- Ник ----
       const nickEl = document.createElement("div");
       nickEl.className = "review-nick";
       nickEl.textContent = nick;
 
       nickEl.addEventListener("click", e => {
         e.stopPropagation();
-
         profileNick.textContent = nick;
         profileTelegram.href = review.Telegram;
 
@@ -34,10 +36,12 @@ fetch("rewieves.json")
         profileCard.style.display = "flex";
       });
 
+      // ---- Дата ----
       const dateEl = document.createElement("div");
       dateEl.className = "review-date";
       dateEl.textContent = review.date;
 
+      // ---- Текст ----
       const textEl = document.createElement("div");
       textEl.className = "review-text";
       textEl.textContent = review.text;
@@ -45,43 +49,37 @@ fetch("rewieves.json")
       card.append(nickEl, dateEl, textEl);
       reviewsContainer.appendChild(card);
 
-// ======================
-// 3D Perspective Tilt
-// ======================
-card.style.transformStyle = "preserve-3d";
-card.style.transition = "transform 0.2s ease, box-shadow 0.2s ease";
+      // ======================
+      // 3D Perspective Tilt
+      // ======================
+      card.addEventListener("mousemove", e => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
 
-card.addEventListener("mousemove", e => {
-  const rect = card.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const maxTilt = 12;
 
-  const centerX = rect.width / 2;
-  const centerY = rect.height / 2;
+        const rotateY = ((x - centerX) / centerX) * maxTilt;
+        const rotateX = -((y - centerY) / centerY) * maxTilt;
 
-  // Максимальный угол наклона
-  const maxTilt = 12; // градусов
+        card.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        card.style.boxShadow = `${-rotateY * 2}px ${rotateX * 2}px 35px rgba(138,43,226,0.35)`;
+      });
 
-  const rotateY = ((x - centerX) / centerX) * maxTilt;
-  const rotateX = -((y - centerY) / centerY) * maxTilt;
-
-  // применяем perspective для реального 3D эффекта
-  card.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-  
-  // динамическая тень (чуть реалистичнее)
-  const shadowX = -rotateY * 2;
-  const shadowY = rotateX * 2;
-  card.style.boxShadow = `${shadowX}px ${shadowY}px 35px rgba(138,43,226,0.35)`;
-});
-
-card.addEventListener("mouseleave", () => {
-  card.style.transform = `perspective(600px) rotateX(0deg) rotateY(0deg)`;
-  card.style.boxShadow = "0 0 15px rgba(0,234,255,0.15)";
-});
-
+      card.addEventListener("mouseleave", () => {
+        card.style.transform = `perspective(600px) rotateX(0deg) rotateY(0deg)`;
+        card.style.boxShadow = "0 0 15px rgba(0,234,255,0.15)";
+      });
+    });
+  })
+  .catch(err => {
+    console.error("Ошибка загрузки отзывов:", err);
+  });
 
 // =========================
-// Закрытие профиля
+// Закрытие профиля (глобально)
 // =========================
 document.addEventListener("click", () => {
   profileCard.classList.remove("show");
