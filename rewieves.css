@@ -4,12 +4,10 @@
     box-sizing: border-box;
     font-family: Arial, sans-serif;
 }
-
 body {
     background: #0b0f1a;
     color: white;
 }
-
 /* верхнее меню */
 .top-menu {
     display: flex;
@@ -17,7 +15,6 @@ body {
     gap: 20px;
     padding: 25px;
 }
-
 .menu-btn {
     border: none;
     padding: 12px 26px;
@@ -26,20 +23,16 @@ body {
     cursor: pointer;
     transition: 0.3s;
 }
-
 .menu-btn.blue {
     background: #1e90ff;
     box-shadow: 0 0 12px rgba(30,144,255,0.6);
 }
-
 .menu-btn.purple {
     background: #8a2be2;
 }
-
 .menu-btn.active {
     box-shadow: 0 0 20px rgba(138,43,226,0.9);
 }
-
 /* отзывы */
 .reviews-container {
     display: flex;
@@ -48,7 +41,6 @@ body {
     gap: 25px;
     padding: 40px;
 }
-
 .review-card {
     background: #131a2e;
     width: 320px;
@@ -56,26 +48,58 @@ body {
     border-radius: 16px;
     box-shadow: 0 0 15px rgba(138,43,226,0.25);
 }
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
 
 .review-nick {
     color: #b084ff;
     font-size: 18px;
     cursor: pointer;
-    margin-bottom: 10px;
+    transition: color 0.2s ease;
 }
 
+.review-nick:hover {
+    color: #d4a5ff;
+}
+
+.review-type {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    letter-spacing: 0.5px;
+}
 .review-date {
     font-size: 13px;
     color: #8b92c9;
     margin-bottom: 10px;
 }
-
-
+.review-rating {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 12px;
+    font-size: 18px;
+}
+.star {
+    color: #ffd700;
+    text-shadow: 0 0 8px rgba(255,215,0,0.6);
+}
+.star.empty {
+    color: #404a5f;
+}
 .review-text {
     color: #d0d6ff;
     font-size: 15px;
 }
-
 /* профиль */
 .profile-card {
     position: absolute;
@@ -87,15 +111,25 @@ body {
     flex-direction: column;
     z-index: 10;
 }
-
 .profile-nick {
     font-size: 18px;
     margin-bottom: 8px;
 }
-
 .profile-telegram {
-    color: #4da6ff;
+    padding: 10px 16px;
+    background: #1e90ff;
+    color: white;
     text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 12px rgba(30,144,255,0.5);
+}
+.profile-telegram:hover {
+    background: #0d7acc;
+    box-shadow: 0 0 20px rgba(30,144,255,0.8);
+    transform: translateY(-2px);
 }
 /* ===== Анимация появления отзывов ===== */
 .review-card {
@@ -103,42 +137,35 @@ body {
   transform: translateY(20px) scale(0.98);
   animation: reviewIn 0.6s ease forwards;
 }
-
 .review-card:hover {
   transform: translateY(-6px) scale(1.02);
   box-shadow: 0 0 30px rgba(138,43,226,0.6);
 }
-
 /* задержка по очереди */
 .review-card:nth-child(1) { animation-delay: 0.05s; }
 .review-card:nth-child(2) { animation-delay: 0.1s; }
 .review-card:nth-child(3) { animation-delay: 0.15s; }
 .review-card:nth-child(4) { animation-delay: 0.2s; }
-
 @keyframes reviewIn {
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
 }
-
 /* ===== Профиль ===== */
 .profile-card {
   transform: scale(0.85);
   opacity: 0;
   transition: all 0.25s ease;
 }
-
 .profile-card.show {
   opacity: 1;
   transform: scale(1);
 }
-
 /* ===== Анимация страницы ===== */
 body {
   animation: pageFade 0.4s ease;
 }
-
 @keyframes pageFade {
   from { opacity: 0 }
   to { opacity: 1 }
@@ -153,7 +180,6 @@ body {
   gap: 18px;
   z-index: 5;
 }
-
 .page-btn {
   padding: 14px 30px;
   border-radius: 16px;
@@ -168,23 +194,19 @@ body {
     background 0.25s ease,
     color 0.25s ease;
 }
-
 .page-btn:hover {
   transform: translateY(-4px) scale(1.06);
   color: #ffffff;
   box-shadow: 0 0 30px rgba(0,234,255,0.45);
 }
-
 .page-btn.active {
   background: linear-gradient(135deg, #8e44ad, #5e2b97);
   color: #ffffff;
   box-shadow: 0 0 35px rgba(142,68,173,0.85);
 }
-
 .page-btn:active {
   transform: scale(0.96);
 }
-
 /* =========================
    Затемнение страницы
    ========================= */
@@ -192,7 +214,6 @@ body.fade-out {
   opacity: 0;
   transition: opacity 0.35s ease;
 }
-
 body {
   opacity: 1;
   transition: opacity 0.35s ease;
