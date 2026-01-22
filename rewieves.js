@@ -53,3 +53,15 @@ document.addEventListener("click", () => {
   profileCard.classList.remove("show");
   setTimeout(() => profileCard.style.display = "none", 200);
 });
+
+document.querySelectorAll(".menu-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const link = btn.dataset.link;
+    if (!link) return;
+
+    document.body.style.opacity = "0";
+    setTimeout(() => {
+      window.location.href = link;
+    }, 300);
+  });
+});
