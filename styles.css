@@ -54,6 +54,10 @@ body {
   color: #ffffff;
 }
 
+.nav-link.active {
+  color: #ffffff;
+}
+
 .nav-indicator {
   position: absolute;
   bottom: -5px;
