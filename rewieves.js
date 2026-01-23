@@ -48,7 +48,7 @@ function renderStars(rating) {
 // =========================
 // Загрузка отзывов
 // =========================
-fetch("reviews.json")
+fetch("rewieves.json")
   .then(res => res.json())
   .then(data => {
     data.forEach((review, index) => {
