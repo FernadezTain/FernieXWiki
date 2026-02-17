@@ -188,6 +188,12 @@ p.hint {
   animation: hintFadeIn 0.5s ease both;
 }
 
+/* Скрытый hint не занимает место */
+.hint-state[style*="display: none"],
+.hint-state[style*="display:none"] {
+  display: none !important;
+}
+
 @keyframes hintFadeIn {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
