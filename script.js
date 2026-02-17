@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <span class="author">${escapeHtml(post.author || "Неизвестно")}</span>
             <span class="date">${formatDate(post.date)}</span>
           </div>
-          <a class="read-btn" href="${articleUrl}">Читать статью →</a>
+          <a class="read-btn" href="${articleUrl}">Читать статью</a>
         `;
 
         // Клик на автора — баннер профиля
