@@ -1,4 +1,13 @@
 /* ============================================
+   Сброс opacity при загрузке (fix чёрного экрана при history.back)
+   ============================================ */
+document.body.style.opacity = "0";
+window.addEventListener("pageshow", () => {
+  document.body.style.transition = "opacity 0.35s ease";
+  document.body.style.opacity = "1";
+});
+
+/* ============================================
    content.js — логика страницы статьи
    URL: content.html?id=CATEGORY-INDEX
    Пример: content.html?id=Команды-0
@@ -21,11 +30,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const backBtn = document.getElementById("back-btn");
   if (backBtn) {
     backBtn.addEventListener("click", () => {
-      if (document.referrer && document.referrer.includes(window.location.hostname)) {
-        history.back();
-      } else {
-        window.location.href = "index.html";
-      }
+      // Плавный уход
+      document.body.style.transition = "opacity 0.3s ease";
+      document.body.style.opacity = "0";
+      setTimeout(() => {
+        if (document.referrer && document.referrer.includes(window.location.hostname)) {
+          history.back();
+        } else {
+          window.location.href = "index.html";
+        }
+      }, 300);
     });
   }
 
