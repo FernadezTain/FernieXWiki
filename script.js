@@ -16,6 +16,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeBannerBtn = document.getElementById("close-banner");
   const searchInput    = document.querySelector(".search-bar input");
 
+  // =========================
+  // Управление hint-блоком
+  // =========================
+  function hideHint() {
+    if (hint) hint.style.display = "none";
+  }
+  function showHint() {
+    if (hint) hint.style.display = "flex";
+  }
+
   // Все категории сайта (должны совпадать с data-section в HTML)
   const ALL_CATEGORIES = [
     "Игровые функции",
@@ -44,7 +54,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const section = item.dataset.section;
       activeCategory = section;
       if (currentSection) currentSection.textContent = section;
-      if (hint) hint.style.display = "none";
       if (searchInput) searchInput.value = "";
       clearSearchState();
       loadPosts(section);
@@ -59,10 +68,10 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       activeCategory = null;
       if (currentSection) currentSection.textContent = "Главная";
-      if (hint) hint.style.display = "block";
       if (searchInput) searchInput.value = "";
       clearSearchState();
       postsContainer.innerHTML = "";
+      showHint();
     });
   }
 
@@ -102,11 +111,10 @@ document.addEventListener("DOMContentLoaded", () => {
         clearSearchState();
         // Восстанавливаем предыдущий вид
         if (activeCategory) {
-          if (hint) hint.style.display = "none";
           loadPosts(activeCategory);
         } else {
           postsContainer.innerHTML = "";
-          if (hint) hint.style.display = "block";
+          showHint();
         }
         return;
       }
@@ -125,7 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function runSearch(query) {
-    if (hint) hint.style.display = "none";
+    hideHint();
     postsContainer.innerHTML = "";
     if (currentSection) currentSection.textContent = `🔍 "${query}"`;
 
@@ -213,6 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Загрузка постов (превью)
   // =========================
   async function loadPosts(category) {
+    hideHint();
     postsContainer.innerHTML = `<div class="posts-loading"><div class="search-spinner"></div></div>`;
 
     try {
