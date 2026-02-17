@@ -7,10 +7,8 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
   <!-- Canvas -->
   <canvas id="particle-network"></canvas>
-
   <!-- Баннер -->
   <div id="dev-banner">
     <div class="dev-banner-content">
@@ -19,25 +17,19 @@
       <button id="close-banner">Понятно</button>
     </div>
   </div>
-
-  <!-- Верхняя панель -->
-<!-- Блоки навигации по страницам -->
-<div class="page-switcher">
-  <div class="page-btn active" data-link="index.html">FernieX</div>
-  <div class="page-btn" data-link="team.html">Команда</div>
-  <div class="page-btn" data-link="rewieves.html">Отзывы</div>
-</div>
-
-
+  <!-- Блоки навигации по страницам -->
+  <div class="page-switcher">
+    <div class="page-btn active" data-link="index.html">FernieX</div>
+    <div class="page-btn" data-link="team.html">Команда</div>
+    <div class="page-btn" data-link="rewieves.html">Отзывы</div>
+  </div>
   <!-- Строка поиска -->
   <div class="search-bar-container">
     <div class="search-bar">
-      <input type="text" placeholder="Поиск по FernieX-Wiki...">
+      <input type="text" placeholder="Поиск по всем разделам...">
     </div>
   </div>
-
   <div class="current-section">Главная</div>
-
   <!-- Боковое меню -->
   <aside class="side-panel">
     <div class="side-handle">›</div>
@@ -50,16 +42,18 @@
       <div class="side-item" data-section="Дополнительно">Дополнительно</div>
     </nav>
   </aside>
-
   <!-- Контент -->
   <main class="main-content">
-    <p class="hint">Выберите раздел слева</p>
+    <!-- Красивое начальное состояние -->
+    <div class="hint-state" id="main-hint">
+      <span class="hint-icon">📖</span>
+      <span class="hint-title">Выберите раздел слева</span>
+      <span class="hint-sub">Или введите запрос в строку поиска — найдём по всем разделам сразу</span>
+    </div>
     <div id="posts-container"></div>
   </main>
-
   <!-- JS -->
   <script src="particles.js"></script>
   <script src="script.js"></script>
-
 </body>
 </html>
