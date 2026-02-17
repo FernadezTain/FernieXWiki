@@ -107,81 +107,106 @@ document.addEventListener("DOMContentLoaded", () => {
   // ПАРСЕР ТЕКСТА -> HTML
   // ============================================
   function renderRichText(raw) {
-    const paragraphs = raw.split(/\n{2,}/);
+    const lines = raw.split("\n");
+    let html = "";
+    let i = 0;
 
-    return paragraphs.map(para => {
-      const lines = para.split("\n").filter(l => l.trim() !== "");
-      if (!lines.length) return "";
-      const rendered = lines.map(line => renderLine(line.trim())).join("");
-      return '<div class="rt-block">' + rendered + "</div>";
-    }).join("");
-  }
+    while (i < lines.length) {
+      const line = lines[i].trim();
 
-  function renderLine(line) {
-    if (!line) return "";
+      // Пустая строка
+      if (!line) { i++; continue; }
 
-    // Команда: строка начинается с /слово
-    if (/^\/\w/.test(line)) {
-      return renderCommandLine(line);
+      // Горизонтальный разделитель ---
+      if (/^-{3,}$/.test(line)) {
+        html += '<div class="rt-divider"></div>';
+        i++; continue;
+      }
+
+      // Раздел верхнего уровня: "1. Раздел ...", "2. Раздел ..."
+      const sectionMatch = line.match(/^(\d+)\.\s+(.+)/);
+      if (sectionMatch && !line.match(/^\d+\.\d+/)) {
+        html += '<div class="rt-section-title">' +
+          '<span class="rt-section-num">' + escapeHtml(sectionMatch[1]) + '</span>' +
+          '<span class="rt-section-text">' + escapeHtml(sectionMatch[2]) + '</span>' +
+        '</div>';
+        i++; continue;
+      }
+
+      // Подпункт: "· 1.1. Название" или "1.1. Название"
+      const subMatch = line.match(/^[·•]?\s*(\d+\.\d+)\.?\s+(.+)/);
+      if (subMatch) {
+        html += '<div class="rt-subpoint-title">' +
+          '<span class="rt-subpoint-num">' + escapeHtml(subMatch[1]) + '</span>' +
+          '<span class="rt-subpoint-text">' + escapeHtml(subMatch[2]) + '</span>' +
+        '</div>';
+        i++; continue;
+      }
+
+      // Блок с меткой "· Описание:", "· Наказание:", "· Описание"
+      const labelMatch = line.match(/^[·•]\s*(Описание|Наказание|Примечание)[:\s]/i);
+      if (labelMatch) {
+        const labelKey = labelMatch[1].toLowerCase();
+        const labelColors = {
+          описание: { color: "#00eaff",  icon: "📋" },
+          наказание: { color: "#ff6b6b", icon: "⚖️" },
+          примечание: { color: "#ffd700", icon: "📌" },
+        };
+        const cfg = labelColors[labelKey] || { color: "#aaa", icon: "ℹ️" };
+        const rest = line.replace(/^[·•]\s*(Описание|Наказание|Примечание)[:\s]*/i, "").trim();
+        html += '<div class="rt-labeled-block" style="--label-color:' + cfg.color + '">' +
+          '<span class="rt-label-icon">' + cfg.icon + '</span>' +
+          '<div class="rt-label-content">' +
+            '<span class="rt-label-title">' + escapeHtml(labelMatch[1]) + '</span>' +
+            (rest ? '<span class="rt-label-text">' + escapeHtml(rest) + '</span>' : '') +
+          '</div>' +
+        '</div>';
+        i++; continue;
+      }
+
+      // Точка-маркер · текст (общий)
+      if (/^[·•]\s/.test(line)) {
+        const text = line.replace(/^[·•]\s/, "");
+        html += '<div class="rt-dot-item"><span class="rt-dot">·</span><span>' + escapeHtml(text) + '</span></div>';
+        i++; continue;
+      }
+
+      // Команда /cmd
+      if (/^\/\w/.test(line)) {
+        const match = line.match(/^(\/\S+)\s*[—–\-]?\s*(.*)/);
+        if (match) {
+          html += '<div class="rt-command">' +
+            '<code class="rt-cmd-name">' + escapeHtml(match[1]) + '</code>' +
+            (match[2] ? '<span class="rt-cmd-desc">' + escapeHtml(match[2]) + '</span>' : '') +
+          '</div>';
+        }
+        i++; continue;
+      }
+
+      // Эмодзи-заголовок
+      if (startsWithEmoji(line) && line.length < 90) {
+        const emojiLen = getLeadingEmojiLength(line);
+        const emoji = line.slice(0, emojiLen);
+        const rest  = line.slice(emojiLen).trim();
+        html += '<div class="rt-heading">' +
+          '<span class="rt-heading-emoji">' + emoji + '</span>' +
+          '<span class="rt-heading-text">' + escapeHtml(rest) + '</span>' +
+        '</div>';
+        i++; continue;
+      }
+
+      // Ранг (5️⃣)
+      if (/^\d[\uFE0F]?\u20E3/.test(line)) {
+        html += '<div class="rt-rank-item">' + escapeHtml(line) + '</div>';
+        i++; continue;
+      }
+
+      // Обычный текст
+      html += '<p class="rt-para">' + escapeHtml(line) + '</p>';
+      i++;
     }
 
-    // Заголовок с эмодзи: эмодзи в начале, текст короткий (< 80 символов)
-    if (startsWithEmoji(line) && line.length < 90) {
-      return renderEmojiHeading(line);
-    }
-
-    // Ранги: цифра + эмодзи (типа 5️⃣)
-    if (/^\d[\uFE0F]?\u20E3/.test(line)) {
-      return renderRankItem(line);
-    }
-
-    // Маркер списка
-    if (/^[•\-–—]\s/.test(line)) {
-      return renderListItem(line);
-    }
-
-    // Обычный абзац
-    return '<p class="rt-para">' + escapeHtml(line) + "</p>";
-  }
-
-  // /команда — описание
-  function renderCommandLine(line) {
-    const match = line.match(/^(\/\S+)\s*[—–\-]?\s*(.*)/);
-    if (match) {
-      const cmd  = match[1];
-      const desc = match[2] || "";
-      return (
-        '<div class="rt-command">' +
-          '<code class="rt-cmd-name">' + escapeHtml(cmd) + "</code>" +
-          (desc ? '<span class="rt-cmd-desc">' + escapeHtml(desc) + "</span>" : "") +
-        "</div>"
-      );
-    }
-    return '<div class="rt-command"><code class="rt-cmd-name">' + escapeHtml(line) + "</code></div>";
-  }
-
-  // Эмодзи-заголовок
-  function renderEmojiHeading(line) {
-    const emojiLen = getLeadingEmojiLength(line);
-    const emoji    = line.slice(0, emojiLen);
-    const rest     = line.slice(emojiLen).trim();
-    return (
-      '<div class="rt-heading">' +
-        '<span class="rt-heading-emoji">' + emoji + "</span>" +
-        '<span class="rt-heading-text">' + escapeHtml(rest) + "</span>" +
-      "</div>"
-    );
-  }
-
-  // Ранговый пункт (5️⃣ Руководитель)
-  function renderRankItem(line) {
-    return '<div class="rt-rank-item">' + escapeHtml(line) + "</div>";
-  }
-
-  // Обычный пункт списка
-  function renderListItem(line) {
-    const text = line.replace(/^[•\-–—]\s/, "");
-    return '<div class="rt-list-item"><span class="rt-bullet">▸</span>' + escapeHtml(text) + "</div>";
+    return html;
   }
 
   // ============================================
@@ -189,16 +214,17 @@ document.addEventListener("DOMContentLoaded", () => {
   // ============================================
   function animateBodyLines(container) {
     const blocks = container.querySelectorAll(
-      ".rt-block, .rt-command, .rt-heading, .rt-list-item, .rt-rank-item, .rt-para"
+      ".rt-section-title, .rt-subpoint-title, .rt-labeled-block, .rt-dot-item, " +
+      ".rt-command, .rt-heading, .rt-list-item, .rt-rank-item, .rt-para, .rt-divider"
     );
     blocks.forEach((el, i) => {
       el.style.opacity    = "0";
       el.style.transform  = "translateY(8px)";
-      el.style.transition = "opacity 0.35s ease " + (i * 0.035) + "s, transform 0.35s ease " + (i * 0.035) + "s";
+      el.style.transition = "opacity 0.35s ease " + (i * 0.03) + "s, transform 0.35s ease " + (i * 0.03) + "s";
       setTimeout(() => {
         el.style.opacity   = "1";
         el.style.transform = "translateY(0)";
-      }, 50 + i * 35);
+      }, 40 + i * 30);
     });
   }
 
