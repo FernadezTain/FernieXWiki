@@ -451,3 +451,140 @@ p.hint {
   .post { padding: 14px 14px; }
   .read-btn { font-size: 0.78rem; padding: 9px 18px; }
 }
+
+/* =========================
+   Бейдж категории на карточке
+   ========================= */
+.post-top {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.post-category-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--badge-color, #00eaff);
+  background: color-mix(in srgb, var(--badge-color, #00eaff) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--badge-color, #00eaff) 35%, transparent);
+  white-space: nowrap;
+}
+
+.post-category-badge::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--badge-color, #00eaff);
+  flex-shrink: 0;
+  box-shadow: 0 0 6px var(--badge-color, #00eaff);
+}
+
+/* =========================
+   Поиск — заголовок результатов
+   ========================= */
+.search-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 16px;
+  font-size: 0.82rem;
+  padding: 0 4px;
+}
+
+.search-count {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #00eaff;
+}
+
+.search-label {
+  color: #666;
+}
+
+.search-query {
+  color: #aaa;
+  font-style: italic;
+}
+
+/* =========================
+   Подсветка совпадений
+   ========================= */
+mark.search-mark {
+  background: rgba(0, 234, 255, 0.18);
+  color: #00eaff;
+  border-radius: 3px;
+  padding: 0 2px;
+  font-weight: 700;
+}
+
+/* =========================
+   Спиннер загрузки
+   ========================= */
+.search-spinner-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 50px 0;
+  color: #555;
+  font-size: 0.88rem;
+}
+
+.posts-loading {
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.search-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(0, 234, 255, 0.15);
+  border-top-color: #00eaff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* =========================
+   Пустой результат поиска
+   ========================= */
+.search-empty {
+  text-align: center;
+  padding: 60px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.search-empty-icon {
+  font-size: 2.5rem;
+  margin-bottom: 6px;
+  opacity: 0.5;
+}
+
+.search-empty p {
+  color: #aaa;
+  font-size: 0.95rem;
+}
+
+.search-empty p strong {
+  color: #fff;
+}
+
+.search-empty span {
+  color: #555;
+  font-size: 0.8rem;
+}
