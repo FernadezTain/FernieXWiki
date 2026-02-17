@@ -490,3 +490,150 @@
     margin-top: 12px;
   }
 }
+
+/* ============================================
+   Типографика — правила, разделы, подпункты
+   ============================================ */
+
+/* Горизонтальный разделитель */
+.rt-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.08), transparent);
+  margin: 28px 0;
+  border-radius: 2px;
+}
+
+/* Раздел верхнего уровня: "1. Раздел безопасности" */
+.rt-section-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 28px 0 10px;
+  padding: 14px 20px;
+  background: rgba(0, 234, 255, 0.05);
+  border: 1px solid rgba(0, 234, 255, 0.12);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.rt-section-title::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: #00eaff;
+  border-radius: 12px 0 0 12px;
+}
+
+.rt-section-num {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #00eaff;
+  opacity: 0.4;
+  line-height: 1;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.rt-section-text {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #e8e8e8;
+  letter-spacing: 0.01em;
+}
+
+/* Подпункт: "1.1. Название" */
+.rt-subpoint-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0 8px 0;
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 8px;
+  border-left: 2px solid rgba(142, 68, 173, 0.5);
+}
+
+.rt-subpoint-num {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #8e44ad;
+  background: rgba(142, 68, 173, 0.15);
+  padding: 2px 8px;
+  border-radius: 20px;
+  flex-shrink: 0;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.rt-subpoint-text {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #ddd;
+}
+
+/* Блок с меткой: Описание / Наказание / Примечание */
+.rt-labeled-block {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 6px 0 6px 16px;
+  padding: 10px 14px;
+  background: color-mix(in srgb, var(--label-color, #aaa) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--label-color, #aaa) 20%, transparent);
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.rt-labeled-block:hover {
+  background: color-mix(in srgb, var(--label-color, #aaa) 10%, transparent);
+}
+
+.rt-label-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+  line-height: 1.4;
+}
+
+.rt-label-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.rt-label-title {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--label-color, #aaa);
+  line-height: 1;
+}
+
+.rt-label-text {
+  font-size: 0.88rem;
+  color: #bbb;
+  line-height: 1.55;
+}
+
+/* Точка-маркер общий · текст */
+.rt-dot-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 4px 0 4px 8px;
+  font-size: 0.9rem;
+  color: #aaa;
+  line-height: 1.55;
+}
+
+.rt-dot {
+  color: rgba(0, 234, 255, 0.4);
+  font-size: 1.4rem;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: -2px;
+}
