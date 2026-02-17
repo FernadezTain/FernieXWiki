@@ -147,11 +147,128 @@
 
 /* --- Тело статьи --- */
 .article-body {
-  font-size: 1.05rem;
-  line-height: 1.8;
+  font-size: 1.0rem;
+  line-height: 1.75;
   color: #ccc;
-  white-space: pre-wrap;
   word-break: break-word;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Блок-абзац (разделённый двойным \n) */
+.rt-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 18px;
+}
+
+/* Обычный абзац */
+.rt-para {
+  margin: 0;
+  color: #c8c8c8;
+  line-height: 1.75;
+}
+
+/* ── Эмодзи-заголовок ─────────────────────── */
+.rt-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0 4px;
+  padding: 10px 16px;
+  background: rgba(0, 234, 255, 0.05);
+  border-left: 3px solid rgba(0, 234, 255, 0.4);
+  border-radius: 0 10px 10px 0;
+}
+
+.rt-heading-emoji {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.rt-heading-text {
+  font-size: 1.0rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.01em;
+}
+
+/* ── Команда (/cmd — описание) ────────────── */
+.rt-command {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 8px 14px;
+  background: rgba(142, 68, 173, 0.07);
+  border: 1px solid rgba(142, 68, 173, 0.2);
+  border-radius: 8px;
+  margin: 3px 0;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.rt-command:hover {
+  background: rgba(142, 68, 173, 0.14);
+  border-color: rgba(142, 68, 173, 0.4);
+}
+
+.rt-cmd-name {
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #c39bd3;
+  background: rgba(142, 68, 173, 0.18);
+  padding: 2px 9px;
+  border-radius: 5px;
+  flex-shrink: 0;
+  letter-spacing: 0.03em;
+}
+
+.rt-cmd-desc {
+  font-size: 0.88rem;
+  color: #999;
+  line-height: 1.4;
+}
+
+/* ── Ранговый пункт ───────────────────────── */
+.rt-rank-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  font-size: 0.92rem;
+  color: #bbb;
+  border-left: 2px solid rgba(255,255,255,0.08);
+  margin: 2px 0;
+  transition: background 0.15s ease;
+}
+
+.rt-rank-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #ddd;
+}
+
+/* ── Список ───────────────────────────────── */
+.rt-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 4px 0;
+  font-size: 0.95rem;
+  color: #bbb;
+  line-height: 1.55;
+}
+
+.rt-bullet {
+  color: #00eaff;
+  font-size: 0.75rem;
+  margin-top: 4px;
+  flex-shrink: 0;
+  opacity: 0.7;
 }
 
 /* --- Скелетон загрузки --- */
