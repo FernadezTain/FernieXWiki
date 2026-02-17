@@ -22,6 +22,7 @@
   backdrop-filter: blur(8px);
   transition: all 0.25s ease;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .back-btn:hover {
@@ -38,6 +39,23 @@
 
 .back-btn:hover .back-arrow {
   transform: translateX(-3px);
+}
+
+/* --- На мобилах кнопка выходит из fixed и встаёт в поток --- */
+@media (max-width: 600px) {
+  .back-btn {
+    position: relative;
+    top: auto;
+    left: auto;
+    align-self: flex-start;
+    margin: 12px 0 0 0;
+    padding: 8px 16px;
+    font-size: 0.82rem;
+  }
+
+  .back-btn:hover {
+    transform: none;
+  }
 }
 
 /* --- Обёртка статьи --- */
@@ -441,15 +459,18 @@
     font-size: 1.5rem;
   }
 
-  .back-btn {
-    top: 12px;
-    left: 12px;
-    padding: 8px 16px;
-    font-size: 0.82rem;
-  }
-
+  /* back-btn уже переключён на relative в @600px блоке выше */
   .article-wrapper {
     margin-top: 80px;
+  }
+}
+
+@media (max-width: 600px) {
+  /* wrapper становится колонкой: кнопка назад → потом статья */
+  .article-wrapper {
+    margin-top: 72px;
+    flex-direction: column;
+    gap: 0;
   }
 }
 
@@ -460,5 +481,12 @@
 
   .article-title {
     font-size: 1.25rem;
+  }
+}
+
+/* --- Отступ карточки от кнопки на мобилах --- */
+@media (max-width: 600px) {
+  .article-card {
+    margin-top: 12px;
   }
 }
