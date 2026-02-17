@@ -1,3 +1,12 @@
+/* ============================================
+   Сброс opacity при загрузке (fix чёрного экрана при history.back)
+   ============================================ */
+document.body.style.opacity = "0";
+window.addEventListener("pageshow", () => {
+  document.body.style.transition = "opacity 0.35s ease";
+  document.body.style.opacity = "1";
+});
+
 document.addEventListener("DOMContentLoaded", () => {
   const currentSection = document.querySelector(".current-section");
   const postsContainer = document.getElementById("posts-container");
