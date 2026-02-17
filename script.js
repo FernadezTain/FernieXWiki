@@ -76,13 +76,28 @@ document.addEventListener("DOMContentLoaded", () => {
         const div = document.createElement("div");
         div.className = "post";
 
+        // Первая буква автора для аватара
+        const authorName = post.author || "?";
+        const avatarLetter = authorName.charAt(0).toUpperCase();
+
         div.innerHTML = `
-          <div class="post-title">${escapeHtml(title)}</div>
-          <div class="post-preview-meta">
-            <span class="author">${escapeHtml(post.author || "Неизвестно")}</span>
-            <span class="date">${formatDate(post.date)}</span>
+          <div class="post-inner">
+            <div class="post-title">${escapeHtml(title)}</div>
+            <div class="post-footer">
+              <div class="post-meta-left">
+                <div class="post-avatar">${avatarLetter}</div>
+                <div class="post-meta-text">
+                  <div class="post-preview-meta">
+                    <span class="author">${escapeHtml(authorName)}</span>
+                  </div>
+                  <div class="post-preview-meta">
+                    <span class="date">${formatDate(post.date)}</span>
+                  </div>
+                </div>
+              </div>
+              <a class="read-btn" href="${articleUrl}">Читать статью</a>
+            </div>
           </div>
-          <a class="read-btn" href="${articleUrl}">Читать статью</a>
         `;
 
         // Клик на автора — баннер профиля
