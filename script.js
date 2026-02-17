@@ -10,7 +10,7 @@ window.addEventListener("pageshow", () => {
 document.addEventListener("DOMContentLoaded", () => {
   const currentSection = document.querySelector(".current-section");
   const postsContainer = document.getElementById("posts-container");
-  const hint           = document.querySelector(".main-content .hint");
+  const hint           = document.getElementById("main-hint");
   const logoLink       = document.getElementById("logo-link");
   const banner         = document.getElementById("dev-banner");
   const closeBannerBtn = document.getElementById("close-banner");
@@ -223,7 +223,12 @@ document.addEventListener("DOMContentLoaded", () => {
       postsContainer.innerHTML = "";
 
       if (!posts.length) {
-        postsContainer.innerHTML = "<p class='hint'>Пока нет постов</p>";
+        postsContainer.innerHTML = `
+          <div class="hint-state empty">
+            <span class="hint-icon">📭</span>
+            <span class="hint-title">Пока нет постов</span>
+            <span class="hint-sub">В этом разделе ещё нет материалов — загляни позже</span>
+          </div>`;
         return;
       }
 
@@ -233,7 +238,12 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
     } catch (err) {
-      postsContainer.innerHTML = "<p class='hint'>Ошибка загрузки постов</p>";
+      postsContainer.innerHTML = `
+        <div class="hint-state error">
+          <span class="hint-icon">⚠️</span>
+          <span class="hint-title">Не удалось загрузить посты</span>
+          <span class="hint-sub">Проверь подключение или попробуй обновить страницу</span>
+        </div>`;
       console.error(err);
     }
   }
