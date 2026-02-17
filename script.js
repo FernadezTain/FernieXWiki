@@ -10,10 +10,24 @@ window.addEventListener("pageshow", () => {
 document.addEventListener("DOMContentLoaded", () => {
   const currentSection = document.querySelector(".current-section");
   const postsContainer = document.getElementById("posts-container");
-  const hint = document.querySelector(".main-content .hint");
-  const logoLink = document.getElementById("logo-link");
-  const banner = document.getElementById("dev-banner");
+  const hint           = document.querySelector(".main-content .hint");
+  const logoLink       = document.getElementById("logo-link");
+  const banner         = document.getElementById("dev-banner");
   const closeBannerBtn = document.getElementById("close-banner");
+  const searchInput    = document.querySelector(".search-bar input");
+
+  // Все категории сайта (должны совпадать с data-section в HTML)
+  const ALL_CATEGORIES = [
+    "Игровые функции",
+    "Чат-менеджер",
+    "Команды",
+    "Статистика",
+    "Настройки",
+    "Дополнительно"
+  ];
+
+  // Текущая активная категория (null = главная / поиск)
+  let activeCategory = null;
 
   // =========================
   // Закрытие баннера разработки
@@ -28,8 +42,11 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".side-item").forEach(item => {
     item.addEventListener("click", () => {
       const section = item.dataset.section;
+      activeCategory = section;
       if (currentSection) currentSection.textContent = section;
       if (hint) hint.style.display = "none";
+      if (searchInput) searchInput.value = "";
+      clearSearchState();
       loadPosts(section);
     });
   });
@@ -40,8 +57,11 @@ document.addEventListener("DOMContentLoaded", () => {
   if (logoLink) {
     logoLink.addEventListener("click", e => {
       e.preventDefault();
+      activeCategory = null;
       if (currentSection) currentSection.textContent = "Главная";
       if (hint) hint.style.display = "block";
+      if (searchInput) searchInput.value = "";
+      clearSearchState();
       postsContainer.innerHTML = "";
     });
   }
@@ -59,16 +79,148 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================
+  // ПОИСК
+  // =========================
+  let searchTimer = null;
+  let searchResultsEl = null;
+
+  function clearSearchState() {
+    if (searchResultsEl) {
+      searchResultsEl.remove();
+      searchResultsEl = null;
+    }
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener("input", () => {
+      const q = searchInput.value.trim();
+
+      // Сброс таймера debounce
+      clearTimeout(searchTimer);
+
+      if (!q) {
+        clearSearchState();
+        // Восстанавливаем предыдущий вид
+        if (activeCategory) {
+          if (hint) hint.style.display = "none";
+          loadPosts(activeCategory);
+        } else {
+          postsContainer.innerHTML = "";
+          if (hint) hint.style.display = "block";
+        }
+        return;
+      }
+
+      // Debounce 300ms
+      searchTimer = setTimeout(() => runSearch(q), 300);
+    });
+
+    // Очистка по Escape
+    searchInput.addEventListener("keydown", e => {
+      if (e.key === "Escape") {
+        searchInput.value = "";
+        searchInput.dispatchEvent(new Event("input"));
+      }
+    });
+  }
+
+  async function runSearch(query) {
+    if (hint) hint.style.display = "none";
+    postsContainer.innerHTML = "";
+    if (currentSection) currentSection.textContent = `🔍 "${query}"`;
+
+    // Показываем спиннер
+    showSearchSpinner();
+
+    const q = query.toLowerCase();
+
+    // Загружаем все категории параллельно
+    const results = [];
+    await Promise.allSettled(
+      ALL_CATEGORIES.map(async (cat) => {
+        try {
+          const res = await fetch(`posts/${encodeURIComponent(cat)}.json`);
+          if (!res.ok) return;
+          const posts = await res.json();
+          posts.forEach((post, index) => {
+            const title  = (post.title  || getAutoTitle(post.text) || "").toLowerCase();
+            const text   = (post.text   || "").toLowerCase();
+            const author = (post.author || "").toLowerCase();
+
+            if (title.includes(q) || text.includes(q) || author.includes(q)) {
+              results.push({ post, cat, index });
+            }
+          });
+        } catch { /* категория не существует — пропускаем */ }
+      })
+    );
+
+    // Убираем спиннер
+    clearSearchState();
+    postsContainer.innerHTML = "";
+
+    if (!results.length) {
+      showSearchEmpty(query);
+      return;
+    }
+
+    // Заголовок результатов
+    const header = document.createElement("div");
+    header.className = "search-header";
+    header.innerHTML = `
+      <span class="search-count">${results.length}</span>
+      <span class="search-label">результат${plural(results.length)} по запросу</span>
+      <span class="search-query">"${escapeHtml(query)}"</span>
+    `;
+    postsContainer.appendChild(header);
+
+    // Рендерим карточки
+    results.forEach(({ post, cat, index }) => {
+      const div = buildPostCard(post, cat, index, query);
+      postsContainer.appendChild(div);
+    });
+  }
+
+  function showSearchSpinner() {
+    clearSearchState();
+    searchResultsEl = document.createElement("div");
+    searchResultsEl.className = "search-spinner-wrap";
+    searchResultsEl.innerHTML = `
+      <div class="search-spinner"></div>
+      <span>Поиск по всем разделам...</span>
+    `;
+    postsContainer.innerHTML = "";
+    postsContainer.appendChild(searchResultsEl);
+  }
+
+  function showSearchEmpty(query) {
+    postsContainer.innerHTML = `
+      <div class="search-empty">
+        <div class="search-empty-icon">🔍</div>
+        <p>Ничего не найдено по запросу <strong>"${escapeHtml(query)}"</strong></p>
+        <span>Попробуйте другое ключевое слово или имя автора</span>
+      </div>
+    `;
+  }
+
+  function plural(n) {
+    if (n % 10 === 1 && n % 100 !== 11) return "";
+    if ([2,3,4].includes(n % 10) && ![12,13,14].includes(n % 100)) return "а";
+    return "ов";
+  }
+
+  // =========================
   // Загрузка постов (превью)
   // =========================
   async function loadPosts(category) {
-    postsContainer.innerHTML = "";
+    postsContainer.innerHTML = `<div class="posts-loading"><div class="search-spinner"></div></div>`;
 
     try {
       const res = await fetch(`posts/${encodeURIComponent(category)}.json`);
       if (!res.ok) throw new Error("Файл не найден");
-
       const posts = await res.json();
+
+      postsContainer.innerHTML = "";
 
       if (!posts.length) {
         postsContainer.innerHTML = "<p class='hint'>Пока нет постов</p>";
@@ -76,55 +228,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       posts.forEach((post, index) => {
-        const articleId = `${category}-${index}`;
-        const articleUrl = `content.html?id=${encodeURIComponent(articleId)}`;
-
-        // Заголовок: если есть поле title — берём его, иначе — первая строка текста
-        const title = post.title || getAutoTitle(post.text);
-
-        const div = document.createElement("div");
-        div.className = "post";
-
-        // Первая буква автора для аватара
-        const authorName = post.author || "?";
-        const avatarLetter = authorName.charAt(0).toUpperCase();
-
-        div.innerHTML = `
-          <div class="post-inner">
-            <div class="post-title">${escapeHtml(title)}</div>
-            <div class="post-footer">
-              <div class="post-meta-left">
-                <div class="post-avatar">${avatarLetter}</div>
-                <div class="post-meta-text">
-                  <div class="post-preview-meta">
-                    <span class="author">${escapeHtml(authorName)}</span>
-                  </div>
-                  <div class="post-preview-meta">
-                    <span class="date">${formatDate(post.date)}</span>
-                  </div>
-                </div>
-              </div>
-              <a class="read-btn" href="${articleUrl}">Читать статью</a>
-            </div>
-          </div>
-        `;
-
-        // Клик на автора — баннер профиля
-        const authorEl = div.querySelector(".author");
-        authorEl.addEventListener("click", e => {
-          e.stopPropagation();
-          showAuthorBanner(post.author);
-        });
-
-        // Клик на кнопку — плавный переход
-        const readBtn = div.querySelector(".read-btn");
-        readBtn.addEventListener("click", e => {
-          e.preventDefault();
-          document.body.style.transition = "opacity 0.35s ease";
-          document.body.style.opacity = "0";
-          setTimeout(() => { window.location.href = articleUrl; }, 350);
-        });
-
+        const div = buildPostCard(post, category, index, null);
         postsContainer.appendChild(div);
       });
 
@@ -132,6 +236,93 @@ document.addEventListener("DOMContentLoaded", () => {
       postsContainer.innerHTML = "<p class='hint'>Ошибка загрузки постов</p>";
       console.error(err);
     }
+  }
+
+  // =========================
+  // Строим карточку поста
+  // =========================
+  function buildPostCard(post, category, index, searchQuery) {
+    const articleId  = `${category}-${index}`;
+    const articleUrl = `content.html?id=${encodeURIComponent(articleId)}`;
+    const title      = post.title || getAutoTitle(post.text);
+    const authorName = post.author || "?";
+    const avatarLetter = authorName.charAt(0).toUpperCase();
+
+    // Подсветка совпадений
+    const displayTitle  = searchQuery ? highlight(title, searchQuery)      : escapeHtml(title);
+    const displayAuthor = searchQuery ? highlight(authorName, searchQuery) : escapeHtml(authorName);
+
+    // Цвет бейджа категории
+    const badgeColor = getCategoryColor(category);
+
+    const div = document.createElement("div");
+    div.className = "post";
+    div.innerHTML = `
+      <div class="post-inner">
+        <div class="post-top">
+          <span class="post-category-badge" style="--badge-color:${badgeColor}">${escapeHtml(category)}</span>
+        </div>
+        <div class="post-title">${displayTitle}</div>
+        <div class="post-footer">
+          <div class="post-meta-left">
+            <div class="post-avatar">${avatarLetter}</div>
+            <div class="post-meta-text">
+              <div class="post-preview-meta">
+                <span class="author">${displayAuthor}</span>
+              </div>
+              <div class="post-preview-meta">
+                <span class="date">${formatDate(post.date)}</span>
+              </div>
+            </div>
+          </div>
+          <a class="read-btn" href="${articleUrl}">Читать статью</a>
+        </div>
+      </div>
+    `;
+
+    // Клик автор
+    div.querySelector(".author").addEventListener("click", e => {
+      e.stopPropagation();
+      showAuthorBanner(post.author);
+    });
+
+    // Клик кнопка
+    div.querySelector(".read-btn").addEventListener("click", e => {
+      e.preventDefault();
+      document.body.style.transition = "opacity 0.35s ease";
+      document.body.style.opacity = "0";
+      setTimeout(() => { window.location.href = articleUrl; }, 350);
+    });
+
+    return div;
+  }
+
+  // =========================
+  // Цвет бейджа по категории
+  // =========================
+  function getCategoryColor(cat) {
+    const map = {
+      "Игровые функции": "#00c853",
+      "Чат-менеджер":    "#ff9100",
+      "Команды":         "#00eaff",
+      "Статистика":      "#e040fb",
+      "Настройки":       "#ff5252",
+      "Дополнительно":   "#8e44ad"
+    };
+    return map[cat] || "#555";
+  }
+
+  // =========================
+  // Подсветка совпадений
+  // =========================
+  function highlight(str, query) {
+    if (!query) return escapeHtml(str);
+    const escaped  = escapeHtml(str);
+    const escapedQ = escapeHtml(query).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return escaped.replace(
+      new RegExp(`(${escapedQ})`, "gi"),
+      '<mark class="search-mark">$1</mark>'
+    );
   }
 
   // =========================
@@ -165,10 +356,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const [datePart, timePart] = dateStr.split(" ");
     if (!datePart) return dateStr;
     const [y, m, d] = datePart.split("-");
-    const months = [
-      "янв","фев","мар","апр","мая","июн",
-      "июл","авг","сен","окт","ноя","дек"
-    ];
+    const months = ["янв","фев","мар","апр","мая","июн","июл","авг","сен","окт","ноя","дек"];
     const monthName = months[parseInt(m, 10) - 1] || m;
     const base = `${parseInt(d, 10)} ${monthName} ${y}`;
     return timePart ? `${base}, ${timePart}` : base;
@@ -179,55 +367,39 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================
   function showAuthorBanner(nick) {
     if (document.getElementById("author-banner")) return;
-
-    const banner = document.createElement("div");
-    banner.id = "author-banner";
-    banner.style.cssText = `
-      position:fixed;top:0;left:0;width:100%;height:100%;
-      background:rgba(10,10,10,0.95);display:flex;
-      align-items:center;justify-content:center;z-index:9999;
-    `;
-
-    banner.innerHTML = `
+    const b = document.createElement("div");
+    b.id = "author-banner";
+    b.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;
+      background:rgba(10,10,10,0.95);display:flex;align-items:center;
+      justify-content:center;z-index:9999;`;
+    b.innerHTML = `
       <div style="background:#141414;padding:30px 25px;border-radius:20px;
                   text-align:center;max-width:350px;width:90%;
                   box-shadow:0 10px 40px rgba(0,234,255,0.4);">
         <h2 style="color:#00eaff;margin-bottom:15px;">Администрация сайта</h2>
         <p style="color:#ccc;margin-bottom:10px;">Имя: ${escapeHtml(nick)}</p>
-        <button id="profile-btn"
-          style="background:#00eaff;color:#000;border:none;border-radius:30px;
-                 padding:12px 25px;font-weight:bold;cursor:pointer;margin-bottom:10px;">
-          Перейти в профиль
-        </button>
+        <button id="profile-btn" style="background:#00eaff;color:#000;border:none;border-radius:30px;
+          padding:12px 25px;font-weight:bold;cursor:pointer;margin-bottom:10px;">Перейти в профиль</button>
         <br>
-        <button id="close-author-banner"
-          style="margin-top:10px;background:#ff6b6b;color:#fff;border:none;
-                 border-radius:30px;padding:10px 25px;cursor:pointer;">
-          Закрыть
-        </button>
-      </div>
-    `;
-
-    document.body.appendChild(banner);
-
+        <button id="close-author-banner" style="margin-top:10px;background:#ff6b6b;color:#fff;
+          border:none;border-radius:30px;padding:10px 25px;cursor:pointer;">Закрыть</button>
+      </div>`;
+    document.body.appendChild(b);
     document.getElementById("profile-btn").addEventListener("click", () => {
       window.open(`profile.html?nick=${encodeURIComponent(nick)}`, "_blank");
     });
-
-    document.getElementById("close-author-banner").addEventListener("click", () => {
-      banner.remove();
-    });
+    document.getElementById("close-author-banner").addEventListener("click", () => b.remove());
   }
 
   // =========================
   // Фиолетовый индикатор верхней панели
   // =========================
-  const links = document.querySelectorAll(".nav-link");
+  const links    = document.querySelectorAll(".nav-link");
   const indicator = document.querySelector(".nav-indicator");
 
   function moveIndicator(el) {
     if (!el || !indicator) return;
-    const rect = el.getBoundingClientRect();
+    const rect       = el.getBoundingClientRect();
     const parentRect = el.parentElement.getBoundingClientRect();
     indicator.style.width = rect.width + "px";
     indicator.style.left  = (rect.left - parentRect.left) + "px";
@@ -257,7 +429,6 @@ document.querySelectorAll(".page-btn").forEach(btn => {
   btn.addEventListener("click", () => {
     const link = btn.dataset.link;
     if (!link || btn.classList.contains("active")) return;
-
     document.body.style.transition = "opacity 0.35s ease";
     document.body.style.opacity = "0";
     setTimeout(() => { window.location.href = link; }, 350);
