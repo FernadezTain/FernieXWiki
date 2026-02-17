@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FernieX Wiki — Статья</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="content.css">
+</head>
+<body>
+  <canvas id="particle-network"></canvas>
+
+  <!-- Верхняя навигация -->
+  <div class="page-switcher">
+    <div class="page-btn" data-link="index.html">FernieX</div>
+    <div class="page-btn" data-link="team.html">Команда</div>
+    <div class="page-btn" data-link="rewieves.html">Отзывы</div>
+  </div>
+
+  <!-- Кнопка назад -->
+  <button class="back-btn" id="back-btn">
+    <span class="back-arrow">←</span>
+    <span class="back-label">Назад</span>
+  </button>
+
+  <!-- Основной контент статьи -->
+  <main class="article-wrapper">
+    <!-- Скелетон загрузки -->
+    <div class="article-skeleton" id="article-skeleton">
+      <div class="skeleton-category"></div>
+      <div class="skeleton-title"></div>
+      <div class="skeleton-meta"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line short"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line mid"></div>
+      <div class="skeleton-line"></div>
+    </div>
+
+    <!-- Сама статья -->
+    <article class="article-card" id="article-card" style="display:none">
+      <div class="article-category" id="article-category"></div>
+      <h1 class="article-title" id="article-title"></h1>
+      <div class="article-meta">
+        <span class="article-author" id="article-author"></span>
+        <span class="meta-divider">·</span>
+        <span class="article-date" id="article-date"></span>
+      </div>
+      <div class="article-divider"></div>
+      <div class="article-photo-wrap" id="article-photo-wrap" style="display:none">
+        <img class="article-photo" id="article-photo" alt="Фото к статье">
+      </div>
+      <div class="article-body" id="article-body"></div>
+    </article>
+
+    <!-- Ошибка -->
+    <div class="article-error" id="article-error" style="display:none">
+      <div class="error-icon">⚠</div>
+      <h2>Статья не найдена</h2>
+      <p>Возможно, она была удалена или ссылка неверна.</p>
+      <button class="back-btn-inline" onclick="history.back()">← Вернуться назад</button>
+    </div>
+  </main>
+
+  <script src="particles.js"></script>
+  <script src="content.js"></script>
+</body>
+</html>
