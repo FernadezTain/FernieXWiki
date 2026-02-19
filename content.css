@@ -41,7 +41,6 @@
   transform: translateX(-3px);
 }
 
-/* --- На мобилах кнопка выходит из fixed и встаёт в поток --- */
 @media (max-width: 600px) {
   .back-btn {
     position: relative;
@@ -52,7 +51,6 @@
     padding: 8px 16px;
     font-size: 0.82rem;
   }
-
   .back-btn:hover {
     transform: none;
   }
@@ -67,8 +65,6 @@
   padding: 0 20px;
   z-index: 1;
   position: relative;
-
-  /* центрирование */
   margin-left: auto;
   margin-right: auto;
   display: flex;
@@ -118,7 +114,7 @@
   letter-spacing: -0.02em;
 }
 
-/* --- Мета (автор + дата) --- */
+/* --- Мета --- */
 .article-meta {
   display: flex;
   align-items: center;
@@ -127,19 +123,9 @@
   margin-bottom: 28px;
 }
 
-.article-author {
-  color: #00eaff;
-  font-weight: 600;
-}
-
-.meta-divider {
-  color: #444;
-  font-size: 1.2rem;
-}
-
-.article-date {
-  color: #666;
-}
+.article-author { color: #00eaff; font-weight: 600; }
+.meta-divider   { color: #444; font-size: 1.2rem; }
+.article-date   { color: #666; }
 
 /* --- Разделитель --- */
 .article-divider {
@@ -174,7 +160,6 @@
   gap: 6px;
 }
 
-/* Блок-абзац (разделённый двойным \n) */
 .rt-block {
   display: flex;
   flex-direction: column;
@@ -182,14 +167,21 @@
   margin-bottom: 18px;
 }
 
-/* Обычный абзац */
 .rt-para {
   margin: 0;
   color: #c8c8c8;
   line-height: 1.75;
 }
 
-/* ── Эмодзи-заголовок ─────────────────────── */
+/* ── Горизонтальный разделитель ─────────── */
+.rt-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.08), transparent);
+  margin: 28px 0;
+  border-radius: 2px;
+}
+
+/* ── Эмодзи-заголовок ─────────────────── */
 .rt-heading {
   display: flex;
   align-items: center;
@@ -214,7 +206,220 @@
   letter-spacing: 0.01em;
 }
 
-/* ── Команда (/cmd — описание) ────────────── */
+/* ── Секция NEW / BugFix ─────────────── */
+.rt-section-badge {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 32px 0 16px;
+  padding: 16px 22px;
+  border-radius: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.rt-section-badge::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  border-radius: 14px 0 0 14px;
+}
+
+.rt-section-badge.new-section {
+  background: rgba(0, 234, 255, 0.06);
+  border: 1px solid rgba(0, 234, 255, 0.15);
+}
+
+.rt-section-badge.new-section::before {
+  background: linear-gradient(180deg, #00eaff, #0088bb);
+}
+
+.rt-section-badge.fix-section {
+  background: rgba(80, 220, 120, 0.06);
+  border: 1px solid rgba(80, 220, 120, 0.18);
+}
+
+.rt-section-badge.fix-section::before {
+  background: linear-gradient(180deg, #50dc78, #2aab52);
+}
+
+.rt-section-badge-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.rt-section-badge-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rt-section-badge-label {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+.new-section .rt-section-badge-label { color: #00eaff; }
+.fix-section .rt-section-badge-label { color: #50dc78; }
+
+.rt-section-badge-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.01em;
+}
+
+/* ── Чекмарк-пункт ✅ ─────────────────── */
+.rt-check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  border-radius: 10px;
+  margin: 3px 0;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+  cursor: default;
+}
+
+.rt-check-item:hover {
+  background: rgba(0, 234, 255, 0.05);
+  border-color: rgba(0, 234, 255, 0.15);
+  transform: translateX(2px);
+}
+
+.rt-check-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+  line-height: 1.4;
+  filter: drop-shadow(0 0 6px rgba(80, 220, 120, 0.6));
+}
+
+.rt-check-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+}
+
+.rt-check-text {
+  font-size: 0.92rem;
+  color: #d0d0d0;
+  line-height: 1.55;
+}
+
+/* ── Блок с командой-подсказкой 💕 ─────── */
+.rt-check-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  padding: 4px 12px;
+  background: rgba(142, 68, 173, 0.12);
+  border: 1px solid rgba(142, 68, 173, 0.3);
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-family: 'Consolas', 'Courier New', monospace;
+  color: #c39bd3;
+  width: fit-content;
+}
+
+/* ── Блок цитаты/нарушения > ──────────── */
+.rt-quote-block {
+  margin: 8px 0 8px 0;
+  padding: 12px 16px;
+  background: rgba(255, 107, 107, 0.06);
+  border: 1px solid rgba(255, 107, 107, 0.15);
+  border-left: 3px solid rgba(255, 107, 107, 0.5);
+  border-radius: 0 10px 10px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rt-quote-line {
+  font-size: 0.84rem;
+  color: #ff9999;
+  line-height: 1.5;
+  padding: 2px 0;
+}
+
+/* ── Подкатегория товаров ─────────────── */
+.rt-shop-category {
+  margin: 14px 0 6px 0;
+  padding: 10px 16px;
+  background: rgba(255, 215, 0, 0.05);
+  border: 1px solid rgba(255, 215, 0, 0.12);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rt-shop-category-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.rt-shop-category-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #ffd700;
+  letter-spacing: 0.02em;
+}
+
+/* Субподкатегория (🇷🇺 / 🌍) */
+.rt-shop-sub {
+  margin: 6px 0 4px 10px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: #888;
+  font-weight: 600;
+}
+
+/* ── Товары в строку ──────────────────── */
+.rt-shop-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px 0 4px 10px;
+}
+
+.rt-shop-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  font-size: 0.78rem;
+  color: #bbb;
+  transition: all 0.2s ease;
+  cursor: default;
+}
+
+.rt-shop-tag:hover {
+  background: rgba(0, 234, 255, 0.08);
+  border-color: rgba(0, 234, 255, 0.25);
+  color: #e0e0e0;
+}
+
+/* ── Команда /cmd ─────────────────────── */
 .rt-command {
   display: flex;
   align-items: baseline;
@@ -250,260 +455,7 @@
   line-height: 1.4;
 }
 
-/* ── Ранговый пункт ───────────────────────── */
-.rt-rank-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 6px 14px;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 8px;
-  font-size: 0.92rem;
-  color: #bbb;
-  border-left: 2px solid rgba(255,255,255,0.08);
-  margin: 2px 0;
-  transition: background 0.15s ease;
-}
-
-.rt-rank-item:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: #ddd;
-}
-
-/* ── Список ───────────────────────────────── */
-.rt-list-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 4px 0;
-  font-size: 0.95rem;
-  color: #bbb;
-  line-height: 1.55;
-}
-
-.rt-bullet {
-  color: #00eaff;
-  font-size: 0.75rem;
-  margin-top: 4px;
-  flex-shrink: 0;
-  opacity: 0.7;
-}
-
-/* --- Скелетон загрузки --- */
-.article-skeleton {
-  background: rgba(16, 16, 16, 0.92);
-  border-radius: 20px;
-  padding: 44px 48px;
-  border: 1px solid rgba(0, 234, 255, 0.08);
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.skeleton-category,
-.skeleton-title,
-.skeleton-meta,
-.skeleton-line {
-  background: rgba(255,255,255,0.06);
-  border-radius: 8px;
-  animation: shimmer 1.6s infinite linear;
-  background-size: 200% 100%;
-  background-image: linear-gradient(
-    90deg,
-    rgba(255,255,255,0.04) 0%,
-    rgba(255,255,255,0.10) 50%,
-    rgba(255,255,255,0.04) 100%
-  );
-}
-
-.skeleton-category { height: 22px; width: 100px; border-radius: 30px; }
-.skeleton-title    { height: 44px; width: 75%; border-radius: 10px; margin-top: 4px; }
-.skeleton-meta     { height: 16px; width: 200px; }
-.skeleton-line     { height: 14px; }
-.skeleton-line.short { width: 60%; }
-.skeleton-line.mid   { width: 80%; }
-
-@keyframes shimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position:  200% 0; }
-}
-
-/* --- Ошибка --- */
-.article-error {
-  text-align: center;
-  padding: 80px 20px;
-  color: #aaa;
-}
-
-.error-icon {
-  font-size: 3rem;
-  margin-bottom: 16px;
-  color: #ff6b6b;
-}
-
-.article-error h2 {
-  color: #ff6b6b;
-  margin-bottom: 10px;
-  font-size: 1.4rem;
-}
-
-.article-error p {
-  margin-bottom: 28px;
-  color: #666;
-}
-
-.back-btn-inline {
-  background: transparent;
-  border: 1px solid rgba(0,234,255,0.3);
-  color: #00eaff;
-  border-radius: 30px;
-  padding: 10px 24px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: all 0.2s ease;
-}
-
-.back-btn-inline:hover {
-  background: rgba(0,234,255,0.08);
-  border-color: #00eaff;
-}
-
-/* ============================================
-   Стили постов на index.html (карточки-превью)
-   ============================================ */
-
-/* Новый стиль поста — превью карточка */
-.post {
-  background: rgba(16, 16, 16, 0.9);
-  border-left: 3px solid #00eaff;
-  border-radius: 14px;
-  padding: 20px 22px;
-  margin-bottom: 16px;
-  box-shadow: 0 4px 20px rgba(0, 234, 255, 0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  cursor: default;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.post:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(0, 234, 255, 0.22);
-}
-
-.post-title {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: #fff;
-  line-height: 1.3;
-}
-
-.post-preview-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.8rem;
-  gap: 12px;
-}
-
-.post-preview-meta .author {
-  color: #00eaff;
-  cursor: pointer;
-  font-weight: 600;
-  flex-shrink: 0;
-}
-
-.post-preview-meta .author:hover {
-  text-decoration: underline;
-}
-
-.post-preview-meta .date {
-  color: #555;
-  flex-shrink: 0;
-}
-
-.read-btn {
-  align-self: flex-start;
-  margin-top: 4px;
-  padding: 8px 20px;
-  background: rgba(142, 68, 173, 0.12);
-  border: 1px solid rgba(142, 68, 173, 0.4);
-  color: #c39bd3;
-  border-radius: 30px;
-  font-size: 0.82rem;
-  font-weight: 700;
-  cursor: pointer;
-  letter-spacing: 0.04em;
-  transition: all 0.22s ease;
-  text-decoration: none;
-  display: inline-block;
-}
-
-.read-btn:hover {
-  background: rgba(142, 68, 173, 0.25);
-  border-color: #8e44ad;
-  color: #fff;
-  box-shadow: 0 0 18px rgba(142, 68, 173, 0.4);
-  transform: translateY(-1px);
-}
-
-/* --- Адаптив --- */
-@media (max-width: 768px) {
-  .article-card {
-    padding: 28px 22px;
-  }
-
-  .article-title {
-    font-size: 1.5rem;
-  }
-
-  /* back-btn уже переключён на relative в @600px блоке выше */
-  .article-wrapper {
-    margin-top: 80px;
-  }
-}
-
-@media (max-width: 600px) {
-  /* wrapper становится колонкой: кнопка назад → потом статья */
-  .article-wrapper {
-    margin-top: 72px;
-    flex-direction: column;
-    gap: 0;
-  }
-}
-
-@media (max-width: 480px) {
-  .article-card {
-    padding: 22px 16px;
-  }
-
-  .article-title {
-    font-size: 1.25rem;
-  }
-}
-
-/* --- Отступ карточки от кнопки на мобилах --- */
-@media (max-width: 600px) {
-  .article-card {
-    margin-top: 12px;
-  }
-}
-
-/* ============================================
-   Типографика — правила, разделы, подпункты
-   ============================================ */
-
-/* Горизонтальный разделитель */
-.rt-divider {
-  height: 1px;
-  background: linear-gradient(to right, transparent, rgba(255,255,255,0.08), transparent);
-  margin: 28px 0;
-  border-radius: 2px;
-}
-
-/* Раздел верхнего уровня: "1. Раздел безопасности" */
+/* ── Раздел верхнего уровня ───────────── */
 .rt-section-title {
   display: flex;
   align-items: center;
@@ -543,7 +495,7 @@
   letter-spacing: 0.01em;
 }
 
-/* Подпункт: "1.1. Название" */
+/* ── Подпункт ─────────────────────────── */
 .rt-subpoint-title {
   display: flex;
   align-items: center;
@@ -573,7 +525,7 @@
   color: #ddd;
 }
 
-/* Блок с меткой: Описание / Наказание / Примечание */
+/* ── Блок с меткой ────────────────────── */
 .rt-labeled-block {
   display: flex;
   align-items: flex-start;
@@ -590,19 +542,9 @@
   background: color-mix(in srgb, var(--label-color, #aaa) 10%, transparent);
 }
 
-.rt-label-icon {
-  font-size: 1rem;
-  flex-shrink: 0;
-  margin-top: 1px;
-  line-height: 1.4;
-}
+.rt-label-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; line-height: 1.4; }
 
-.rt-label-content {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  min-width: 0;
-}
+.rt-label-content { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 
 .rt-label-title {
   font-size: 0.72rem;
@@ -613,13 +555,9 @@
   line-height: 1;
 }
 
-.rt-label-text {
-  font-size: 0.88rem;
-  color: #bbb;
-  line-height: 1.55;
-}
+.rt-label-text { font-size: 0.88rem; color: #bbb; line-height: 1.55; }
 
-/* Точка-маркер общий · текст */
+/* ── Точка-маркер ─────────────────────── */
 .rt-dot-item {
   display: flex;
   gap: 10px;
@@ -636,4 +574,208 @@
   line-height: 1;
   flex-shrink: 0;
   margin-top: -2px;
+}
+
+/* ── Ранговый пункт ───────────────────── */
+.rt-rank-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  font-size: 0.92rem;
+  color: #bbb;
+  border-left: 2px solid rgba(255,255,255,0.08);
+  margin: 2px 0;
+  transition: background 0.15s ease;
+}
+
+.rt-rank-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #ddd;
+}
+
+/* ── Список ───────────────────────────── */
+.rt-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 4px 0;
+  font-size: 0.95rem;
+  color: #bbb;
+  line-height: 1.55;
+}
+
+.rt-bullet {
+  color: #00eaff;
+  font-size: 0.75rem;
+  margin-top: 4px;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+/* ============================================
+   Скелетон
+   ============================================ */
+.article-skeleton {
+  background: rgba(16, 16, 16, 0.92);
+  border-radius: 20px;
+  padding: 44px 48px;
+  border: 1px solid rgba(0, 234, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.skeleton-category,
+.skeleton-title,
+.skeleton-meta,
+.skeleton-line {
+  background: rgba(255,255,255,0.06);
+  border-radius: 8px;
+  animation: shimmer 1.6s infinite linear;
+  background-size: 200% 100%;
+  background-image: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.04) 0%,
+    rgba(255,255,255,0.10) 50%,
+    rgba(255,255,255,0.04) 100%
+  );
+}
+
+.skeleton-category { height: 22px; width: 100px; border-radius: 30px; }
+.skeleton-title    { height: 44px; width: 75%; border-radius: 10px; margin-top: 4px; }
+.skeleton-meta     { height: 16px; width: 200px; }
+.skeleton-line     { height: 14px; }
+.skeleton-line.short { width: 60%; }
+.skeleton-line.mid   { width: 80%; }
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+/* ============================================
+   Ошибка
+   ============================================ */
+.article-error {
+  text-align: center;
+  padding: 80px 20px;
+  color: #aaa;
+}
+
+.error-icon { font-size: 3rem; margin-bottom: 16px; color: #ff6b6b; }
+
+.article-error h2 { color: #ff6b6b; margin-bottom: 10px; font-size: 1.4rem; }
+.article-error p  { margin-bottom: 28px; color: #666; }
+
+.back-btn-inline {
+  background: transparent;
+  border: 1px solid rgba(0,234,255,0.3);
+  color: #00eaff;
+  border-radius: 30px;
+  padding: 10px 24px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.back-btn-inline:hover {
+  background: rgba(0,234,255,0.08);
+  border-color: #00eaff;
+}
+
+/* ============================================
+   Карточки-превью на index.html
+   ============================================ */
+.post {
+  background: rgba(16, 16, 16, 0.9);
+  border-left: 3px solid #00eaff;
+  border-radius: 14px;
+  padding: 20px 22px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 20px rgba(0, 234, 255, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: default;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.post:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0, 234, 255, 0.22);
+}
+
+.post-title { font-size: 1.05rem; font-weight: 700; color: #fff; line-height: 1.3; }
+
+.post-preview-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  gap: 12px;
+}
+
+.post-preview-meta .author {
+  color: #00eaff;
+  cursor: pointer;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.post-preview-meta .author:hover { text-decoration: underline; }
+.post-preview-meta .date { color: #555; flex-shrink: 0; }
+
+.read-btn {
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 8px 20px;
+  background: rgba(142, 68, 173, 0.12);
+  border: 1px solid rgba(142, 68, 173, 0.4);
+  color: #c39bd3;
+  border-radius: 30px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: all 0.22s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.read-btn:hover {
+  background: rgba(142, 68, 173, 0.25);
+  border-color: #8e44ad;
+  color: #fff;
+  box-shadow: 0 0 18px rgba(142, 68, 173, 0.4);
+  transform: translateY(-1px);
+}
+
+/* ============================================
+   Адаптив
+   ============================================ */
+@media (max-width: 768px) {
+  .article-card { padding: 28px 22px; }
+  .article-title { font-size: 1.5rem; }
+  .article-wrapper { margin-top: 80px; }
+}
+
+@media (max-width: 600px) {
+  .article-wrapper {
+    margin-top: 72px;
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .article-card { padding: 22px 16px; }
+  .article-title { font-size: 1.25rem; }
+}
+
+@media (max-width: 600px) {
+  .article-card { margin-top: 12px; }
 }
