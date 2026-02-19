@@ -133,9 +133,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ===== Переходы между страницами с затемнением =====
-  function setupPageButtons(selector){
+function setupPageButtons(selector){
     document.querySelectorAll(selector).forEach(btn=>{
-      btn.addEventListener('click', ()=>{
+      btn.addEventListener('click', (e)=>{
+        e.stopPropagation(); // ← это главный фикс
         const link = btn.dataset.link || btn.getAttribute('href');
         if(!link) return;
 
@@ -144,7 +145,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
-
   // Любые ссылки верхней панели
   setupPageButtons('.page-btn');
 });
