@@ -146,5 +146,5 @@ function setupPageButtons(selector){
     });
   }
   // Любые ссылки верхней панели
-  setupPageButtons('.page-btn');
+  setupPageButtons('.nav-btn');
 });
