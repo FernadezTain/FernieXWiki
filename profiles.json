@@ -38,5 +38,29 @@
     "Discord": "none",
     "VK": "none",
     "Odnoklasniki": "none"
+  },
+  "Kerry": {
+    "Avatar": "limitnik.png",
+    "About": "Руководитель Агентов Поддержки",
+    "Telegram": "https://t.me/Lim1tnik",
+    "Discord": "none",
+    "VK": "none",
+    "Odnoklasniki": "none"
+  },
+  "x ɪ ɪ ɪ": {
+    "Avatar": "XIII.png",
+    "About": "Мл. Модератор",
+    "Telegram": "https://t.me/Ibrazt",
+    "Discord": "none",
+    "VK": "none",
+    "Odnoklasniki": "none"
+  },
+  "Maks Verteze": {
+    "Avatar": "verteze.png",
+    "About": "Мл. Модератор",
+    "Telegram": "https://t.me/verteze_m",
+    "Discord": "none",
+    "VK": "none",
+    "Odnoklasniki": "none"
   }
 }
