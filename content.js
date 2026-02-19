@@ -30,7 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const backBtn = document.getElementById("back-btn");
   if (backBtn) {
     backBtn.addEventListener("click", () => {
-      // Плавный уход
       document.body.style.transition = "opacity 0.3s ease";
       document.body.style.opacity = "0";
       setTimeout(() => {
@@ -81,11 +80,9 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("article-author").textContent   = post.author || "Неизвестно";
     document.getElementById("article-date").textContent     = formatDate(post.date);
 
-    // Богатый рендер текста
     const bodyEl = document.getElementById("article-body");
     bodyEl.innerHTML = renderRichText(post.text || "");
 
-    // Фото
     if (post.photo) {
       const photoWrap = document.getElementById("article-photo-wrap");
       const photoImg  = document.getElementById("article-photo");
@@ -111,19 +108,151 @@ document.addEventListener("DOMContentLoaded", () => {
     let html = "";
     let i = 0;
 
+    // Состояние для группировки блоков
+    let inQuoteBlock     = false;  // накапливаем строки > ...
+    let inShopCategory   = false;  // внутри категории товаров
+    let shopItemsBuffer  = [];     // товары текущей категории
+    let quoteBuffer      = [];     // строки цитаты
+
+    const flushQuote = () => {
+      if (!quoteBuffer.length) return;
+      html += '<div class="rt-quote-block">' +
+        quoteBuffer.map(l => '<span class="rt-quote-line">' + escapeHtml(l) + '</span>').join("") +
+        '</div>';
+      quoteBuffer = [];
+      inQuoteBlock = false;
+    };
+
+    const flushShopItems = () => {
+      if (!shopItemsBuffer.length) return;
+      html += '<div class="rt-shop-items">' +
+        shopItemsBuffer.map(t => '<span class="rt-shop-tag">' + escapeHtml(t.trim()) + '</span>').join("") +
+        '</div>';
+      shopItemsBuffer = [];
+    };
+
     while (i < lines.length) {
-      const line = lines[i].trim();
+      const raw_line = lines[i];
+      const line     = raw_line.trim();
 
-      // Пустая строка
-      if (!line) { i++; continue; }
+      // --- Пустая строка ---
+      if (!line) {
+        flushQuote();
+        flushShopItems();
+        inShopCategory = false;
+        i++; continue;
+      }
 
-      // Горизонтальный разделитель ---
+      // --- Горизонтальный разделитель ---
       if (/^-{3,}$/.test(line)) {
+        flushQuote();
+        flushShopItems();
+        inShopCategory = false;
         html += '<div class="rt-divider"></div>';
         i++; continue;
       }
 
-      // Раздел верхнего уровня: "1. Раздел ...", "2. Раздел ..."
+      // --- Цитата / блок нарушений: "> Ст. 146 ..." ---
+      if (/^>/.test(line)) {
+        quoteBuffer.push(line.replace(/^>\s*/, ""));
+        inQuoteBlock = true;
+        i++; continue;
+      } else if (inQuoteBlock) {
+        flushQuote();
+      }
+
+      // --- Секция-бейдж: "📦 NEW — Новое:" или "🔧 BugFix — Исправления:" ---
+      const newSectionMatch  = line.match(/^📦\s*NEW/i);
+      const fixSectionMatch  = line.match(/^🔧\s*BugFix/i);
+
+      if (newSectionMatch) {
+        html += '<div class="rt-section-badge new-section">' +
+          '<span class="rt-section-badge-icon">📦</span>' +
+          '<div class="rt-section-badge-content">' +
+            '<span class="rt-section-badge-label">Новое</span>' +
+            '<span class="rt-section-badge-title">NEW — Добавлено</span>' +
+          '</div>' +
+        '</div>';
+        i++; continue;
+      }
+
+      if (fixSectionMatch) {
+        html += '<div class="rt-section-badge fix-section">' +
+          '<span class="rt-section-badge-icon">🔧</span>' +
+          '<div class="rt-section-badge-content">' +
+            '<span class="rt-section-badge-label">Исправления</span>' +
+            '<span class="rt-section-badge-title">BugFix — Исправлено</span>' +
+          '</div>' +
+        '</div>';
+        i++; continue;
+      }
+
+      // --- Чекмарк-пункт: "✅ Текст" ---
+      if (/^✅/.test(line)) {
+        flushShopItems();
+        inShopCategory = false;
+
+        // Текст после ✅
+        let mainText = line.replace(/^✅\s*/, "");
+
+        // Смотрим, есть ли следующая строка с хинтом (💕 ...)
+        let hint = null;
+        if (i + 1 < lines.length && /^\s*💕/.test(lines[i + 1])) {
+          hint = lines[i + 1].trim();
+          i++;
+        }
+
+        html += '<div class="rt-check-item">' +
+          '<span class="rt-check-icon">✅</span>' +
+          '<div class="rt-check-body">' +
+            '<span class="rt-check-text">' + escapeHtml(mainText) + '</span>' +
+            (hint ? '<span class="rt-check-hint">' + escapeHtml(hint) + '</span>' : '') +
+          '</div>' +
+        '</div>';
+        i++; continue;
+      }
+
+      // --- Строка с хинтом 💕 (если отдельно, без предшествующего ✅) ---
+      if (/^💕/.test(line)) {
+        html += '<div class="rt-check-hint">' + escapeHtml(line) + '</div>';
+        i++; continue;
+      }
+
+      // --- Подкатегория товаров: "   📱 Телефоны:", "   🚗 Машины:", etc ---
+      // Отступ + эмодзи + слово + двоеточие
+      const shopCatMatch = raw_line.match(/^\s{2,}([\p{Emoji_Presentation}\p{Extended_Pictographic}]+)\s+(.+?):\s*$/u);
+      if (shopCatMatch) {
+        flushShopItems();
+        const icon  = shopCatMatch[1].trim();
+        const title = shopCatMatch[2].trim();
+        html += '<div class="rt-shop-category">' +
+          '<span class="rt-shop-category-icon">' + icon + '</span>' +
+          '<span class="rt-shop-category-title">' + escapeHtml(title) + '</span>' +
+        '</div>';
+        inShopCategory = true;
+        i++; continue;
+      }
+
+      // --- Субподкатегория: "   🇷🇺 Российский автопром:" ---
+      const shopSubMatch = raw_line.match(/^\s{2,}(🇷🇺|🌍|[\p{Regional_Indicator}]{2})\s+(.+?):\s*$/u);
+      if (shopSubMatch) {
+        flushShopItems();
+        html += '<div class="rt-shop-sub">' +
+          shopSubMatch[1] + ' ' + escapeHtml(shopSubMatch[2]) +
+        '</div>';
+        inShopCategory = true;
+        i++; continue;
+      }
+
+      // --- Строка товаров: "   · iPhone 16, iPhone 17, ..." ---
+      const shopItemsMatch = raw_line.match(/^\s{2,}[·•*]\s+(.+)/);
+      if (shopItemsMatch && inShopCategory) {
+        const items = shopItemsMatch[1].split(",");
+        shopItemsBuffer.push(...items);
+        i++; continue;
+      }
+
+      // --- Раздел верхнего уровня: "1. Раздел ..." ---
       const sectionMatch = line.match(/^(\d+)\.\s+(.+)/);
       if (sectionMatch && !line.match(/^\d+\.\d+/)) {
         html += '<div class="rt-section-title">' +
@@ -133,7 +262,7 @@ document.addEventListener("DOMContentLoaded", () => {
         i++; continue;
       }
 
-      // Подпункт: "· 1.1. Название" или "1.1. Название"
+      // --- Подпункт: "· 1.1. Название" ---
       const subMatch = line.match(/^[·•]?\s*(\d+\.\d+)\.?\s+(.+)/);
       if (subMatch) {
         html += '<div class="rt-subpoint-title">' +
@@ -143,16 +272,16 @@ document.addEventListener("DOMContentLoaded", () => {
         i++; continue;
       }
 
-      // Блок с меткой "· Описание:", "· Наказание:", "· Описание"
+      // --- Блок с меткой "· Описание:", "· Наказание:", "· Примечание:" ---
       const labelMatch = line.match(/^[·•]\s*(Описание|Наказание|Примечание)[:\s]/i);
       if (labelMatch) {
         const labelKey = labelMatch[1].toLowerCase();
         const labelColors = {
-          описание: { color: "#00eaff",  icon: "📋" },
-          наказание: { color: "#ff6b6b", icon: "⚖️" },
-          примечание: { color: "#ffd700", icon: "📌" },
+          описание:   { color: "#00eaff",  icon: "📋" },
+          наказание:  { color: "#ff6b6b",  icon: "⚖️" },
+          примечание: { color: "#ffd700",  icon: "📌" },
         };
-        const cfg = labelColors[labelKey] || { color: "#aaa", icon: "ℹ️" };
+        const cfg  = labelColors[labelKey] || { color: "#aaa", icon: "ℹ️" };
         const rest = line.replace(/^[·•]\s*(Описание|Наказание|Примечание)[:\s]*/i, "").trim();
         html += '<div class="rt-labeled-block" style="--label-color:' + cfg.color + '">' +
           '<span class="rt-label-icon">' + cfg.icon + '</span>' +
@@ -164,14 +293,14 @@ document.addEventListener("DOMContentLoaded", () => {
         i++; continue;
       }
 
-      // Точка-маркер · текст (общий)
+      // --- Точка-маркер · текст ---
       if (/^[·•]\s/.test(line)) {
         const text = line.replace(/^[·•]\s/, "");
         html += '<div class="rt-dot-item"><span class="rt-dot">·</span><span>' + escapeHtml(text) + '</span></div>';
         i++; continue;
       }
 
-      // Команда /cmd
+      // --- Команда /cmd ---
       if (/^\/\w/.test(line)) {
         const match = line.match(/^(\/\S+)\s*[—–\-]?\s*(.*)/);
         if (match) {
@@ -183,8 +312,10 @@ document.addEventListener("DOMContentLoaded", () => {
         i++; continue;
       }
 
-      // Эмодзи-заголовок
+      // --- Эмодзи-заголовок (первый символ — эмодзи, строка короткая) ---
       if (startsWithEmoji(line) && line.length < 90) {
+        flushShopItems();
+        inShopCategory = false;
         const emojiLen = getLeadingEmojiLength(line);
         const emoji = line.slice(0, emojiLen);
         const rest  = line.slice(emojiLen).trim();
@@ -195,16 +326,20 @@ document.addEventListener("DOMContentLoaded", () => {
         i++; continue;
       }
 
-      // Ранг (5️⃣)
+      // --- Ранг (5️⃣) ---
       if (/^\d[\uFE0F]?\u20E3/.test(line)) {
         html += '<div class="rt-rank-item">' + escapeHtml(line) + '</div>';
         i++; continue;
       }
 
-      // Обычный текст
+      // --- Обычный текст ---
       html += '<p class="rt-para">' + escapeHtml(line) + '</p>';
       i++;
     }
+
+    // Сбрасываем незакрытые буферы
+    flushQuote();
+    flushShopItems();
 
     return html;
   }
@@ -214,17 +349,20 @@ document.addEventListener("DOMContentLoaded", () => {
   // ============================================
   function animateBodyLines(container) {
     const blocks = container.querySelectorAll(
-      ".rt-section-title, .rt-subpoint-title, .rt-labeled-block, .rt-dot-item, " +
-      ".rt-command, .rt-heading, .rt-list-item, .rt-rank-item, .rt-para, .rt-divider"
+      ".rt-section-title, .rt-section-badge, .rt-subpoint-title, .rt-labeled-block, " +
+      ".rt-dot-item, .rt-command, .rt-heading, .rt-list-item, .rt-rank-item, " +
+      ".rt-para, .rt-divider, .rt-check-item, .rt-quote-block, " +
+      ".rt-shop-category, .rt-shop-sub, .rt-shop-items"
     );
     blocks.forEach((el, i) => {
       el.style.opacity    = "0";
-      el.style.transform  = "translateY(8px)";
-      el.style.transition = "opacity 0.35s ease " + (i * 0.03) + "s, transform 0.35s ease " + (i * 0.03) + "s";
+      el.style.transform  = "translateY(10px)";
+      el.style.transition =
+        `opacity 0.35s ease ${i * 0.028}s, transform 0.35s ease ${i * 0.028}s`;
       setTimeout(() => {
         el.style.opacity   = "1";
         el.style.transform = "translateY(0)";
-      }, 40 + i * 30);
+      }, 40 + i * 28);
     });
   }
 
@@ -232,17 +370,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // УТИЛИТЫ
   // ============================================
   function startsWithEmoji(str) {
-    // Проверяем первый символ — эмодзи ли это
     const emojiRegex = /^[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{1F100}-\u{1F1FF}\u{FE00}-\u{FE0F}\u{1F900}-\u{1F9FF}]/u;
     return emojiRegex.test(str);
   }
 
   function getLeadingEmojiLength(str) {
-    // Грубый подсчёт: берём первые 4 символа как возможное эмодзи
     let len = 0;
     const segments = [...str];
-    for (let i = 0; i < Math.min(segments.length, 3); i++) {
-      const code = segments[i].codePointAt(0);
+    for (let k = 0; k < Math.min(segments.length, 3); k++) {
+      const code = segments[k].codePointAt(0);
       if (
         (code >= 0x1F300 && code <= 0x1FAFF) ||
         (code >= 0x2600  && code <= 0x27BF)  ||
@@ -250,12 +386,12 @@ document.addEventListener("DOMContentLoaded", () => {
         (code >= 0x1F900 && code <= 0x1F9FF) ||
         (code >= 0x1F100 && code <= 0x1F1FF)
       ) {
-        len += segments[i].length;
+        len += segments[k].length;
       } else {
         break;
       }
     }
-    return len || 2; // минимум 2 байта
+    return len || 2;
   }
 
   function showError() {
