@@ -9,8 +9,12 @@ body {
   overflow-x: hidden;
 }
 
+html, body {
+  overflow: hidden;
+}
+
 /* --- Верхняя панель --- */
-.top-bar {
+.page-switcher {
   position: fixed;
   top: 20px;
   left: 50%;
@@ -20,23 +24,43 @@ body {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 1.5rem;
-  font-weight: bold;
-  z-index: 1000;
-  gap: 30px;
+  gap: 12px;
+  z-index: 10002;
   pointer-events: auto;
 }
 
-.top-bar a, .top-bar div {
-  text-decoration: none;
+.nav-btn {
+  padding: 8px 20px;
+  border-radius: 30px;
+  font-weight: bold;
+  font-size: 1rem;
+  border: none;
   cursor: pointer;
-  transition: color 0.25s ease;
-  font-weight: 700;
+  background: rgba(30, 30, 30, 0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: #00eaff;
+  transition: all 0.25s ease;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  pointer-events: auto;
   user-select: none;
 }
 
-#logo-link { color: #00eaff; }
-.team-link { color: #a14fff; }
+.nav-btn:nth-child(2) { color: #a14fff; }
+.nav-btn:nth-child(3) { color: #ff6b6b; }
+
+.nav-btn:hover {
+  transform: scale(1.08);
+  background: linear-gradient(135deg, #7b3cff, #a14fff);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(0, 234, 255, 0.3);
+}
+
+.nav-btn.active {
+  background: linear-gradient(135deg, #7b3cff, #a14fff);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(0, 234, 255, 0.3);
+}
 
 /* --- Основной контент --- */
 .main-content {
@@ -48,13 +72,11 @@ body {
   align-items: center;
 }
 
-
 /* --- 3D-карусель --- */
 .team-container {
   width: 100%;
   height: 100%;
 }
-
 
 /* Центр круга */
 .center-object {
@@ -115,14 +137,6 @@ body {
   pointer-events: none;
 }
 
-.avatar.front {
-  filter: none;
-}
-
-.avatar.back {
-  filter: brightness(0.9);
-}
-
 /* Hover */
 .avatar:hover {
   transform: scale(1.16) translateZ(40px);
@@ -132,36 +146,12 @@ body {
 
 /* --- АКТИВНАЯ АВАТАРКА - ПОДСВЕТКА --- */
 @keyframes glow-rainbow {
-  0% {
-    box-shadow: 0 0 20px 6px rgba(255, 223, 0, 0.6),
-                0 0 40px 12px rgba(255, 223, 0, 0.2),
-                0 10px 30px rgba(0, 0, 0, 0.6);
-  }
-  20% {
-    box-shadow: 0 0 20px 6px rgba(0, 187, 255, 0.6),
-                0 0 40px 12px rgba(0, 187, 255, 0.2),
-                0 10px 30px rgba(0, 0, 0, 0.6);
-  }
-  40% {
-    box-shadow: 0 0 20px 6px rgba(255, 0, 127, 0.6),
-                0 0 40px 12px rgba(255, 0, 127, 0.2),
-                0 10px 30px rgba(0, 0, 0, 0.6);
-  }
-  60% {
-    box-shadow: 0 0 20px 6px rgba(0, 255, 127, 0.6),
-                0 0 40px 12px rgba(0, 255, 127, 0.2),
-                0 10px 30px rgba(0, 0, 0, 0.6);
-  }
-  80% {
-    box-shadow: 0 0 20px 6px rgba(255, 100, 0, 0.6),
-                0 0 40px 12px rgba(255, 100, 0, 0.2),
-                0 10px 30px rgba(0, 0, 0, 0.6);
-  }
-  100% {
-    box-shadow: 0 0 20px 6px rgba(255, 223, 0, 0.6),
-                0 0 40px 12px rgba(255, 223, 0, 0.2),
-                0 10px 30px rgba(0, 0, 0, 0.6);
-  }
+  0%   { box-shadow: 0 0 20px 6px rgba(255, 223, 0, 0.6),   0 0 40px 12px rgba(255, 223, 0, 0.2),   0 10px 30px rgba(0,0,0,0.6); }
+  20%  { box-shadow: 0 0 20px 6px rgba(0, 187, 255, 0.6),   0 0 40px 12px rgba(0, 187, 255, 0.2),   0 10px 30px rgba(0,0,0,0.6); }
+  40%  { box-shadow: 0 0 20px 6px rgba(255, 0, 127, 0.6),   0 0 40px 12px rgba(255, 0, 127, 0.2),   0 10px 30px rgba(0,0,0,0.6); }
+  60%  { box-shadow: 0 0 20px 6px rgba(0, 255, 127, 0.6),   0 0 40px 12px rgba(0, 255, 127, 0.2),   0 10px 30px rgba(0,0,0,0.6); }
+  80%  { box-shadow: 0 0 20px 6px rgba(255, 100, 0, 0.6),   0 0 40px 12px rgba(255, 100, 0, 0.2),   0 10px 30px rgba(0,0,0,0.6); }
+  100% { box-shadow: 0 0 20px 6px rgba(255, 223, 0, 0.6),   0 0 40px 12px rgba(255, 223, 0, 0.2),   0 10px 30px rgba(0,0,0,0.6); }
 }
 
 .avatar.active-glow {
@@ -234,156 +224,50 @@ body {
   transform: scale(1.05);
 }
 
-/* --- Адаптив --- */
-@media (max-width: 1200px) {
-  .profile-panel {
-    width: 280px;
-    right: 30px;
-  }
-}
-
-@media (max-width: 1000px) {
-  .center-object {
-    width: 120px;
-    height: 120px;
-  }
-  
-  .avatar {
-    width: 70px;
-    height: 70px;
-  }
-  
-  .profile-panel {
-    width: 260px;
-    right: 20px;
-  }
-}
-
-@media (max-width: 768px) {
-  .top-bar {
-    font-size: 1.15rem;
-    gap: 16px;
-  }
-  
-  .center-object {
-    width: 110px;
-    height: 110px;
-  }
-  
-  .avatar {
-    width: 60px;
-    height: 60px;
-  }
-  
-  .profile-panel {
-    width: 240px;
-    right: 15px;
-    top: 70px;
-    padding: 20px;
-  }
-  
-  .profile-panel h3 {
-    font-size: 1rem;
-  }
-  
-  .profile-panel p {
-    font-size: 0.85rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .top-bar {
-    font-size: 1rem;
-    gap: 12px;
-  }
-  
-  .center-object {
-    width: 90px;
-    height: 90px;
-  }
-  
-  .avatar {
-    width: 48px;
-    height: 48px;
-  }
-  
-  .profile-panel {
-    width: 220px;
-    right: 10px;
-    top: 60px;
-    padding: 15px;
-  }
-  
-  .profile-panel h3 {
-    font-size: 0.95rem;
-  }
-  
-  .profile-panel p {
-    font-size: 0.8rem;
-    margin-bottom: 12px;
-  }
-  
-  .profile-panel button {
-    padding: 8px 12px;
-    font-size: 0.8rem;
-  }
-}s
+/* --- Canvas частиц --- */
 #particle-network {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: -1;          /* чтобы был на фоне */
-  pointer-events: none; /* чтобы не мешал кликам */
-}
-html, body {
-  overflow: hidden;
-}
-/* --- Верхние кнопки навигации --- */
-.nav-links {
-  display: flex;
-  gap: 20px;
-}
-
-.nav-link {
-  position: relative;
-  padding: 8px 16px;
-  border-radius: 30px;
-  font-weight: bold;
-  text-decoration: none;
-  color: #00eaff; /* цвет по умолчанию */
-  background: rgba(30,30,30,0.6);
-  backdrop-filter: blur(6px);
-  transition: all 0.25s ease;
-  cursor: pointer;
-}
-
-.nav-link.team-link {
-  color: #a14fff; /* цвет команды */
-}
-
-.nav-link.review-link {
-  color: #ff6b6b; /* цвет отзывов */
-}
-
-/* Hover */
-.nav-link:hover {
-  transform: scale(1.08);
-  background: linear-gradient(135deg, #7b3cff, #a14fff);
-  color: #fff;
-  box-shadow: 0 8px 20px rgba(0,234,255,0.3);
-}
-
-/* Активная ссылка */
-.nav-link.active {
-  background: linear-gradient(135deg, #7b3cff, #a14fff);
-  color: #fff;
-  box-shadow: 0 8px 20px rgba(0,234,255,0.3);
+  z-index: -1;
+  pointer-events: none;
 }
 
 /* --- Fade-out при переходе страниц --- */
 body.fade-out {
   opacity: 0;
   transition: opacity 0.35s ease-in-out;
+}
+
+/* --- Адаптив --- */
+@media (max-width: 1200px) {
+  .profile-panel { width: 280px; right: 30px; }
+}
+
+@media (max-width: 1000px) {
+  .center-object { width: 120px; height: 120px; }
+  .avatar { width: 70px; height: 70px; }
+  .profile-panel { width: 260px; right: 20px; }
+}
+
+@media (max-width: 768px) {
+  .page-switcher { gap: 8px; }
+  .nav-btn { font-size: 0.9rem; padding: 6px 14px; }
+  .center-object { width: 110px; height: 110px; }
+  .avatar { width: 60px; height: 60px; }
+  .profile-panel { width: 240px; right: 15px; top: 70px; padding: 20px; }
+  .profile-panel h3 { font-size: 1rem; }
+  .profile-panel p { font-size: 0.85rem; }
+}
+
+@media (max-width: 480px) {
+  .nav-btn { font-size: 0.8rem; padding: 5px 10px; }
+  .center-object { width: 90px; height: 90px; }
+  .avatar { width: 48px; height: 48px; }
+  .profile-panel { width: 220px; right: 10px; top: 60px; padding: 15px; }
+  .profile-panel h3 { font-size: 0.95rem; }
+  .profile-panel p { font-size: 0.8rem; margin-bottom: 12px; }
+  .profile-panel button { padding: 8px 12px; font-size: 0.8rem; }
 }
