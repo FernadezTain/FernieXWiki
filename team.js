@@ -146,5 +146,5 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Любые ссылки верхней панели
-  setupPageButtons('.nav-link');
+  setupPageButtons('.page-btn');
 });
