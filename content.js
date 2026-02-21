@@ -302,7 +302,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (match) {
           html += '<div class="rt-command">' +
             '<code class="rt-cmd-name">' + escapeHtml(match[1]) + '</code>' +
-            (match[2] ? '<span class="rt-cmd-desc">' + escapeHtml(match[2]) + '</span>' : '') +
+            (match[2] ? '<div class="rt-cmd-desc">' + escapeHtml(match[2]) + '</div>' : '') +
           '</div>';
         }
         i++; continue;
@@ -340,7 +340,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (plainCmdMatch && line.length < 140) {
         html += '<div class="rt-plain-command">' +
           '<code class="rt-plain-cmd-name">' + escapeHtml(plainCmdMatch[1]) + '</code>' +
-          '<span class="rt-plain-cmd-desc">' + escapeHtml(plainCmdMatch[2]) + '</span>' +
+          '<div class="rt-plain-cmd-desc">' + escapeHtml(plainCmdMatch[2]) + '</div>' +
         '</div>';
         i++; continue;
       }
