@@ -114,6 +114,11 @@ document.addEventListener("DOMContentLoaded", () => {
     let shopItemsBuffer = [];
     let quoteBuffer     = [];
 
+    // ── Состояние таблицы ──
+    let inTable         = false;
+    let tableRows       = [];
+    let tableHeader     = null;
+
     const flushQuote = () => {
       if (!quoteBuffer.length) return;
       html += '<div class="rt-quote-block">' +
@@ -131,6 +136,55 @@ document.addEventListener("DOMContentLoaded", () => {
       shopItemsBuffer = [];
     };
 
+    const flushTable = () => {
+      if (!tableHeader && !tableRows.length) return;
+      let t = '<div class="rt-table-wrap"><table class="rt-table">';
+      if (tableHeader) {
+        t += '<thead><tr>' +
+          tableHeader.map(h => '<th>' + escapeHtml(h) + '</th>').join("") +
+          '</tr></thead>';
+      }
+      if (tableRows.length) {
+        t += '<tbody>';
+        tableRows.forEach(row => {
+          t += '<tr>' + row.map((cell, ci) => {
+            // Первая колонка — обычный текст, остальные могут иметь класс
+            const cls = ci === 0 ? '' : getCellClass(cell);
+            const content = formatCellContent(cell);
+            return `<td${cls ? ' class="' + cls + '"' : ''}>${content}</td>`;
+          }).join("") + '</tr>';
+        });
+        t += '</tbody>';
+      }
+      t += '</table></div>';
+      html += t;
+      tableHeader = null;
+      tableRows   = [];
+      inTable     = false;
+    };
+
+    // Определяем класс для ячейки таблицы по содержимому
+    function getCellClass(cell) {
+      const c = cell.trim();
+      if (/^x\d/.test(c) || /^—$/.test(c)) return "rt-td-mult";
+      if (/^\+/.test(c) || /победа|выигр/i.test(c)) return "rt-td-win";
+      if (/^−|^-/.test(c) || /пораж|проигр/i.test(c)) return "rt-td-loss";
+      if (/50%|частич|возврат/i.test(c)) return "rt-td-partial";
+      if (/\d+\.?\d*%/.test(c)) return "rt-td-chance";
+      return "";
+    }
+
+    function formatCellContent(cell) {
+      const c = cell.trim();
+      // множитель типа x5, x14, x35
+      if (/^x\d+/.test(c)) return '<span class="rt-mult">' + escapeHtml(c) + '</span>';
+      // +процент
+      if (/^\+\d/.test(c)) return '<span class="rt-win-text">' + escapeHtml(c) + '</span>';
+      // −процент
+      if (/^[−\-]\d/.test(c)) return '<span class="rt-loss-text">' + escapeHtml(c) + '</span>';
+      return escapeHtml(c);
+    }
+
     while (i < lines.length) {
       const raw_line = lines[i];
       const line     = raw_line.trim();
@@ -139,6 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!line) {
         flushQuote();
         flushShopItems();
+        flushTable();
         inShopCategory = false;
         i++; continue;
       }
@@ -147,9 +202,37 @@ document.addEventListener("DOMContentLoaded", () => {
       if (/^-{3,}$/.test(line)) {
         flushQuote();
         flushShopItems();
+        flushTable();
         inShopCategory = false;
         html += '<div class="rt-divider"></div>';
         i++; continue;
+      }
+
+      // ── Строка таблицы: начинается и заканчивается на | ──
+      if (/^\|.+\|$/.test(line)) {
+        // Разбиваем по |
+        const cells = line.split("|").slice(1, -1).map(c => c.trim());
+
+        // Строка-разделитель (|---|---|)
+        if (cells.every(c => /^[-:]+$/.test(c))) {
+          // Предыдущая строка стала заголовком
+          if (tableRows.length) {
+            tableHeader = tableRows.pop();
+          }
+          inTable = true;
+          i++; continue;
+        }
+
+        if (!inTable && !tableHeader) {
+          // Первая строка — пока буфер
+          tableRows.push(cells);
+          inTable = true;
+        } else {
+          tableRows.push(cells);
+        }
+        i++; continue;
+      } else if (inTable) {
+        flushTable();
       }
 
       // --- Цитата / блок нарушений: "> Ст. 146 ..." ---
@@ -373,6 +456,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Сбрасываем незакрытые буферы
     flushQuote();
     flushShopItems();
+    flushTable();
 
     return html;
   }
@@ -386,7 +470,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ".rt-dot-item, .rt-command, .rt-plain-command, .rt-heading, .rt-list-item, .rt-rank-item, " +
       ".rt-para, .rt-divider, .rt-check-item, .rt-quote-block, " +
       ".rt-shop-category, .rt-shop-sub, .rt-shop-items, " +
-      ".rt-info-block, .rt-restriction-item"
+      ".rt-info-block, .rt-restriction-item, .rt-table-wrap"
     );
     blocks.forEach((el, i) => {
       el.style.opacity    = "0";
