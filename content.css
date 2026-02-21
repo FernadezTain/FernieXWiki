@@ -390,18 +390,17 @@
 }
 
 /* ── Команда /cmd ─────────────────────── */
+/* ── Команда /cmd ─────────────────────── */
 .rt-command {
   display: flex;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 6px 10px;
+  flex-direction: column;
+  gap: 4px;
   padding: 8px 14px;
   background: rgba(142, 68, 173, 0.07);
   border: 1px solid rgba(142, 68, 173, 0.2);
   border-radius: 8px;
   margin: 3px 0;
   overflow: hidden;
-  word-break: break-word;
   transition: background 0.2s ease, border-color 0.2s ease;
 }
 .rt-command:hover {
@@ -416,17 +415,14 @@
   background: rgba(142, 68, 173, 0.18);
   padding: 2px 9px;
   border-radius: 5px;
-  flex-shrink: 0;
   letter-spacing: 0.03em;
   white-space: nowrap;
-  max-width: 100%;
+  align-self: flex-start;
 }
 .rt-cmd-desc {
   font-size: 0.85rem;
   color: #999;
   line-height: 1.5;
-  flex: 1;
-  min-width: 0;
   word-break: break-word;
   overflow-wrap: anywhere;
 }
@@ -434,17 +430,15 @@
 /* ── Команда без слэша (казино, описание, +описание) ── */
 .rt-plain-command {
   display: flex;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 6px 10px;
+  flex-direction: column;
+  gap: 4px;
   padding: 8px 14px;
   background: rgba(0, 234, 255, 0.05);
   border: 1px solid rgba(0, 234, 255, 0.15);
   border-radius: 8px;
   margin: 3px 0;
-  transition: background 0.2s ease, border-color 0.2s ease;
   overflow: hidden;
-  word-break: break-word;
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 .rt-plain-command:hover {
   background: rgba(0, 234, 255, 0.1);
@@ -458,17 +452,14 @@
   background: rgba(0, 234, 255, 0.1);
   padding: 2px 9px;
   border-radius: 5px;
-  flex-shrink: 0;
   letter-spacing: 0.03em;
   white-space: nowrap;
-  max-width: 100%;
+  align-self: flex-start;
 }
 .rt-plain-cmd-desc {
   font-size: 0.85rem;
   color: #999;
   line-height: 1.5;
-  flex: 1;
-  min-width: 0;
   word-break: break-word;
   overflow-wrap: anywhere;
 }
