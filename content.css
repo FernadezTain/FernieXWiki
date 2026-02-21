@@ -390,7 +390,6 @@
 }
 
 /* ── Команда /cmd ─────────────────────── */
-/* ── Команда /cmd ─────────────────────── */
 .rt-command {
   display: flex;
   flex-direction: column;
@@ -427,7 +426,7 @@
   overflow-wrap: anywhere;
 }
 
-/* ── Команда без слэша (казино, описание, +описание) ── */
+/* ── Команда без слэша ── */
 .rt-plain-command {
   display: flex;
   flex-direction: column;
@@ -492,7 +491,7 @@
   padding: 2px 0;
 }
 
-/* ── Строка ограничения — Текст ──────── */
+/* ── Строка ограничения ──────────────── */
 .rt-restriction-item {
   display: flex;
   align-items: flex-start;
@@ -655,6 +654,84 @@
   margin-top: 4px;
   flex-shrink: 0;
   opacity: 0.7;
+}
+
+/* ============================================
+   ── Таблица rt-table ──────────────────────
+   ============================================ */
+.rt-table-wrap {
+  overflow-x: auto;
+  margin: 6px 0;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 234, 255, 0.1);
+  /* Плавный скролл на мобильных */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Тонкий скроллбар */
+.rt-table-wrap::-webkit-scrollbar { height: 4px; }
+.rt-table-wrap::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); }
+.rt-table-wrap::-webkit-scrollbar-thumb { background: rgba(0,234,255,0.2); border-radius: 4px; }
+
+.rt-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  min-width: 320px;
+}
+
+.rt-table thead tr {
+  background: rgba(0, 234, 255, 0.07);
+}
+.rt-table th {
+  padding: 10px 14px;
+  color: #00eaff;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(0, 234, 255, 0.12);
+}
+.rt-table td {
+  padding: 9px 14px;
+  color: #bbb;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  line-height: 1.45;
+  vertical-align: middle;
+}
+.rt-table tbody tr:last-child td { border-bottom: none; }
+.rt-table tbody tr {
+  transition: background 0.15s ease;
+}
+.rt-table tbody tr:hover {
+  background: rgba(0, 234, 255, 0.03);
+}
+
+/* Классы ячеек */
+.rt-table .rt-td-mult  { color: #00eaff; font-weight: 700; }
+.rt-table .rt-td-win   { color: #50dc78; }
+.rt-table .rt-td-loss  { color: #ff6b6b; }
+.rt-table .rt-td-partial { color: #ffd700; }
+.rt-table .rt-td-chance  { color: #888; font-size: 0.82rem; }
+
+/* Спаны внутри ячеек */
+.rt-mult      { color: #00eaff; font-weight: 700; font-family: 'Consolas','Courier New',monospace; }
+.rt-win-text  { color: #50dc78; font-weight: 600; }
+.rt-loss-text { color: #ff6b6b; font-weight: 600; }
+
+/* Мобильный хинт "← прокрути" */
+.rt-table-wrap::after {
+  content: '';
+  display: none;
+}
+@media (max-width: 540px) {
+  .rt-table th,
+  .rt-table td {
+    padding: 8px 10px;
+    font-size: 0.8rem;
+  }
 }
 
 /* ============================================
