@@ -109,18 +109,18 @@ document.addEventListener("DOMContentLoaded", () => {
     let i = 0;
 
     // Состояние для группировки блоков
-    let inQuoteBlock     = false;  // накапливаем строки > ...
-    let inShopCategory   = false;  // внутри категории товаров
-    let shopItemsBuffer  = [];     // товары текущей категории
-    let quoteBuffer      = [];     // строки цитаты
+    let inQuoteBlock    = false;
+    let inShopCategory  = false;
+    let shopItemsBuffer = [];
+    let quoteBuffer     = [];
 
     const flushQuote = () => {
       if (!quoteBuffer.length) return;
       html += '<div class="rt-quote-block">' +
         quoteBuffer.map(l => '<span class="rt-quote-line">' + escapeHtml(l) + '</span>').join("") +
         '</div>';
-      quoteBuffer = [];
-      inQuoteBlock = false;
+      quoteBuffer     = [];
+      inQuoteBlock    = false;
     };
 
     const flushShopItems = () => {
@@ -161,9 +161,9 @@ document.addEventListener("DOMContentLoaded", () => {
         flushQuote();
       }
 
-      // --- Секция-бейдж: "📦 NEW — Новое:" или "🔧 BugFix — Исправления:" ---
-      const newSectionMatch  = line.match(/^📦\s*NEW/i);
-      const fixSectionMatch  = line.match(/^🔧\s*BugFix/i);
+      // --- Секция-бейдж: "📦 NEW" или "🔧 BugFix" ---
+      const newSectionMatch = line.match(/^📦\s*NEW/i);
+      const fixSectionMatch = line.match(/^🔧\s*BugFix/i);
 
       if (newSectionMatch) {
         html += '<div class="rt-section-badge new-section">' +
@@ -192,10 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
         flushShopItems();
         inShopCategory = false;
 
-        // Текст после ✅
         let mainText = line.replace(/^✅\s*/, "");
-
-        // Смотрим, есть ли следующая строка с хинтом (💕 ...)
         let hint = null;
         if (i + 1 < lines.length && /^\s*💕/.test(lines[i + 1])) {
           hint = lines[i + 1].trim();
@@ -212,14 +209,13 @@ document.addEventListener("DOMContentLoaded", () => {
         i++; continue;
       }
 
-      // --- Строка с хинтом 💕 (если отдельно, без предшествующего ✅) ---
+      // --- Строка с хинтом 💕 ---
       if (/^💕/.test(line)) {
         html += '<div class="rt-check-hint">' + escapeHtml(line) + '</div>';
         i++; continue;
       }
 
-      // --- Подкатегория товаров: "   📱 Телефоны:", "   🚗 Машины:", etc ---
-      // Отступ + эмодзи + слово + двоеточие
+      // --- Подкатегория товаров ---
       const shopCatMatch = raw_line.match(/^\s{2,}([\p{Emoji_Presentation}\p{Extended_Pictographic}]+)\s+(.+?):\s*$/u);
       if (shopCatMatch) {
         flushShopItems();
@@ -233,7 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
         i++; continue;
       }
 
-      // --- Субподкатегория: "   🇷🇺 Российский автопром:" ---
+      // --- Субподкатегория ---
       const shopSubMatch = raw_line.match(/^\s{2,}(🇷🇺|🌍|[\p{Regional_Indicator}]{2})\s+(.+?):\s*$/u);
       if (shopSubMatch) {
         flushShopItems();
@@ -244,7 +240,7 @@ document.addEventListener("DOMContentLoaded", () => {
         i++; continue;
       }
 
-      // --- Строка товаров: "   · iPhone 16, iPhone 17, ..." ---
+      // --- Строка товаров ---
       const shopItemsMatch = raw_line.match(/^\s{2,}[·•*]\s+(.+)/);
       if (shopItemsMatch && inShopCategory) {
         const items = shopItemsMatch[1].split(",");
@@ -277,9 +273,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if (labelMatch) {
         const labelKey = labelMatch[1].toLowerCase();
         const labelColors = {
-          описание:   { color: "#00eaff",  icon: "📋" },
-          наказание:  { color: "#ff6b6b",  icon: "⚖️" },
-          примечание: { color: "#ffd700",  icon: "📌" },
+          описание:   { color: "#00eaff", icon: "📋" },
+          наказание:  { color: "#ff6b6b", icon: "⚖️" },
+          примечание: { color: "#ffd700", icon: "📌" },
         };
         const cfg  = labelColors[labelKey] || { color: "#aaa", icon: "ℹ️" };
         const rest = line.replace(/^[·•]\s*(Описание|Наказание|Примечание)[:\s]*/i, "").trim();
@@ -312,13 +308,50 @@ document.addEventListener("DOMContentLoaded", () => {
         i++; continue;
       }
 
-      // --- Эмодзи-заголовок (первый символ — эмодзи, строка короткая) ---
+      // --- 📌 Блок примечания с дочерними — строками ---
+      if (/^📌/.test(line)) {
+        const blockLines = [];
+        let j = i + 1;
+        while (j < lines.length && /^[—–]\s/.test(lines[j].trim())) {
+          blockLines.push(lines[j].trim().replace(/^[—–]\s+/, ""));
+          j++;
+        }
+        if (blockLines.length > 0) {
+          const titleText = line.replace(/^📌\s*/, "");
+          html += '<div class="rt-info-block">' +
+            '<span class="rt-info-title">📌 ' + escapeHtml(titleText) + '</span>' +
+            blockLines.map(l => '<span class="rt-info-line">— ' + escapeHtml(l) + '</span>').join("") +
+          '</div>';
+          i = j;
+          continue;
+        }
+        // Если нет дочерних строк — рендерим как эмодзи-заголовок (ниже)
+      }
+
+      // --- Строка ограничения: "— Текст" или "– Текст" ---
+      const restrictionMatch = line.match(/^[—–]\s+(.+)/);
+      if (restrictionMatch) {
+        html += '<div class="rt-restriction-item">' + escapeHtml(restrictionMatch[1]) + '</div>';
+        i++; continue;
+      }
+
+      // --- Команда без слэша: "казино [сумма] — описание" / "+описание — desc" ---
+      const plainCmdMatch = line.match(/^([+\-]?[а-яёa-z][а-яёa-z0-9_]*(?:\s+\[.+?\])*)\s*[—–]\s*(.+)/i);
+      if (plainCmdMatch && line.length < 140) {
+        html += '<div class="rt-plain-command">' +
+          '<code class="rt-plain-cmd-name">' + escapeHtml(plainCmdMatch[1]) + '</code>' +
+          '<span class="rt-plain-cmd-desc">' + escapeHtml(plainCmdMatch[2]) + '</span>' +
+        '</div>';
+        i++; continue;
+      }
+
+      // --- Эмодзи-заголовок ---
       if (startsWithEmoji(line) && line.length < 90) {
         flushShopItems();
         inShopCategory = false;
         const emojiLen = getLeadingEmojiLength(line);
-        const emoji = line.slice(0, emojiLen);
-        const rest  = line.slice(emojiLen).trim();
+        const emoji    = line.slice(0, emojiLen);
+        const rest     = line.slice(emojiLen).trim();
         html += '<div class="rt-heading">' +
           '<span class="rt-heading-emoji">' + emoji + '</span>' +
           '<span class="rt-heading-text">' + escapeHtml(rest) + '</span>' +
@@ -350,9 +383,10 @@ document.addEventListener("DOMContentLoaded", () => {
   function animateBodyLines(container) {
     const blocks = container.querySelectorAll(
       ".rt-section-title, .rt-section-badge, .rt-subpoint-title, .rt-labeled-block, " +
-      ".rt-dot-item, .rt-command, .rt-heading, .rt-list-item, .rt-rank-item, " +
+      ".rt-dot-item, .rt-command, .rt-plain-command, .rt-heading, .rt-list-item, .rt-rank-item, " +
       ".rt-para, .rt-divider, .rt-check-item, .rt-quote-block, " +
-      ".rt-shop-category, .rt-shop-sub, .rt-shop-items"
+      ".rt-shop-category, .rt-shop-sub, .rt-shop-items, " +
+      ".rt-info-block, .rt-restriction-item"
     );
     blocks.forEach((el, i) => {
       el.style.opacity    = "0";
